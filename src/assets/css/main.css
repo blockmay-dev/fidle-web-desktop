@@ -1,1 +1,119 @@
+.primary--btn {
+    display: block;
+    width: 100%;
+    border: none;
+    background-color: var(--main-color);
+    color: #fff;
+    padding: 0.6rem 3rem;
+    border-radius: 5px;
+}
 
+.secondary--btn {
+    display: block;
+    width: 100%;
+    border: none;
+    background-color: var(--blue-500);
+    color: #fff;
+    padding: 0.6rem 3rem;
+    border-radius: 5px;
+}
+
+
+/* Chat Interface  */
+
+.chat--interface {
+    position: fixed;
+    right: 10%;
+    bottom: 0;
+    background-color: #fff;
+    width: 320px;
+    padding: 1rem;
+    box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.08);
+    border-radius: 10px 10px 0 0;
+    z-index: 9999;
+}
+
+#textarea {
+    border: transparent;
+    background: transparent;
+    outline: transparent;
+    width: 100%;
+    height: 30px;
+}
+
+.chat--interface input::placeholder {
+    font-size: 0.8rem;
+}
+
+.chat--interface .main--chat {
+    height: 250px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding-right: 0.5rem;
+}
+
+.message--content {
+    display: flex;
+    align-items: flex-end;
+    margin-bottom: 0.8rem;
+    gap: 4px;
+}
+
+.message--content.sender {
+    margin-left: auto;
+    max-width: max-content;
+}
+
+.message--content.sender .main--text {
+    background-color: var(--blue-800);
+    padding: 0.4rem 1rem;
+    border-radius: 10px 0px 10px 10px;
+    font-size: 0.9rem;
+    max-width: 200px;
+    white-space: pre-wrap;
+}
+
+.message--content .main--text p {
+    word-break: normal;
+}
+
+.message--content .sender img {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+}
+
+.message--content.reciever .main--text {
+    background-color: var(--blue-500);
+    padding: 0.4rem 1rem;
+    border-radius: 0px 10px 10px 10px;
+    max-width: 200px;
+    font-size: 0.9rem;
+    white-space: pre-wrap;
+}
+
+.send--chat {
+    background-color: var(--gray-50);
+    padding: 0.5rem 0.5rem;
+    border-radius: 25px;
+}
+
+.chat--interface .el-textarea__inner {
+    border: none !important;
+    background-color: transparent !important;
+}
+
+.el-button--primary {
+    background-color: var(--main-color);
+    border-color: var(--main-color);
+}
+
+.el-button {
+    border: 1px solid var(--main-color);
+}
+
+.el-button:hover {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+    color: var(--main-color);
+}

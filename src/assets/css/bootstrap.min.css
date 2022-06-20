@@ -41,7 +41,8 @@ h6 {
 
 p {
     margin-top: 0;
-    margin-bottom: 1rem
+    margin-bottom: 1rem;
+    color: #000;
 }
 
 abbr[data-original-title],
@@ -2185,7 +2186,7 @@ pre code {
 }
 
 .table .thead-light th {
-    color: #495057;
+    color: #000;
     background-color: #f8f9fa;
     border-color: #f5f6f8
 }
@@ -2198,7 +2199,7 @@ pre code {
 .table-dark td,
 .table-dark th,
 .table-dark thead th {
-    border-color: #454d55
+    border-color: #000
 }
 
 .table-dark.table-bordered {
@@ -11393,7 +11394,7 @@ h3,
 h4,
 h5,
 h6 {
-    color: #495057
+    color: #000
 }
 
 a {

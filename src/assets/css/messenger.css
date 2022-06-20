@@ -1,0 +1,97 @@
+.chat--list {
+    background-color: #fff;
+    border-radius: 10px;
+    height: 87vh;
+    width: 40%;
+    overflow-y: auto;
+}
+
+.chat--box {
+    overflow-y: auto;
+    height: 72vh;
+}
+
+.chat--box_container {
+    width: 100%;
+    background-color: #fff;
+    border-radius: 10px;
+    height: 87vh;
+}
+
+.empty--chat {
+    width: 100%;
+    background-color: #fff;
+    border-radius: 10px;
+    height: 87vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.messenger .messages-photo img {
+    height: 30px;
+    width: 30px;
+}
+
+.messenger .message--list {
+    padding: 0.8rem 0.6rem;
+    border-top: 1px solid #efefef;
+    border-bottom: 1px solid #efefef;
+}
+
+.messenger .message--list:hover {
+    background-color: var(--blue-800);
+}
+
+.messenger .chat--box .sender--img img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+.messenger .chat--box .reciever .main--text {
+    background-color: var(--blue-800);
+    padding: 0.4rem 1rem;
+    border-radius: 0px 5px 5px 5px;
+    max-width: 400px;
+    font-size: 0.9rem;
+    white-space: pre-wrap;
+    padding: 0.8rem;
+}
+
+.messenger .sender {
+    margin-left: auto;
+    max-width: max-content;
+}
+
+.messenger .sender .main--text {
+    background-color: var(--blue-200);
+    padding: 0.4rem 1rem;
+    border-radius: 5px 0px 5px 5px;
+    font-size: 0.9rem;
+    max-width: 400px;
+    white-space: pre-wrap;
+    padding: 0.8rem;
+}
+
+.messenger .sender .main--text p {
+    color: #fff;
+}
+
+.messenger .chat--box {
+    position: relative;
+}
+
+.messenger .messenger--top {
+    background-color: #fff;
+    padding: 1.3rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 10px 10px 0 0;
+}
+
+.messenger .send--message {
+    background-color: #fff;
+    padding: 1.3rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 10px 10px 0 0;
+}
