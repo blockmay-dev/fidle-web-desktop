@@ -15,7 +15,7 @@
           <div
             v-else
             class="cover--area p-3"
-            style="background: var(--main-color)"
+            style="background: #b8b8b8"
           >
             <p v-if="user.level" class="text-white">{{ user.level.name }}</p>
           </div>

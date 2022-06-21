@@ -14,7 +14,7 @@
         v-else
           class="cover--area p-3"
           style="
-            background: var(--main-color);
+            background: #b8b8b8;
           "
         >
         

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <div class="media--files">
+      <div class="media--files profile--section p-3">
         <div class="media" v-for="media in mediaData" :key="media.id">
           <div v-for="file in media.media" :key="file.id">
             <img v-if="file.extension == 'jpg' || file.extension == 'png' || file.extension == 'jpeg' " :src="file.file" alt="" width="100%" />
