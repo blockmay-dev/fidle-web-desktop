@@ -13,7 +13,7 @@
                 />
                 <img
                   v-else
-                  src="https://media.istockphoto.com/photos/businessman-silhouette-as-avatar-or-default-profile-picture-picture-id476085198?k=6&m=476085198&s=612x612&w=0&h=5cDQxXHFzgyz8qYeBQu2gCZq1_TN0z40e_8ayzne0X0="
+                  src="@/assets/img/no_user.png"
                   alt=""
                 />
                 <span class="add-story-icon" role="button" @click="createStory">
@@ -34,7 +34,7 @@
                     </div>
                     <img
                         v-else
-                    src="https://images.askmen.com/1080x540/2016/01/25-021526-facebook_profile_picture_affects_chances_of_getting_hired.jpg"
+                    src="@/assets/img/no_user.png"
                     alt=""
                     width="100%"
                     />

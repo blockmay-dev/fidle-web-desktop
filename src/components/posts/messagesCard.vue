@@ -3,7 +3,7 @@
     <div>
       <div class="rounded--card">
         <div class="px-3 pt-3">
-            <h6 class="text-dark">Messages</h6>
+            <h6 class="">Messages</h6>
         </div>
         <div class="p-3">
             <div class="messages-search-field mb-2">
@@ -24,13 +24,13 @@
                                 />
                                 <img
                                 v-else
-                                src="https://media.istockphoto.com/photos/businessman-silhouette-as-avatar-or-default-profile-picture-picture-id476085198?k=6&m=476085198&s=612x612&w=0&h=5cDQxXHFzgyz8qYeBQu2gCZq1_TN0z40e_8ayzne0X0="
+                                src="@/assets/img/no_user.png"
                                 alt=""
                                 />
                             </div>
                             <img
                             v-else
-                            src="https://media.istockphoto.com/photos/businessman-silhouette-as-avatar-or-default-profile-picture-picture-id476085198?k=6&m=476085198&s=612x612&w=0&h=5cDQxXHFzgyz8qYeBQu2gCZq1_TN0z40e_8ayzne0X0="
+                            src="@/assets/img/no_user.png"
                             alt=""
                             />
                         </div>

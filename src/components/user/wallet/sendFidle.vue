@@ -73,7 +73,7 @@
                     </div>
                     <div v-else>
                       <img
-                        src="https://images.askmen.com/1080x540/2016/01/25-021526-facebook_profile_picture_affects_chances_of_getting_hired.jpg"
+                        src="@/assets/img/no_user.png"
                         alt=""
                         width="100%"
                       />

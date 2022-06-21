@@ -7,7 +7,7 @@
             <h2> {{ wallet_balances.FPW }}<span class="small currency-choice">FPW</span>  </h2>
         </div>
         <div>
-            <button class="earn-fpw d-flex justify-content-between">
+            <button class="earn-fpw d-flex justify-content-between" @click="earning = !earning">
                 <span>Earn Fidle Power</span>
                 <span> <IconComponent icon="la:angle-right" /> </span>
             </button>
@@ -80,18 +80,28 @@
         </div>
       </div>
     </div>
+
+    <EarnFidlePower @closeModal="closeFdw" v-show="earning"/>
   </div>
 </template>
 
 <script>
+import EarnFidlePower from '@/components/static/earnFidlePower.vue';
 export default {
+  components:{
+    EarnFidlePower
+  },
     props:[''],
     data(){
         return {
-            wallet_balances: {}
+            wallet_balances: {},
+            earning: false,
         }
     },
     methods: {
+      closeFdw(){
+        this.earning = false
+      },
     getWalletBalances() {
       this.$axios
         .get("user/wallet-balances")

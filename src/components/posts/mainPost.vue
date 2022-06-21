@@ -13,7 +13,7 @@
               />
               <img
                 v-else
-                src="https://media.istockphoto.com/photos/businessman-silhouette-as-avatar-or-default-profile-picture-picture-id476085198?k=6&m=476085198&s=612x612&w=0&h=5cDQxXHFzgyz8qYeBQu2gCZq1_TN0z40e_8ayzne0X0="
+                src="@/assets/img/no_user.png"
                 alt=""
               />
             </div>
@@ -175,7 +175,7 @@
             </template>
             <div>
               <div
-                v-for="item in posts.results"
+                v-for="item in posts"
                 :key="item.id"
                 class="rounded--card p-3 mt-3"
                 data-aos="fade-up"
@@ -197,7 +197,7 @@
                         </div>
                         <div v-else>
                           <img
-                            src="https://images.askmen.com/1080x540/2016/01/25-021526-facebook_profile_picture_affects_chances_of_getting_hired.jpg"
+                            src="@/assets/img/no_user.png"
                             alt=""
                             width="100%"
                           />
@@ -226,7 +226,7 @@
                                   </div>
                                   <div v-else>
                                     <img
-                                      src="https://images.askmen.com/1080x540/2016/01/25-021526-facebook_profile_picture_affects_chances_of_getting_hired.jpg"
+                                      src="@/assets/img/no_user.png"
                                       alt=""
                                       width="100%"
                                     />
@@ -304,14 +304,15 @@
 
                   <div v-for="media in item.media" :key="media.id">
                     <img
-                      v-if="media.extension == 'jpg' || 'jpeg' || 'png' "
+                      v-if="media.extension == 'jpg' || media.extension == 'jpeg' || media.extension == 'png' "
                       :src="media.file"
                       alt=""
                       width="100%"
-                      height="500px"
+                      height="auto"
                       style="object-fit: cover; object-position: top"
                     />
                     <video v-else :src="media.file" autoplay playsinline loop 
+                    style="width:100%"
                      ></video>
                   </div>
 
@@ -410,7 +411,7 @@
                         />
                         <img
                           v-else
-                          src="https://media.istockphoto.com/photos/businessman-silhouette-as-avatar-or-default-profile-picture-picture-id476085198?k=6&m=476085198&s=612x612&w=0&h=5cDQxXHFzgyz8qYeBQu2gCZq1_TN0z40e_8ayzne0X0="
+                          src="@/assets/img/no_user.png"
                           alt=""
                         />
                       </div>
@@ -450,7 +451,7 @@
                         />
                         <img
                           v-else
-                          src="https://media.istockphoto.com/photos/businessman-silhouette-as-avatar-or-default-profile-picture-picture-id476085198?k=6&m=476085198&s=612x612&w=0&h=5cDQxXHFzgyz8qYeBQu2gCZq1_TN0z40e_8ayzne0X0="
+                          src="@/assets/img/no_user.png"
                           alt=""
                         />
                       </div>
@@ -508,6 +509,10 @@
             </div>
           </el-skeleton>
         </div>
+
+        <div class="view--more_posts">
+          <button @click="viewMore">View More</button>
+        </div>
       </div>
 
       <!-- App Loader -->
@@ -558,7 +563,8 @@ export default {
       loader: false,
       valueInput: "",
       commentsList: [],
-      followLoading: false
+      followLoading: false,
+      page: 1,
     };
   },
   methods: {
@@ -663,16 +669,38 @@ export default {
         .get("user/feeds")
         .then((res) => {
           console.log(res.data);
-          this.posts = res.data;
+          this.posts = res.data.results;
         })
         .catch((err) => {
           console.log(err);
           this.loading = true
         })
         .finally(() => {
-          // this.loading = false;
+          this.loading = false;
         });
     },
+    
+    async viewMore() {
+      this.page = this.page + 1
+      this.loading = true;
+      try {
+        let res = await this.$axios.get(
+          `/user/feeds?page=${this.page}`, 
+        );
+        console.log(res.data);
+        let newPosts = res.data.results
+        for (let i = 0; i<newPosts.length; i++ ){
+          console.log(newPosts[i]);
+          this.posts.push(newPosts[i])
+        }
+     console.log(this.posts);
+        
+      } catch (error) {
+        console.log(error);
+      }
+      this.loading = false
+    },
+
     goToUser(item){
       this.$router.push({name: 'fidler-profile', params:{id: item.user.id}})
     },
