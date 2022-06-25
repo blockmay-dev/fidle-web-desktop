@@ -1,107 +1,6 @@
 <template>
   <div>
     <div>
-      <!-- Create  A Post  -->
-      <div class="rounded--card p-3">
-        <div>
-          <div class="d-flex" style="gap: 20px">
-            <div class="start-post-photo">
-              <img
-                v-if="user.current_profile_image"
-                :src="user.current_profile_image.media.file"
-                alt=""
-              />
-              <img
-                v-else
-                src="@/assets/img/no_user.png"
-                alt=""
-              />
-            </div>
-            <div class="start--post">
-              <el-input
-                type="textarea"
-                :autosize="{ minRows: 2, maxRows: 5 }"
-                placeholder="Start a Post"
-                v-model="payload.content"
-              >
-              </el-input>
-            </div>
-          </div>
-          <div class="media--preview mt-3" v-show="imgPreview">
-            <img :src="imgSrc" alt="" />
-            <div
-              class="close-media-preview"
-              role="button"
-              @click="closePreview"
-            >
-              <IconComponent
-                icon="ep:circle-close-filled"
-                class="file--icons"
-                style="font-size: 40px"
-              />
-            </div>
-          </div>
-          <div class="preview" v-show="videoPreview">
-            <video class="uploaded__video" controls id="video_select_preview" />
-            <div
-              class="close-video-preview"
-              role="button"
-              @click="closeVideoPreview"
-            >
-              <IconComponent
-                icon="ep:circle-close-filled"
-                class="file--icons"
-                style="font-size: 40px"
-              />
-            </div>
-          </div>
-        </div>
-
-        <hr />
-        <!-- Options of Posts  -->
-        <div class="d-flex justify-content-between align-items-center">
-          <div class="d-flex align-items-center" style="gap: 10px">
-            <div class="actions--container" role="button" style="gap: 5px">
-              <input
-                @change="onFileChange"
-                type="file"
-                accept="image/*"
-                id="choose-file"
-                name="choose-file"
-              />
-              <label class="m-0" for="choose-file"
-                ><IconComponent
-                  icon="ic:outline-photo-size-select-actual"
-                  class="file--icons"
-                />
-              </label>
-            </div>
-            <div class="actions--container" style="gap: 5px" role="button">
-              <label for="video_select" role="button"
-                ><IconComponent icon="akar-icons:video" class="file--icons"
-              /></label>
-              <input
-                type="file"
-                id="video_select"
-                hidden
-                accept="video/*"
-                @change="showVideoPreview($event)"
-              />
-              <span></span>
-            </div>
-            <div class="actions--container" style="gap: 5px">
-              <span
-                ><IconComponent icon="bytesize:location" class="file--icons"
-              /></span>
-            </div>
-          </div>
-
-          <div>
-            <button class="main--button" @click="createFidle">post</button>
-          </div>
-        </div>
-      </div>
-
       <!-- Main Post Content  -->
       <div class="">
         <div class="">
@@ -341,7 +240,7 @@
                       height="auto"
                       style="object-fit: cover; object-position: top"
                     />
-                    <video v-else :src="media.file" playsinline loop 
+                    <video v-else :src="media.file" playsinline loop
                     style="width:100%"
                      ></video>
                   </div>
@@ -645,6 +544,7 @@ export default {
   },
   data() {
     return {
+        posts_count: '',
       flags: false,
       verify: false,
       comments: false,
@@ -789,10 +689,13 @@ export default {
     },
     getPosts() {
       this.loading = true;
+      let searchItem =  this.$route.query.q
+      console.log(searchItem);
       this.$axios
-        .get("user/feeds")
+        .get("user/feeds?search="+searchItem)
         .then((res) => {
           console.log(res.data);
+          this.posts_count = res.data.count
           this.posts = res.data.results;
         })
         .catch((err) => {

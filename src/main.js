@@ -23,6 +23,10 @@ import http from '@/plugins/http'
 import "toastify-js/src/toastify.css"
 import toastify from 'toastify-js'
 
+import VueClipboard from 'vue-clipboard2'
+
+Vue.use(VueClipboard)
+
 
 import { Icon } from '@iconify/vue2';
 

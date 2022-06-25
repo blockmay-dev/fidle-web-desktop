@@ -37,22 +37,97 @@
       <el-tab-pane label="Fidle Coin" name="third">
         <FidleWalletVue />
       </el-tab-pane>
+
+            <!-- Transaction History Table -->
+      <div class="my-4">
+          <TransactionsView @open="openModal"/>
+      </div>
     </el-tabs>
 
     <UpgradeLevel v-show="upgrade" @close="closeUpgrade" />
+
+    <!-- View Trasaction By Id -->
+    <div v-show="modal">
+            <div class="transaction--details_mask">
+                <div class="transaction--details_content">
+                    <div class="top d-flex align-items-center justify-content-between">
+                        <div>
+                            <small class="text-capitalize">{{ timeRange(new Date(transaction.date_created * 1000.0)) }}</small>
+                            <div class="d-flex" style="gap:5px">
+                                <h6 class=""> {{ transaction.amount }} {{ transaction.currency }}  </h6>
+                                <span :class="transaction.status">
+                                    {{ transaction.status }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="close--transaction_icon" role="button" @click="closeModal">
+                            <IconComponent icon="ep:close-bold" />
+                        </div>
+                    </div>
+                    <div class="transaction--details_data mt-3">
+                        <div class="row">
+                            <h6 class="col-md-6 small text-secondary">Description</h6>
+                            <h6 class="col-md-6 small"> {{ transaction.description }} </h6>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <h6 class="col-md-6 small text-secondary">Transaction Hash</h6>
+                            <h6 class="col-md-6 small"> {{ transaction.transaction_hash }} </h6>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <h6 class="col-md-6 small text-secondary">Channel</h6>
+                            <h6 class="col-md-6 small text-capitalize"> {{ transaction.channel }} </h6>
+                        </div>
+                    </div>
+                    <div class="transaction--details_data mt-3">
+                        <div class="row">
+                            <h6 class="col-md-6 small text-secondary">Block Number</h6>
+                            <h6 class="col-md-6 small"> {{ transaction.block_number }} </h6>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <h6 class="col-md-6 small text-secondary">Transaction Type</h6>
+                            <h6 class="col-md-6 small text-capitalize">{{ transaction.transaction_type }} </h6>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <h6 class="col-md-6 small text-secondary">Date Created</h6>
+                            <h6 class="col-md-6 small">{{ timeStamp(new Date(transaction.date_created * 1000.0)) }} </h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
   </div>
 </template>
 <script>
+import {
+  timeRange,
+  sliceContent,
+  dollarFilter,
+  colorSplit,
+  timeStamp,
+} from "@/plugins/filter";
 import MainWalletVue from "./mainWallet.vue";
 import FidleWalletVue from "./fidleWallet.vue";
 import FdwWalletVue from "./fdwWallet.vue";
 import UpgradeLevel from "@/components/user/wallet/upgradeLevel.vue";
+import TransactionsView from '@/components/user/wallet/transactionsView.vue'
 export default {
   data() {
     return {
+      timeStamp,
+      timeRange,
+      sliceContent,
+      dollarFilter,
+      colorSplit,
       activeName: "first",
       upgrade: false,
       user: {},
+      modal: false,
+      trx_id: '',
+      transaction: {}
     };
   },
   methods: {
@@ -60,7 +135,16 @@ export default {
       console.log(tab, event);
     },
     closeUpgrade() {
-      this.upgrade = !this.upgrad;
+      this.upgrade = !this.upgrade;
+    },
+    openModal(val){
+      console.log(val);
+      this.trx_id = val
+      this.modal = true
+      this.getTransaction()
+    },
+    closeModal(){
+      this.modal = false
     },
     getUser(){
       this.$axios
@@ -73,10 +157,21 @@ export default {
           console.log(err);
         });
     },
+     getTransaction(){
+            this.$axios.get(`/user/wallet/transactions/${this.trx_id}`)
+            .then((res)=>{
+                console.log(res);
+                this.transaction = res.data
+            })
+            .catch((err)=>{
+                console.log(err);
+            })
+        },
   },
   mounted() {
     this.getUser();
   },
-  components: { MainWalletVue, FidleWalletVue, FdwWalletVue, UpgradeLevel },
+  
+  components: { MainWalletVue, FidleWalletVue, FdwWalletVue, UpgradeLevel, TransactionsView },
 };
 </script>

@@ -32,13 +32,17 @@
                 <!-- Main Profile Details  -->
                 <div class="update--form">
                     <form action="">
-                        <div class="mb-2">
+                        <!-- <div class="mb-2">
                             <label for="">Username</label>
                             <input type="text" v-model="userData.username">
-                        </div>
+                        </div> -->
                         <div class="mb-2">
                             <label for="">Email</label>
                             <input type="text" v-model="userData.email">
+                        </div>
+                        <div class="mb-2">
+                            <label for="">Date of Birth</label>
+                            <input type="date" v-model="userData.dob">
                         </div>
                         <div class="mb-2">
                             <label for="">Country</label>

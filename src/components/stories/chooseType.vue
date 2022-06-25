@@ -6,7 +6,7 @@
           <div
             class="photo-story rounded-bg"
             role="button"
-            @click="goToPreview('photo')"
+            @click="goToPreview()"
           >
             <div class="text-center">
               <div class="icon">
@@ -58,6 +58,54 @@
         </span>
       </el-dialog>
 
+       <!-- Modal For Photo Story  -->
+      <el-dialog title="Photo Story" :visible.sync="dialogFormVisible2">
+            <div class="story--photo_preview mb-3" v-show="imgPreview">
+            <div
+              class="close--media_preview text-right"
+              role="button"
+              @click="closePreview"
+            >
+              <IconComponent
+                icon="ep:circle-close-filled"
+                class="file--icons"
+                style="font-size: 40px"
+              />
+            </div>
+            <img :src="imgSrc" alt="" />
+          </div>
+
+
+            <div class="d-flex justify-content-center" v-if="isActive">
+              <input
+                @change="onFileChange"
+                type="file"
+                accept="image/*"
+                id="choose-file"
+                name="choose-file"
+              />
+              <label class="choose--image" for="choose-file"
+                ><IconComponent
+                  icon="ic:outline-plus"
+                  class="file--icons"
+                  style="font-size:50px"
+                />
+              </label>
+            </div>
+            <el-input
+                type="textarea"
+                :autosize="{ minRows: 2, maxRows: 4}"
+                placeholder="Please enter text (Optional)"
+                v-model="payload.content">
+              </el-input>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible2 = false">Cancel</el-button>
+          <el-button type="primary" @click="addStory"
+            >Add Story</el-button
+          >
+        </span>
+      </el-dialog>
+
     </div>
   </div>
 </template>
@@ -68,14 +116,25 @@ export default {
   data() {
     return {
       dialogFormVisible: false,
+      dialogFormVisible2: false,
       payload:{
         content: '',
-      }
+      },
+      imgPreview: false,
+      imgSrc: '',
+      dataObj:{
+        media: null,
+        content: ''
+      },
+      isActive: true
     };
   },
   methods: {
     goToTextPreview() {
        this.dialogFormVisible = true
+    },
+    goToPreview(){
+      this.dialogFormVisible2 = true
     },
     addStory(){
       let payload = {
@@ -85,23 +144,36 @@ export default {
       .then((res)=>{
         console.log(res)
         this.$notify({
-          title: 'Success',
-          message: 'This is a success message',
+          title: 'Done!',
+          message: 'Story Added',
           type: 'success'
         })
       })
       .catch((err)=>{
         console.log(err);
-        this.$notify({
-          title: 'error',
-          message: 'This is a success message',
-          type: 'success'
-        })
       })
       .finally(()=>{
         this.dialogFormVisible = false
       })
-    }
+    },
+    onFileChange(e) {
+      // alert('Hello World')
+      this.imgPreview = true;
+      var input = e.target;
+      this.dataObj.media = input.files[0];
+      console.log(this.dataObj.media);
+      if (e.target.files.length > 0) {
+        var src = URL.createObjectURL(e.target.files[0]);
+        this.imgSrc = src;
+        this.isActive = false;
+        // document.getElementById('message').style.backgroundImage = null;
+        // this.payload.color = "";
+      }
+    },
+    closePreview() {
+      this.imgPreview = false;
+      this.isActive = true
+    },
   },
   mounted() {
     

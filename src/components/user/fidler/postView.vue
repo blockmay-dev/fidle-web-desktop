@@ -74,8 +74,9 @@
               </div>
             </template>
             <div>
+              <div>
               <div
-                v-for="item in posts.results"
+                v-for="item in posts"
                 :key="item.id"
                 class="rounded--card p-3 mt-3"
                 data-aos="fade-up"
@@ -88,7 +89,7 @@
                       class="d-flex align-items-center mb-3"
                       style="gap: 15px"
                     >
-                      <div class="start-post-photo">
+                      <div class="start-post-photo" role="button" @click="goToUser(item)">
                         <div v-if="item.user.current_profile_image">
                           <img
                             :src="item.user.current_profile_image.media.file"
@@ -104,32 +105,145 @@
                         </div>
                       </div>
                       <div>
-                        <h6 class="font-weight-bold  text-capitalize">
-                          {{ item.user.name }}
-                        </h6>
-                        <p class="text-secondary small" style="font-size:10px">
+                        <popper-component
+                          trigger="hover"
+                          :options="{
+                            placement: 'top',
+                            modifiers: { offset: { offset: '0,10px' } },
+                          }"
+                        >
+                          <div class="popper">
+                            <div class="p-2 text-left">
+                              <div class="top-side d-flex align-items-center" style="gap:10px">
+                                <div class="start-post-photo" @click="goToUser(item.user)">
+                                  <div v-if="item.user.current_profile_image">
+                                    <img
+                                      :src="
+                                        item.user.current_profile_image.media
+                                          .file
+                                      "
+                                      alt=""
+                                    />
+                                  </div>
+                                  <div v-else>
+                                    <img
+                                      src="@/assets/img/no_user.png"
+                                      alt=""
+                                      width="100%"
+                                    />
+                                  </div>
+                                </div>
+                                <div>
+                                  <h6 @click="goToUser(item)">{{ item.user.name }}</h6>
+                                  <small class="text-secondary">
+                                    @{{item.user.username}}</small>
+                                </div>
+                              </div>
+                              <div>
+                                <small> {{ item.user.followers_count }} Follower<span v-show="item.user.followers_count > 1">s</span> </small>
+                              </div>
+                              <div class="pop--action">
+                                <button v-if="item.user.following" >
+                                  Message
+                                </button>
+                                <button v-else @click="followUser(item)">
+                                <div v-if="followLoading" class="d-flex justify-content-center">
+                                      <div class="spinner-border" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                      </div>
+                                    </div>
+                                  <span v-else>
+                                    Follow
+                                  </span>
+                                  
+                                </button>
+                                
+                              </div>
+                            </div>
+                          </div>
+
+                          <h6
+                            slot="reference"
+                            role="button"
+                            class="
+                              poster--name
+                              font-weight-bold
+                               text-capitalize
+                            "
+                            @click="goToUser(item)"
+                          >
+                            {{ item.user.name }}
+                          </h6>
+                        </popper-component>
+                        <p class="text-secondary small" style="font-size: 10px">
                           {{ timeStamp(new Date(item.date_created * 1000.0)) }}
                         </p>
                       </div>
                     </div>
-                    <div>
-                      <IconComponent
+                    <div class="dropleft">
+                      <span role="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false" >
+                        <IconComponent
                         icon="akar-icons:more-horizontal"
-                        style="font-size: 30px"
+                        style="font-size: 20px"
                       />
+                      </span>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                          <div class="dropdown-item d-flex" style="gap:12px"  role="button" @click="savePost(item)">
+                            <span class="text-dark drop--main_text">
+                              <IconComponent icon="bi:bookmark-fill" v-if="item.saved" />
+                              <IconComponent icon="bi:bookmark" v-else />
+                            </span> 
+                            <span v-if="item.saved">
+                              Post Saved <br> <small class="text-secondary">Post has been saved</small>
+                            </span>  
+                            <span v-else>
+                              Save Post <br> <small class="text-secondary">Saved Posts for later</small>
+                            </span>  
+                          </div>
+                          <div class="dropdown-item d-flex" style="gap:12px"  role="button" @click="getPost(item)"> 
+                            <span class="text-dark drop--main_text"><IconComponent icon="akar-icons:text-align-right" /></span> 
+                            <span>
+                              Verify <br> <small class="text-secondary">Details of Post</small>
+                            </span>  
+                          </div>
+                          <div class="dropdown-item d-flex" style="gap:12px"  role="button" @click="hidePost(item)"> 
+                            <span class="text-dark drop--main_text"><IconComponent icon="ant-design:minus-circle-outlined" /></span> 
+                            <span>
+                              Hide Post <br> <small class="text-secondary">Dont see this post again</small>
+                            </span>  
+                          </div>
+                          <div class="dropdown-item d-flex" style="gap:12px"  role="button" @click="openFlag(item)"> 
+                            <span class="text-dark drop--main_text"><IconComponent icon="gis:flag-o" /></span> 
+                            <span>
+                              Flag Post <br> <small class="text-secondary">I have some concerns</small>
+                            </span>  
+                          </div>
+                          <div class="dropdown-item d-flex" style="gap:12px"  role="button"
+                          v-clipboard:copy="'https://fidle-desktop/fidle?post_url='+item.id"
+                          v-clipboard:success="onCopy"
+                          v-clipboard:error="onError"
+                          > 
+                            <span class="text-dark drop--main_text"><IconComponent icon="entypo:link" /></span> 
+                            <span>
+                              Copy Link <br> <small class="text-secondary">Copy Link</small>
+                            </span>  
+                          </div>
+                        </div>
+                      <!-- </div> -->
                     </div>
                   </div>
 
                   <div v-for="media in item.media" :key="media.id">
                     <img
-                    v-if="media.extension == 'jpg' || media.extension == 'png' || media.extension == 'jpeg' "
+                      v-if="media.extension == 'jpg' || media.extension == 'jpeg' || media.extension == 'png' "
                       :src="media.file"
                       alt=""
                       width="100%"
-                      height="100%"
+                      height="auto"
                       style="object-fit: cover; object-position: top"
                     />
-                    <video v-else :src="media.file"  playsinline loop 
+                    <video v-else :src="media.file" playsinline loop 
+                    style="width:100%"
                      ></video>
                   </div>
 
@@ -146,10 +260,10 @@
                     <div v-html="item.content"></div>
                   </div>
                   <!-- Number of Comments and Reactions  -->
-                  <div class="my-3 d-flex justify-content-between">
+                  <div class="mb-3 d-flex justify-content-between">
                     <div class="d-flex align-items-center" style="gap: 10px">
                       <div>
-                        <span class="amount ">{{
+                        <span class="amount">{{
                           dollarFilter(item.worth)
                         }}</span>
                       </div>
@@ -176,8 +290,17 @@
                       style="gap: 10px"
                       @click="likePost(item)"
                     >
-                      <IconComponent icon="flat-color-icons:like" style=" font-size: 24px !important;" v-if="item.liked"/>
-                      <IconComponent v-else icon="icon-park-outline:like" style="color: red;  font-size: 24px !important;" role="button" />
+                      <IconComponent
+                        icon="flat-color-icons:like"
+                        style="font-size: 24px !important"
+                        v-if="item.liked"
+                      />
+                      <IconComponent
+                        v-else
+                        icon="icon-park-outline:like"
+                        style="color: red; font-size: 24px !important"
+                        role="button"
+                      />
                       <span>Like</span>
                     </div>
                     <div
@@ -186,7 +309,10 @@
                       style="gap: 10px"
                       @click="getComments(item)"
                     >
-                      <IconComponent icon="bx:comment" style=" font-size: 24px" />
+                      <IconComponent
+                        icon="bx:comment"
+                        style="font-size: 24px"
+                      />
                       <span>Comment</span>
                     </div>
                     <div
@@ -200,8 +326,14 @@
                   </div>
                   <hr class="m-0" />
 
-                  <div class="comments mt-3" >
-                    <div class="comment--box  d-flex align-items-end" v-show="comments === item.id" v-for="comment in commentsList" :key="comment.id" style="gap:3px">
+                  <div class="comments mt-3">
+                    <div
+                      class="comment--box d-flex align-items-end"
+                      v-show="comments === item.id"
+                      v-for="comment in commentsList"
+                      :key="comment.id"
+                      style="gap: 3px"
+                    >
                       <div class="commenter-photo">
                         <img
                           v-if="comment.user.current_profile_image"
@@ -215,13 +347,33 @@
                         />
                       </div>
                       <div class="main-comment">
-                       <p> {{ comment.content }}</p>
-                       <span class="like--comment" v-if="comment.has_liked"><IconComponent icon="flat-color-icons:like" style=" font-size: 24px !important;" /></span>
-                      <span class="like--comment" @click="likeComment(item, comment)" role="button" v-else><IconComponent icon="icon-park-outline:like" style="color: red;  font-size: 24px !important;" role="button" /></span>
+                        <p>{{ comment.content }}</p>
+                        <span class="like--comment" v-if="comment.has_liked"
+                          ><IconComponent
+                            icon="flat-color-icons:like"
+                            style="font-size: 24px !important"
+                        /></span>
+                        <span
+                          class="like--comment"
+                          @click="likeComment(item, comment)"
+                          role="button"
+                          v-else
+                          ><IconComponent
+                            icon="icon-park-outline:like"
+                            style="color: red; font-size: 24px !important"
+                            role="button"
+                        /></span>
                       </div>
-                      
                     </div>
-                    <div class="start--post add-comment d-flex  align-items-center mt-3" >
+                    <div
+                      class="
+                        start--post
+                        add-comment
+                        d-flex
+                        align-items-center
+                        mt-3
+                      "
+                    >
                       <div class="commenter-photo">
                         <img
                           v-if="user.current_profile_image"
@@ -234,8 +386,8 @@
                           alt=""
                         />
                       </div>
-                        <div class="w-100">
-                        <form action="" class="form" >
+                      <div class="w-100">
+                        <form action="" class="form">
                           <el-input
                             width="100%"
                             type="textarea"
@@ -245,36 +397,128 @@
                             v-model="valueInput"
                           >
                           </el-input>
-                          <div class="your-input-box" @click="toogleDialogEmoji(item)" role="button">
-                              <IconComponent icon="fluent:emoji-32-regular" style="font-size: 20px"  color="var(--main-color)"/>
+                          <div
+                            class="your-input-box"
+                            @click="toogleDialogEmoji(item)"
+                            role="button"
+                          >
+                            <IconComponent
+                              icon="fluent:emoji-32-regular"
+                              style="font-size: 20px"
+                              color="var(--main-color)"
+                            />
                           </div>
-                          <div class="your-input-box" @click="postComment(item)" role="button">
-                              <IconComponent icon="akar-icons:send" style="font-size: 20px"  color="var(--main-color)"/>
+                          <div
+                            class="your-input-box"
+                            @click="postComment(item)"
+                            role="button"
+                          >
+                            <IconComponent
+                              icon="akar-icons:send"
+                              style="font-size: 20px"
+                              color="var(--main-color)"
+                            />
                           </div>
                         </form>
-                        </div>
                       </div>
+                    </div>
                   </div>
                   <VEmojiPicker
-                            v-show="showDialog == item.id "
-                            :pack="emojisNative"
-                            labelSearch="Search"
-                            class="emojis"
-                            style="
-                              {
-                                width: 4px;
-                              }
-                            "
-                            @select="onSelectEmoji"
-                          />
+                    v-show="showDialog == item.id"
+                    :pack="emojisNative"
+                    labelSearch="Search"
+                    class="emojis"
+                    style="
+                       {
+                        width: 4px;
+                      }
+                    "
+                    @select="onSelectEmoji"
+                  />
                 </div>
               </div>
+            </div>
             </div>
           </el-skeleton>
         </div>
 
         <div v-show="empty">
           {{user.name}} has not made any posts
+        </div>
+      </div>
+
+            <!-- Verify Post -->
+      <div class="verify--details" v-show="verify">
+        <div class="verify--content">
+          <div class="mb-4 text-right" role="button" @click="verify = false">
+            <IconComponent icon="ant-design:close-circle-outlined" style="font-size:30px"/>
+          </div>
+          <div class="row mb-3">
+            <span class="col-4 font-weight-bold">Creators Name:</span>
+            <span v-if="post.user" class="col-6"> {{ post.user.name }} </span>
+          </div>
+          <div class="row mb-3">
+            <span class="col-4 font-weight-bold">Date Created:</span>
+            <span class="col-6"> {{ timeStamp(new Date(post.date_created * 1000.0)) }} </span>
+          </div>
+          <div class="row mb-3">
+            <span class="col-4 font-weight-bold">Post Hash</span>
+            <span class="col-6"> {{ post.cid }} </span>
+          </div>
+          <div class="row">
+            <span class="col-4 font-weight-bold">Verify on Chain</span>
+            <span class="col-6"> {{ post.verify_hash }} </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Report Abuse -->
+      <div class="verify--details" v-show="flags">
+        <div class="verify--content">
+          <div class="mb-4 text-right" role="button" @click="flags = false">
+            <IconComponent icon="ant-design:close-circle-outlined" style="font-size:30px"/>
+          </div>
+          <div class="mb-2">
+            <h3>Flag Post</h3>
+            <small> Why do you want to flag this post? </small>
+          </div>
+          <div>
+            <div>
+              <input type="radio" name="" value="Violence" id="" v-model="dataObj.reason">
+              <label class="ml-2" for="">Violence</label>
+            </div>
+            <div>
+              <input type="radio" name="" id="" value="Harassment" v-model="dataObj.reason">
+              <label class="ml-2" for="">Harassment</label>
+            </div>
+            <div>
+              <input type="radio" name="" id="" value="Suicide or Self Injury" v-model="dataObj.reason">
+              <label class="ml-2" for="">Suicide or Self-Injury</label>
+            </div>
+            <div>
+              <input type="radio" name="" id="" value="Misleading Information" v-model="dataObj.reason">
+              <label class="ml-2" for="">Misleading Information</label>
+            </div>
+            <div>
+              <input type="radio" name="" id="" value="Hate Speech" v-model="dataObj.reason">
+              <label class="ml-2" for="">Hate Speech</label>
+            </div>
+            <div>
+              <input type="radio" name="" id="" value="Spam" v-model="dataObj.reason">
+              <label class="ml-2" for="">Spam</label>
+            </div>
+            <div>
+              <input type="radio" name="" id="" value="Terrorism" v-model="dataObj.reason">
+              <label class="ml-2" for="">Terrorism</label>
+            </div>
+            <div>
+              <input type="radio" name="" id="" value="Unathorized Sales" v-model="dataObj.reason">
+              <label class="ml-2" for="">Unathorized Sales</label>
+            </div>
+          </div>
+          <div class="mt-2">
+            <button @click="flagPost">Report</button>
+          </div>
         </div>
       </div>
 
@@ -303,6 +547,8 @@ export default {
     return {
       comments: false,
       showDialog: false,
+      post: '',
+      followLoading: false,
       timeStamp,
       timeRange,
       sliceContent,
@@ -326,10 +572,46 @@ export default {
       valueInput: "",
       commentsList: [],
       id: this.$route.params.id,
-      empty: false
+      empty: false,
+  verify: false,
+  dataObj:{
+        reason: ''
+      },
+      val: '',
+  flags: false
     };
   },
   methods: {
+    onCopy: function (e) {
+       console.log(e);
+       this.$message({
+          showClose: true,
+          message: 'Copied',
+          type: 'info'
+        });
+    },
+    onError: function () {
+       console.log('Failed to copy texts')
+    },
+    followUser(item) {
+      console.log(item.user.id);
+        this.followLoading = true
+        this.$axios.post(`users/${item.user.id}/follow/`)
+        .then((res)=>{
+            console.log(res.data.message);
+            this.$notify({
+              message: ` You are now following ${item.user.name}`,
+              position: 'bottom-right'
+            });
+        })
+        .catch((err)=>{
+            console.log(err);
+        })
+        .finally(()=>{
+            this.getPosts();
+            this.followLoading = false;
+        })
+    },
     async getComments(item){
       console.log(this.item_id);
     this.comments = ( this.comments === item.id ) ? null : item.id;
@@ -383,38 +665,14 @@ export default {
     toogleDialogEmoji(item){
       this.showDialog = ( this.showDialog === item.id ) ? null : item.id;
     },
-    createFidle() {
-      this.loader = true
-      let formData = new FormData();
-      formData.append("content", this.payload.content);
-      formData.append("media", this.payload.media);
-      formData.append("_method", "POST");
-      this.$axios
-        .post("posts/", formData)
-        .then((res) => {
-          // this.$router.push("/");
-          console.log(res);
-          
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-        .finally(()=>{
-          this.payload = {}
-          this.closePreview()
-          this.closeVideoPreview()
-          this.getPosts()
-          this.loader = false
-        })
-    },
     getPosts() {
       this.loading = true;
       this.$axios
         .get(`users/${this.id}/posts`)
         .then((res) => {
           console.log(res.data);
-          this.posts = res.data;
-          if(this.posts.results.length === 0){
+          this.posts = res.data.results;
+          if(this.posts.length === 0){
             this.empty = true
           }
         })
@@ -424,6 +682,37 @@ export default {
         .finally(() => {
           this.loading = false;
         });
+    },
+    async viewMore() {
+      this.page = this.page + 1
+      this.loading = true;
+      try {
+        let res = await this.$axios.get(
+          `/user/feeds?page=${this.page}`, 
+        );
+        console.log(res.data);
+        let newPosts = res.data.results
+        for (let i = 0; i<newPosts.length; i++ ){
+          console.log(newPosts[i]);
+          this.posts.push(newPosts[i])
+        }
+     console.log(this.posts);
+        
+      } catch (error) {
+        console.log(error);
+      }
+      this.loading = false
+    },
+    getPost(item){
+      this.verify = true
+      this.$axios.get(`posts/${item.id}`)
+      .then((res)=>{
+        console.log(res);
+        this.post = res.data
+      })
+      .catch((err)=>{
+        console.log(err);
+      })
     },
 
     getUser() {
@@ -486,7 +775,78 @@ export default {
       this.videoPreview = false;
       // var preview = document.getElementById("video_select_preview");
       //   preview.src = "";
-    }
+    },
+    savePost(item){
+      this.$axios.post(`posts/${item.id}/save/`)
+      .then((res)=>{
+        console.log(res);
+        this.$message({
+          showClose: true,
+          message: 'Post Saved'
+        });
+      })
+      .catch((err)=>{
+        console.log(err);
+        this.$message({
+          showClose: true,
+          message: 'Something went wrong',
+          type: 'error'
+        });
+      })
+      .finally(()=>{
+        this.getPosts()
+      })
+    },
+    goToUser(item){
+      this.$router.push({name: 'fidler-profile', params:{id: item.user.id}})
+    },
+    hidePost(item){
+      this.$axios.post(`posts/${item.id}/hide/`)
+      .then((res)=>{
+        console.log(res);
+        this.$message({
+          showClose: true,
+          message: 'Post Hidden'
+        });
+      })
+      .catch((err)=>{
+        console.log(err);
+        this.$message({
+          showClose: true,
+          message: 'Something went wrong',
+          type: 'error'
+        });
+      })
+      .finally(()=>{
+        this.getPosts()
+      })
+    },
+    openFlag(item){
+      this.flags = !this.flags
+      this.val = item.id
+    },
+    flagPost(){
+      this.$axios.post(`posts/${this.val}/report-abuse/`, this.dataObj)
+      .then((res)=>{
+        console.log(res);
+        this.$message({
+          showClose: true,
+          message: "Post Flagged"
+        });
+      })
+      .catch((err)=>{
+        console.log(err);
+        this.$message({
+          showClose: true,
+          message: 'Something went wrong',
+          type: 'error'
+        });
+      })
+      .finally(()=>{
+        this.getPosts()
+        this.flags = false
+      })
+    },
   },
   mounted() {
     this.getPosts();

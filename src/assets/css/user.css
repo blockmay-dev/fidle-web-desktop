@@ -13,7 +13,7 @@
     align-items: center;
     gap: 10px;
     margin-bottom: 1.3rem;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
 }
 
 .side-pane ul li .router-link-exact-active {
@@ -112,6 +112,7 @@
     color: var(--success-color);
     padding: 0.2rem 0.8rem;
     border-radius: 10px;
+    font-size: 11px;
 }
 
 .fail {
@@ -119,6 +120,7 @@
     color: var(--error-color);
     padding: 0.2rem 0.8rem;
     border-radius: 10px;
+    font-size: 11px;
 }
 
 .transaction--type img {
@@ -219,7 +221,7 @@
 
 .wallet .fidle {
     background-color: var(--blue-800);
-    padding: 1rem;
+    padding: 1.6rem;
     border-radius: 5px;
     color: #000 !important;
 }
@@ -254,7 +256,7 @@
     position: fixed;
     width: 100%;
     height: 100vh;
-    top: 10%;
+    top: 0;
     left: 0;
     z-index: 999;
     display: flex;
@@ -272,13 +274,56 @@
     background-color: var(--main-color);
     padding: 0.4rem 0.8rem;
     color: #fff;
+    border-radius: 20px;
+    width: 100%;
+}
+
+.amount--field .currency {
+    background-color: var(--blue-400);
+    color: #fff;
+    padding: 0.3rem 0.8rem;
+    font-size: 0.7rem;
+    border-radius: 40px;
+}
+
+.amount--field {
+    border: 1px solid var(--blue-200);
+    border-radius: 5px;
+    padding: 0.8rem 0;
+    display: flex;
+}
+
+.amount--field input {
+    border: none;
+    outline: none;
+    text-align: right;
+    display: block;
+    width: 100%;
+}
+
+.amount--field input::placeholder {
+    color: #e5e5e5;
+}
+
+.description {
+    border: none;
+    width: 100%;
+    background-color: #E3E9FF;
+    padding: 0.5rem 0.6rem;
+    border-radius: 5px;
+    outline: #e3e9ff;
+    font-size: 0.9rem;
+    width: 100%;
+    display: block;
+}
+
+.description::placeholder {
     font-size: 0.8rem;
-    border-radius: 8px;
 }
 
 .send-fidle-photo img {
-    width: 40px;
-    height: 40px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     object-fit: cover;
     object-position: top;
@@ -403,7 +448,7 @@
 
 .wallet .fpw {
     background-color: #FFF2D4;
-    padding: 1rem;
+    padding: 1.6rem;
     border-radius: 5px;
     color: #000 !important;
 }
@@ -509,4 +554,258 @@
     font-size: 0.8rem;
     padding: 0.7rem 1.3rem;
     color: #fff;
+}
+
+
+/* Transaction Datails  */
+
+.transaction--details_mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+}
+
+.transaction--details_content {
+    background-color: #fff;
+    border-radius: 10px;
+    margin-right: 20px;
+    padding: 1rem;
+    width: 25%;
+}
+
+.transaction--details_content .transaction--details_data {
+    background-color: #0e0e0e10;
+    border-radius: 10px;
+    padding: 0.7rem;
+}
+
+.close--transaction_icon {
+    background-color: #0e0e0e10;
+    width: 20px;
+    height: 20px;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+
+/* Update Profile  */
+
+.update-profile-modal {
+    background-color: rgba(0, 0, 0, 0.6);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.update-profile-modal .update-profile-content {
+    background-color: #fff;
+    width: 40%;
+    /* padding: 2rem; */
+    border-radius: 10px;
+    height: 600px;
+    overflow-y: scroll;
+}
+
+.update-profile-modal .update-profile-content .update--form {
+    padding: 2rem;
+}
+
+.update-profile-modal .update-profile-content label {
+    display: block;
+    font-size: 12px;
+}
+
+.update-profile-modal .update-profile-content input,
+.update-profile-modal .update-profile-content select {
+    display: block;
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 5px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.update-profile-modal .update-profile-content .user--image {
+    position: relative;
+    height: 100px;
+    background-color: var(--gray-700);
+}
+
+.update-profile-modal .update-profile-content input,
+.update-profile-modal .update-profile-content select {
+    font-size: 13px;
+}
+
+.update-profile-modal .update-profile-content .user--image img {
+    width: 70px;
+    width: 70px;
+    border-radius: 50%;
+    position: absolute;
+    bottom: -20px;
+    border: 2px solid #fff;
+    background-color: var(--main-color);
+}
+
+.update--profile {
+    background-color: rgba(0, 0, 0, 0.4);
+    position: absolute;
+    top: 65px;
+    left: 32px;
+    display: flex;
+    padding: 0.5rem;
+    color: #fff;
+    font-size: 20px;
+    border-radius: 50%;
+}
+
+.save--btn {
+    background-color: var(--main-color);
+    padding: 0.1rem 0.8rem;
+    color: #fff;
+    border-radius: 10px;
+    border: none;
+    font-size: 14px;
+}
+
+
+/* Receive Fidle  */
+
+.receive--fidle_container {
+    background-color: rgba(0, 0, 0, 0.3);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.receive--fidle_content {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 10px;
+    width: 35%;
+}
+
+.receive--fidle_content input {
+    display: block;
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 0.8rem;
+}
+
+.receive--fidle_content .input--field {
+    border: 1px solid rgba(0, 0, 0, 0.6);
+    border-radius: 5px;
+    padding: 5px;
+    margin-top: 10px;
+    width: 100%;
+    display: flex;
+}
+
+.receive--fidle_content .input--field span {
+    background-color: var(--main-color);
+    color: #fff;
+    padding: 0.2rem 0.6rem;
+    border-radius: 5px;
+}
+
+
+/* Swap Fidle */
+
+.swap--fidle_container {
+    background-color: rgba(0, 0, 0, 0.3);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.swap--fidle_content {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 10px;
+    width: 30%;
+}
+
+.swap--icon {
+    background-color: #fff;
+    box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.2);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    border-radius: 50%;
+}
+
+.divider--line {
+    height: 1px;
+    background-color: #e5e5e5;
+    width: 95%;
+}
+
+.swap--fidle_content input {
+    text-align: right;
+    width: 100%;
+    display: block;
+    /* margin: 0.rem 0; */
+    padding: 0.5rem;
+    outline: none;
+    border: none;
+}
+
+.percentages {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.percentages span {
+    box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.2);
+    border-radius: 20px;
+    padding: 0.3rem 0.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 30px;
+    font-size: 0.9rem;
+    color: var(--blue-200);
+}
+
+.swap--button button {
+    background-color: var(--blue-200);
+    border: none;
+    display: block;
+    width: 100%;
+    padding: 0.5rem 0.8rem;
+    border-radius: 40px;
+    margin-top: 1.3rem;
+    color: #fff;
+    border: none;
 }

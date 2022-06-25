@@ -2,15 +2,19 @@
   <div>
     <div class="send-fidle-container">
       <!-- Step One  -->
-      <div class="bg-white p-3 rounded-lg w-25">
-        <h6 class="font-weight-bold mb-3" style="color: var(--main-color)">
+      <div class="bg-white p-3 rounded-lg w-25" v-show="step_one">
+      <div @click="close" class="text-right mb-3">
+        <IconComponent icon="ant-design:close-circle-outlined" style="font-size:20px"/>
+      </div>
+        <h4 class="font-weight-bold text-center mb-3" style="color: var(--main-color)">
           Send Options
-        </h6>
+        </h4>
         <div class="choose-send-options">
           <ul class="m-0">
             <li
               class="d-flex mb-3 align-items-center justify-content-between"
               role="button"
+              @click="toUserSearch"
             >
               <span class="d-flex align-items-center" style="gap: 8px">
                 <span class="icon">
@@ -26,6 +30,7 @@
             <li
               class="d-flex align-items-center justify-content-between"
               role="button"
+              @click="toEnterWallet"
             >
               <span class="d-flex align-items-center" style="gap: 8px">
                 <span class="icon">
@@ -45,11 +50,14 @@
       <!-- Step Two  -->
 
       <!-- To Existing User -->
-      <div class="bg-white p-3 rounded-lg w-50 wallet--user">
+      <div class="bg-white p-3 rounded-lg w-25 wallet--user" v-show="step_two_user">
+      <div @click="close" class="text-right mb-3">
+        <IconComponent icon="ant-design:close-circle-outlined" style="font-size:20px"/>
+      </div>
         <div>
-          <h6 class="font-weight-bold mb-3" style="color: var(--main-color)">
+          <h4 class="font-weight-bold text-center mb-3" style="color: var(--main-color)">
             Send Fidle
-          </h6>
+          </h4>
           <div class="input--field">
             <input
               v-model="search"
@@ -60,10 +68,17 @@
             <span><IconComponent icon="bytesize:search" /></span>
           </div>
 
-          <div>
-            <div class="users mt-3" v-for="item in results" :key="item.id">
+          <div v-if="loading" class="mt-3">
+            <div class="d-flex justify-content-center" >
+              <div class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+            </div>
+          </div>
+          <div v-else style="max-height:400px; overflow-y: auto;">
+            <div class="users mt-3" v-for="item in results" :key="item.id" >
               <div class="d-flex align-items-center justify-content-between">
-                <div class="d-flex align-items-center" style="gap:10px">
+                <div class="d-flex align-items-center" style="gap: 10px">
                   <div class="send-fidle-photo">
                     <div v-if="item.current_profile_image">
                       <img
@@ -72,11 +87,7 @@
                       />
                     </div>
                     <div v-else>
-                      <img
-                        src="@/assets/img/no_user.png"
-                        alt=""
-                        width="100%"
-                      />
+                      <img src="@/assets/img/no_user.png" alt="" width="100%" />
                     </div>
                   </div>
                   <div>
@@ -89,8 +100,8 @@
                   </div>
                 </div>
                 <div>
-                    <button >Send</button>
-                  </div>
+                  <button @click="goToAmount(item)">Send</button>
+                </div>
               </div>
             </div>
           </div>
@@ -98,88 +109,338 @@
       </div>
 
       <!-- To Wallet Address -->
-      <div class="bg-white p-3 rounded-lg w-50 wallet--user">
+      <div class="bg-white p-3 rounded-lg w-25 wallet--user" v-show="step_two_wallet">
+      <div @click="close" class="text-right mb-3">
+        <IconComponent icon="ant-design:close-circle-outlined" style="font-size:20px"/>
+      </div>
         <div>
-          <h6 class="font-weight-bold mb-3" style="color: var(--main-color)">
+          <h4 class="font-weight-bold text-center mb-3" style="color: var(--main-color)">
             Send Fidle
-          </h6>
-          <form action="">
+          </h4>
             <div class="input--field">
-              <el-input placeholder="Enter Wallet Address"> </el-input>
+              <input type="text" v-model="dataObj.address" placeholder="Type or paste copied wallet address" required>
+              <span class="text-white " style="background-color: var(--main-color); padding:0.2rem 0.8rem; border-radius: 20px;" role="button" @click="pasteCopy">paste</span>
             </div>
             <div class="text-center">
-              <button>Send</button>
+              <button @click="goToAmount2">Send</button>
             </div>
-          </form>
         </div>
       </div>
 
-      <!-- Step Three  -->
-      <div class="bg-white p-3 rounded-lg w-25 preview--user">
-        <div></div>
+      <!-- Enter Amount and Description -->
+      <div class="bg-white p-3 rounded-lg w-25 wallet--user" v-show="step_three">
+      <div @click="close" class="text-right mb-3">
+        <IconComponent icon="ant-design:close-circle-outlined" style="font-size:20px"/>
+      </div>
+        <div class="">
+          <div class="send-fidle-photo text-center mb-3">
+            <div v-if="user.current_profile_image">
+              <img :src="user.current_profile_image.media.file" alt="" />
+            </div>
+            <div v-else>
+              <img src="@/assets/img/no_user.png" alt="" width="100%" />
+            </div>
+          </div>
+          <div class="text-center">
+            <h5 class="m-0">
+              {{ user.name }}
+            </h5>
+            <p class="text-secondary" style="font-size: 14px">
+              @{{ user.username }}
+            </p>
+          </div>
+          <div class="amount--field mt-3">
+            <span class="d-flex align-items-center currency" style="gap:5px">
+              <img src="@/assets/img/fidlecoin.svg" alt="" width="15"/>
+              <span>FDC</span>
+            </span>
+            <input type="number" @keyup="checkBalance" v-model="dataObj.amount" placeholder="0.0" required>
+          </div>
+          <span><small>Available Balance:</small> {{ wallet_balances.FIDLE - dataObj.amount }}FIDLE </span>
+          <div class="my-3">
+            <input class="description" type="text" placeholder="Description(optional)">
+          </div>
+          <div class="text-center">
+              <button @click="goToSummary">Send</button>
+            </div>
+        </div>
       </div>
 
-      <!-- Step Four  -->
-      <div class="">Send Fidle</div>
+      <!-- Confirm Details  -->
+      <div class="bg-white p-3 rounded-lg w-25 preview--user wallet--user" v-show="step_four">
+      <div @click="close" class="text-right mb-3">
+        <IconComponent icon="ant-design:close-circle-outlined" style="font-size:20px"/>
+      </div>
+        <div class="">
+          <div class="send-fidle-photo text-center mb-3" v-show="username">
+            <div v-if="user.current_profile_image">
+              <img :src="user.current_profile_image.media.file" alt="" />
+            </div>
+            <div v-else>
+              <img src="@/assets/img/no_user.png" alt="" width="100%" />
+            </div>
+          </div>
+          <div class="text-center" v-show="username">
+            <h6 class="m-0">
+              {{ user.name }}
+            </h6>
+            <p class="text-secondary" style="font-size: 12px">
+              @{{ user.username }}
+            </p>
+          </div>
+          <div class="mt-3">
+            <hr v-show="username">
+            <div class="row" v-show="username">
+              <h6 class="col-md-6"> Username </h6>
+              <h6 class="col-md-6"> {{ dataObj.username }} </h6>
+            </div>
+            <hr>
+            <div class="row" v-show="!username">
+              <h6 class="col-md-6">Wallet Address</h6>
+              <h6 class="col-md-6"> {{ dataObj.address }} </h6>
+            </div>
+            <hr v-show="!username">
+            <div class="row">
+              <h6 class="col-md-6">Amount</h6>
+              <h6 class="col-md-6"> {{ dataObj.amount }} FIDLE</h6>
+            </div>
+            <hr>
+          </div>
+          <div class="text-center">
+              <button class="bg-secondary" @click="goBack"> <IconComponent icon="eva:arrow-back-outline" /> Cancel</button>
+              <button @click="goToPin">Confirm Transfer</button>
+          </div>
+        </div>
+      </div>
 
-      <!-- Step Five  -->
-      <div class="">Send Fidle</div>
+      <!-- Enter Pin  -->
+      <div class="bg-white p-3 rounded-lg w-25 preview--user wallet--user" v-show="step_five">
+      <div @click="close" class="text-right mb-3">
+        <IconComponent icon="ant-design:close-circle-outlined" style="font-size:20px"/>
+      </div>
+        <el-alert
+          v-show="err"
+          :title="err"
+          type="error"
+          show-icon>
+        </el-alert>
+        <div class="text-center mt-3">
+          <div class="text-center">
+            <h4 class="m-0">
+              Enter Your Pin
+            </h4>
+            <p class="text-secondary" style="font-size: 12px">
+              Enter your pin to confirm transfer
+            </p>
+          </div>
+          <div class="mt-3">
+            <PincodeInput
+                v-model="dataObj.pin"
+                placeholder="-"
+                />
+          </div>
+          <div v-if="completeLoading" class="mt-3">
+            <div class="d-flex justify-content-center" >
+              <div class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+            </div>
+          </div>
+          <div class="text-center" v-else>
+              <button @click="done">Confirm Transfer</button>
+          </div>
+        </div>
+      </div>
 
-      <!-- Step Six  -->
-      <div class="">Send Fidle</div>
+      <!-- Transfer Successful  -->
+      <div class="bg-white p-3 rounded-lg w-25 preview--user wallet--user" v-show="step_six">
+        <div class="">
+          <div class="text-center">
+            <img src="@/assets/img/transfer_success.png" width="200px" alt="">
+          </div>
+          <div class="text-center my-3">
+            <h3 class="m-0 font-weight-bold" style="color:var(--main-color)">
+              Transfer Successful
+            </h3>
+            <p class="text-secondary" style="font-size: 12px">
+              Congratulations, transfer successful!!!
+            </p>
+          </div>
+          <div class="text-center">
+              <button @click="close">Ok</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+
+import PincodeInput from 'vue-pincode-input';
 export default {
+  props: ['wallet_balances'],
+  components:{
+    PincodeInput
+  },
   data() {
     return {
       links: [],
       state: "",
       search: "",
       results: "",
+      user: {},
+      step_one: true,
+      step_two_user: false,
+      step_two_wallet: false,
+      step_three: false,
+      step_four: false,
+      step_five: false,
+      step_six: false,
+      loading: true,
+      dataObj:{
+        pin: '',
+        address: '',
+        amount: '',
+        username: '',
+        description: ''
+      },
+      username: true,
+      completeLoading: false,
+      err: ''
     };
   },
   methods: {
-    querySearch() {
-      let posts = this.links;
-      let search = this.search.toLowerCase();
-      const value = posts.filter(
-        (elem) => elem.username.toLowerCase() == search
-      );
-      console.log(value);
-      this.results = value;
+    checkBalance(){
+      if(this.dataObj.amount > this.wallet_balances.FIDLE) {
+        alert("You can't send above your current wallet balance")
+        this.dataObj.amount = ''
+      }
     },
-    loadAll() {
-      // return [
-      //   { "value": "vue", "link": "https://github.com/vuejs/vue" },
-      //   { "value": "element", "link": "https://github.com/ElemeFE/element" },
-      //   { "value": "cooking", "link": "https://github.com/ElemeFE/cooking" },
-      //   { "value": "mint-ui", "link": "https://github.com/ElemeFE/mint-ui" },
-      //   { "value": "vuex", "link": "https://github.com/vuejs/vuex" },
-      //   { "value": "vue-router", "link": "https://github.com/vuejs/vue-router" },
-      //   { "value": "babel", "link": "https://github.com/babel/babel" }
-      //  ];
+    toUserSearch(){
+      this.step_two_user = true
+      this.step_one = false
+    },
+     toEnterWallet(){
+      this.step_two_wallet = true
+      this.step_one = false
+    },
+    goToAmount(item){
+      this.$axios.get(`users/${item.id}/`)
+      .then((res)=>{
+        console.log(res);
+        this.user = res.data
+        this.dataObj.username = res.data.username
+        console.log(this.dataObj.username);
+      })
+      .catch((err)=>{
+        console.log(err);
+      })
+      .finally(()=>{
+        this.search = ''
+        this.step_two_user = false
+        this.step_three = true
+      })
+    },
+    goToAmount2(){
+      this.username = false
+      this.step_two_wallet = false
+      this.step_three = true
+    },
+    goToSummary(){
+      if(this.dataObj.amount == ''){
+        alert("You must enter an amount")
+      }
+      else{
+        this.step_three = false
+        this.step_four = true
+      }
+    },
+    goToPin(){
+      this.step_four = false
+      this.step_five = true
+    },
+     goBack(){
+      this.step_three = true
+      this.step_four = false
+    },
+    done(){
+      console.log(this.username);
+      this.completeLoading = true
+      if (this.username) {
+        this.$axios.post('user/wallet/share-fidle/', this.dataObj)
+        .then((res)=>{
+          console.log(res);
+          this.step_five = false
+          this.step_six = true
+        })
+        .catch((err)=>{
+          console.log(err.response.data.error);
+          this.err = err.response.data.error
+          this.dataObj.pin = ''
+        })
+        .finally(()=>{
+          this.completeLoading = false
+        })
+      }
+      else{
+        this.completeLoading = true
+        this.$axios.post('user/wallet/transfer-fidle/', this.dataObj)
+        .then((res)=>{
+          console.log(res);
+          this.step_five = false
+          this.step_six = true
+        })
+        .catch((err)=>{
+          console.log(err.response.data.error);
+          this.err = err.response.data.error
+
+        })
+        .finally(()=>{
+          this.completeLoading = false
+        })
+      }
+    },
+    close(){
+      this.step_one= true
+      this.step_two_user= false
+      this.step_two_wallet= false
+      this.step_three= false
+      this.step_four= false
+      this.step_five= false
+      this.step_six = false
+      this.$emit('close')
+      this.dataObj = {}
+    },
+    pasteCopy(){
+      navigator.clipboard.readText()
+      .then(cliptext => {
+        this.dataObj.address = cliptext
+        err => alert(err);
+      })
+    },
+    querySearch() {
+      this.loading = true
       this.$axios
-        .get("user/following")
+        .get("users?search="+this.search)
         .then((res) => {
-          this.links = res.data.results;
+          this.results = res.data.results;
           console.log(this.links);
           // return list
         })
         .catch((err) => {
           console.log(err);
-        });
+        })
+        .finally(()=>{
+          this.loading = false
+        })
     },
     handleSelect(item) {
       console.log(item);
     },
   },
   mounted() {
-    this.loadAll();
-    //   this.links = this.loadAll();
-    //   console.log(this.links);
+    // this.loadAll();
   },
 };
 </script>

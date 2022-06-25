@@ -2,7 +2,7 @@
   <div>
     <div>
       <div class="media--files profile--section p-3">
-        <div class="media" v-for="media in mediaData" :key="media.id">
+        <div class="media" v-for="media in mediaData" :key="media.id" @click="goToPost(media)" role="button">
           <div v-for="file in media.media" :key="file.id">
             <img v-if="file.extension == 'jpg' || file.extension == 'png' || file.extension == 'jpeg' " :src="file.file" alt="" width="100%" />
             <video v-else :src="file.file"  playsinline loop 
@@ -53,9 +53,6 @@ export default {
           const value = posts.filter((elem) => elem.media.length !== 0);
           console.log(value);
           this.mediaData = value
-          // console.log(this.mediaData);
-          // this.mediaFiles = value.media;
-          // console.log(this.mediaFiles);
         })
         .catch((err) => {
           console.log(err);
@@ -63,6 +60,10 @@ export default {
         .finally(() => {
           this.loading = false;
         });
+    },
+    goToPost(media){
+      this.$router.push({name: 'single-fidle', params:{id: media.id}})
+
     },
   },
   mounted() {

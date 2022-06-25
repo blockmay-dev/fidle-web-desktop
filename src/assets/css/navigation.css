@@ -49,8 +49,8 @@
 }
 
 .app-header-icon .notification-icon .notification--dot {
-    width: 7px;
-    height: 7px;
+    /* width: 7px;
+    height: 7px; */
     background-color: #D72624;
     border-radius: 50%;
     position: absolute;

@@ -1,113 +1,14 @@
 <template>
-  <div>
     <div>
-      <!-- Create  A Post  -->
-      <div class="rounded--card p-3">
-        <div>
-          <div class="d-flex" style="gap: 20px">
-            <div class="start-post-photo">
-              <img
-                v-if="user.current_profile_image"
-                :src="user.current_profile_image.media.file"
-                alt=""
-              />
-              <img
-                v-else
-                src="@/assets/img/no_user.png"
-                alt=""
-              />
-            </div>
-            <div class="start--post">
-              <el-input
-                type="textarea"
-                :autosize="{ minRows: 2, maxRows: 5 }"
-                placeholder="Start a Post"
-                v-model="payload.content"
-              >
-              </el-input>
-            </div>
-          </div>
-          <div class="media--preview mt-3" v-show="imgPreview">
-            <img :src="imgSrc" alt="" />
-            <div
-              class="close-media-preview"
-              role="button"
-              @click="closePreview"
-            >
-              <IconComponent
-                icon="ep:circle-close-filled"
-                class="file--icons"
-                style="font-size: 40px"
-              />
-            </div>
-          </div>
-          <div class="preview" v-show="videoPreview">
-            <video class="uploaded__video" controls id="video_select_preview" />
-            <div
-              class="close-video-preview"
-              role="button"
-              @click="closeVideoPreview"
-            >
-              <IconComponent
-                icon="ep:circle-close-filled"
-                class="file--icons"
-                style="font-size: 40px"
-              />
-            </div>
-          </div>
-        </div>
-
-        <hr />
-        <!-- Options of Posts  -->
-        <div class="d-flex justify-content-between align-items-center">
-          <div class="d-flex align-items-center" style="gap: 10px">
-            <div class="actions--container" role="button" style="gap: 5px">
-              <input
-                @change="onFileChange"
-                type="file"
-                accept="image/*"
-                id="choose-file"
-                name="choose-file"
-              />
-              <label class="m-0" for="choose-file"
-                ><IconComponent
-                  icon="ic:outline-photo-size-select-actual"
-                  class="file--icons"
-                />
-              </label>
-            </div>
-            <div class="actions--container" style="gap: 5px" role="button">
-              <label for="video_select" role="button"
-                ><IconComponent icon="akar-icons:video" class="file--icons"
-              /></label>
-              <input
-                type="file"
-                id="video_select"
-                hidden
-                accept="video/*"
-                @change="showVideoPreview($event)"
-              />
-              <span></span>
-            </div>
-            <div class="actions--container" style="gap: 5px">
-              <span
-                ><IconComponent icon="bytesize:location" class="file--icons"
-              /></span>
-            </div>
-          </div>
-
-          <div>
-            <button class="main--button" @click="createFidle">post</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Main Post Content  -->
-      <div class="">
+        <div class="">
+            <!-- Main Post Content  -->
+             <div class="row">
+              <div class="col-md-9">
+                <div class="">
         <div class="">
           <el-skeleton style="" :loading="loading" animated :count="20">
             <template slot="template">
-              <div class="rounded--card p-3 mt-3">
+              <div class="rounded--card p-3 mb-3">
                 <div>
                   <div class="row" style="margin: 0; align-items: center">
                     <div class="col-md-1" style="padding: 0">
@@ -175,9 +76,7 @@
             </template>
             <div>
               <div
-                v-for="item in posts"
-                :key="item.id"
-                class="rounded--card p-3 mt-3"
+                class="rounded--card p-3 mb-3"
                 data-aos="fade-up"
               >
                 <div>
@@ -539,97 +438,17 @@
             </div>
           </el-skeleton>
         </div>
-
-        <div class="view--more_posts">
-          <button @click="viewMore">View More</button>
-        </div>
       </div>
-
-      <!-- Verify Post -->
-      <div class="verify--details" v-show="verify">
-        <div class="verify--content">
-          <div class="mb-4 text-right" role="button" @click="verify = false">
-            <IconComponent icon="ant-design:close-circle-outlined" style="font-size:30px"/>
-          </div>
-          <div class="row mb-3">
-            <span class="col-4 font-weight-bold">Creators Name:</span>
-            <span v-if="post.user" class="col-6"> {{ post.user.name }} </span>
-          </div>
-          <div class="row mb-3">
-            <span class="col-4 font-weight-bold">Date Created:</span>
-            <span class="col-6"> {{ timeStamp(new Date(post.date_created * 1000.0)) }} </span>
-          </div>
-          <div class="row mb-3">
-            <span class="col-4 font-weight-bold">Post Hash</span>
-            <span class="col-6"> {{ post.cid }} </span>
-          </div>
-          <div class="row">
-            <span class="col-4 font-weight-bold">Verify on Chain</span>
-            <span class="col-6"> {{ post.verify_hash }} </span>
-          </div>
+              </div>
+             </div>
         </div>
-      </div>
-
-      <!-- Report Abuse -->
-      <div class="verify--details" v-show="flags">
-        <div class="verify--content">
-          <div class="mb-4 text-right" role="button" @click="flags = false">
-            <IconComponent icon="ant-design:close-circle-outlined" style="font-size:30px"/>
-          </div>
-          <div class="mb-2">
-            <h3>Flag Post</h3>
-            <small> Why do you want to flag this post? </small>
-          </div>
-          <div>
-            <div>
-              <input type="radio" name="" value="Violence" id="" v-model="dataObj.reason">
-              <label class="ml-2" for="">Violence</label>
-            </div>
-            <div>
-              <input type="radio" name="" id="" value="Harassment" v-model="dataObj.reason">
-              <label class="ml-2" for="">Harassment</label>
-            </div>
-            <div>
-              <input type="radio" name="" id="" value="Suicide or Self Injury" v-model="dataObj.reason">
-              <label class="ml-2" for="">Suicide or Self-Injury</label>
-            </div>
-            <div>
-              <input type="radio" name="" id="" value="Misleading Information" v-model="dataObj.reason">
-              <label class="ml-2" for="">Misleading Information</label>
-            </div>
-            <div>
-              <input type="radio" name="" id="" value="Hate Speech" v-model="dataObj.reason">
-              <label class="ml-2" for="">Hate Speech</label>
-            </div>
-            <div>
-              <input type="radio" name="" id="" value="Spam" v-model="dataObj.reason">
-              <label class="ml-2" for="">Spam</label>
-            </div>
-            <div>
-              <input type="radio" name="" id="" value="Terrorism" v-model="dataObj.reason">
-              <label class="ml-2" for="">Terrorism</label>
-            </div>
-            <div>
-              <input type="radio" name="" id="" value="Unathorized Sales" v-model="dataObj.reason">
-              <label class="ml-2" for="">Unathorized Sales</label>
-            </div>
-          </div>
-          <div class="mt-2">
-            <button @click="flagPost">Report</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- App Loader -->
-      <AppLoader :loader="loader" />
     </div>
-  </div>
 </template>
 
-<script src="vue-clipboard2-master/dist/vue-clipboard.min.js"></script>
+
+
 <script>
 import { VEmojiPicker } from "v-emoji-picker";
-import AppLoader from "@/components/static/appLoader.vue";
 import packEmoji from "@/api/emojis.js";
 import {
   timeRange,
@@ -640,13 +459,10 @@ import {
 } from "@/plugins/filter";
 export default {
   components: {
-    AppLoader,
     VEmojiPicker,
   },
   data() {
     return {
-      flags: false,
-      verify: false,
       comments: false,
       showDialog: false,
       timeStamp,
@@ -665,7 +481,6 @@ export default {
         media: {},
         content: "",
       },
-      post: {},
       imgSrc: "",
       disabled: true,
       videoPreview: false,
@@ -674,10 +489,10 @@ export default {
       commentsList: [],
       followLoading: false,
       page: 1,
+      item: {},
       dataObj:{
         reason: ''
       },
-      val: '',
     };
   },
   methods: {
@@ -764,36 +579,14 @@ export default {
     toogleDialogEmoji(item) {
       this.showDialog = this.showDialog === item.id ? null : item.id;
     },
-    createFidle() {
-      this.loader = true;
-      let formData = new FormData();
-      formData.append("content", this.payload.content);
-      formData.append("media", this.payload.media);
-      formData.append("_method", "POST");
-      this.$axios
-        .post("posts/", formData)
-        .then((res) => {
-          // this.$router.push("/");
-          console.log(res);
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-        .finally(() => {
-          this.payload = {};
-          this.closePreview();
-          this.closeVideoPreview();
-          this.getPosts();
-          this.loader = false;
-        });
-    },
     getPosts() {
+      let id = this.$route.query.post_id
       this.loading = true;
       this.$axios
-        .get("user/feeds")
+        .get(`posts/${id}`)
         .then((res) => {
           console.log(res.data);
-          this.posts = res.data.results;
+          this.item = res.data;
         })
         .catch((err) => {
           console.log(err);
@@ -823,17 +616,6 @@ export default {
         console.log(error);
       }
       this.loading = false
-    },
-    getPost(item){
-      this.verify = true
-      this.$axios.get(`posts/${item.id}`)
-      .then((res)=>{
-        console.log(res);
-        this.post = res.data
-      })
-      .catch((err)=>{
-        console.log(err);
-      })
     },
 
     goToUser(item){
@@ -969,9 +751,6 @@ export default {
         this.flags = false
       })
     },
-    viewSelection(){
-      console.log(this.dataObj);
-    }
   },
   mounted() {
     this.getPosts();
@@ -982,9 +761,9 @@ window.addEventListener('scroll', videoScroll);
 
 function videoScroll() {
 
-  if ( document.querySelectorAll('video').length > 0) {
+  if ( document.querySelectorAll('video[autoplay]').length > 0) {
     var windowHeight = window.innerHeight,
-        videoEl = document.querySelectorAll('video');
+        videoEl = document.querySelectorAll('video[autoplay]');
 
     for (var i = 0; i < videoEl.length; i++) {
 
@@ -1011,3 +790,5 @@ function videoScroll() {
   },
 };
 </script>
+
+

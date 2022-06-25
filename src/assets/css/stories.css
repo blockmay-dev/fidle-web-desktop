@@ -174,3 +174,25 @@
 .text--story-content {
     width: 80%;
 }
+
+.story--photo_preview {
+    text-align: center;
+}
+
+.story--photo_preview img {
+    width: 200px;
+    height: 300px;
+    border-radius: 10px;
+    object-position: top;
+    object-fit: cover;
+}
+
+.choose--image {
+    border: 1px dashed rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 100px;
+    margin-bottom: 1rem !important;
+}

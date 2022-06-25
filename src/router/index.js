@@ -119,6 +119,51 @@ const routes = [{
                     import ( /* webpackChunkName: "about" */ '../pages/user/wallet/indexPage.vue')
             },
             {
+                path: '/search-results',
+                name: 'search-results',
+                // route level code-splitting
+                // this generates a separate chunk (about.[hash].js) for this route
+                // which is lazy-loaded when the route is visited.
+                component: () =>
+                    import ( /* webpackChunkName: "about" */ '../components/static/search/searchResults.vue')
+            },
+            {
+                path: '/notifications',
+                name: 'notifications',
+                // route level code-splitting
+                // this generates a separate chunk (about.[hash].js) for this route
+                // which is lazy-loaded when the route is visited.
+                component: () =>
+                    import ( /* webpackChunkName: "about" */ '../pages/user/notifications/userNotifications.vue')
+            },
+            {
+                path: '/settings',
+                name: 'settings',
+                // route level code-splitting
+                // this generates a separate chunk (about.[hash].js) for this route
+                // which is lazy-loaded when the route is visited.
+                component: () =>
+                    import ( /* webpackChunkName: "about" */ '../pages/settings/indexPage.vue')
+            },
+            {
+                path: '/fidle/external-post-source',
+                name: 'single-fidle-post',
+                // route level code-splitting
+                // this generates a separate chunk (about.[hash].js) for this route
+                // which is lazy-loaded when the route is visited.
+                component: () =>
+                    import ( /* webpackChunkName: "about" */ '../pages/posts/singlePost.vue')
+            },
+            {
+                path: '/fidle/:id',
+                name: 'single-fidle',
+                // route level code-splitting
+                // this generates a separate chunk (about.[hash].js) for this route
+                // which is lazy-loaded when the route is visited.
+                component: () =>
+                    import ( /* webpackChunkName: "about" */ '../pages/posts/_id.vue')
+            },
+            {
                 path: '/stories/create',
                 // route level code-splitting
                 // this generates a separate chunk (about.[hash].js) for this route

@@ -1,427 +1,570 @@
 <template>
-    <div>
-        <div>
-            <!-- Main Post Content  -->
-      <div class="">
-        <div class="">
-          <el-skeleton style="" :loading="loading" animated :count="20">
-            <template slot="template">
-              <div class="rounded--card p-3 mt-3">
-                <div>
-                  <div class="row" style="margin: 0; align-items: center">
-                    <div class="col-md-1" style="padding: 0">
-                      <el-skeleton-item
-                        variant="image"
-                        style="
-                          height: 50px;
-                          width: 50px;
-                          border-radius: 50%;
-                          margin-bottom: 10px;
-                        "
-                      />
-                    </div>
-                    <div class="col-md-11" style="padding: 0">
-                      <div class="row justify-content-between">
-                        <div class="col-md-3">
-                          <el-skeleton-item variant="text" class="" />
+  <div>
+    <div class="">
+      <!-- Main Post Content  -->
+      <div class="row">
+        <div class="col-md-9">
+          <div class="">
+            <div class="">
+              <el-skeleton :loading="loading" animated :count="20">
+                <template slot="template">
+                  <div class="rounded--card p-3 mb-3">
+                    <div>
+                      <div class="row" style="margin: 0; align-items: center">
+                        <div class="col-md-1" style="padding: 0">
                           <el-skeleton-item
-                            variant="text"
-                            style="width: 80px"
-                            class=""
+                            variant="image"
+                            style="
+                              height: 50px;
+                              width: 50px;
+                              border-radius: 50%;
+                              margin-bottom: 10px;
+                            "
                           />
                         </div>
-                        <div class="col-md-1 text-right" style="padding: 0">
-                          <el-skeleton-item variant="text" class="" />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <el-skeleton-item variant="image" style="height: 500px" />
-                <div style="padding-top: 14px">
-                  <el-skeleton-item
-                    variant="caption"
-                    style="width: 100%; height: 60px"
-                  />
-                  <div
-                    style="
-                      display: flex;
-                      justify-content: space-between;
-                      margin-top: 20px;
-                    "
-                  >
-                    <el-skeleton-item variant="caption" style="width: 15%" />
-                    <el-skeleton-item variant="caption" style="width: 15%" />
-                  </div>
-                  <hr />
-                  <div
-                    style="
-                      display: flex;
-                      align-items: center;
-                      justify-content: space-around;
-                      margin-top: 16px;
-                      margin-bottom: 16px;
-                      height: 16px;
-                    "
-                  >
-                    <el-skeleton-item variant="text" style="width: 15%" />
-                    <el-skeleton-item variant="text" style="width: 15%" />
-                    <el-skeleton-item variant="text" style="width: 15%" />
-                  </div>
-                  <hr />
-                </div>
-              </div>
-            </template>
-            <div>
-              <div
-                v-for="item in posts"
-                :key="item.id"
-                class="rounded--card p-3 mt-3"
-                data-aos="fade-up"
-              >
-                <div>
-                  <div
-                    class="d-flex justify-content-between align-items-center"
-                  >
-                    <div
-                      class="d-flex align-items-center mb-3"
-                      style="gap: 15px"
-                    >
-                      <div class="start-post-photo" role="button" @click="goToUser(item)">
-                        <div v-if="item.user.current_profile_image">
-                          <img
-                            :src="item.user.current_profile_image.media.file"
-                            alt=""
-                          />
-                        </div>
-                        <div v-else>
-                          <img
-                            src="@/assets/img/no_user.png"
-                            alt=""
-                            width="100%"
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <popper-component
-                          trigger="hover"
-                          :options="{
-                            placement: 'top',
-                            modifiers: { offset: { offset: '0,10px' } },
-                          }"
-                        >
-                          <div class="popper">
-                            <div class="p-2 text-left">
-                              <div class="top-side d-flex align-items-center" style="gap:10px">
-                                <div class="start-post-photo" @click="goToUser(item.user)">
-                                  <div v-if="item.user.current_profile_image">
-                                    <img
-                                      :src="
-                                        item.user.current_profile_image.media
-                                          .file
-                                      "
-                                      alt=""
-                                    />
-                                  </div>
-                                  <div v-else>
-                                    <img
-                                      src="@/assets/img/no_user.png"
-                                      alt=""
-                                      width="100%"
-                                    />
-                                  </div>
-                                </div>
-                                <div>
-                                  <h6 @click="goToUser(item)">{{ item.user.name }}</h6>
-                                  <small class="text-secondary">
-                                    @{{item.user.username}}</small>
-                                </div>
-                              </div>
-                              <div>
-                                <small> {{ item.user.followers_count }} Follower<span v-show="item.user.followers_count > 1">s</span> </small>
-                              </div>
-                              <div class="pop--action">
-                                <button v-if="item.user.following" >
-                                  Message
-                                </button>
-                                <button v-else @click="followUser(item)">
-                                <div v-if="followLoading" class="d-flex justify-content-center">
-                                      <div class="spinner-border" role="status">
-                                        <span class="sr-only">Loading...</span>
-                                      </div>
-                                    </div>
-                                  <span v-else>
-                                    Follow
-                                  </span>
-                                  
-                                </button>
-                                
-                              </div>
+                        <div class="col-md-11" style="padding: 0">
+                          <div class="row justify-content-between">
+                            <div class="col-md-3">
+                              <el-skeleton-item variant="text" class="" />
+                              <el-skeleton-item
+                                variant="text"
+                                style="width: 80px"
+                                class=""
+                              />
+                            </div>
+                            <div class="col-md-1 text-right" style="padding: 0">
+                              <el-skeleton-item variant="text" class="" />
                             </div>
                           </div>
-
-                          <h6
-                            slot="reference"
-                            role="button"
-                            class="
-                              poster--name
-                              font-weight-bold
-                               text-capitalize
-                            "
-                            @click="goToUser(item)"
-                          >
-                            {{ item.user.name }}
-                          </h6>
-                        </popper-component>
-                        <p class="text-secondary small" style="font-size: 10px">
-                          {{ timeStamp(new Date(item.date_created * 1000.0)) }}
-                        </p>
-                      </div>
-                    </div>
-                    <div class="dropleft">
-                      <span role="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
-                        <IconComponent
-                        icon="akar-icons:more-horizontal"
-                        style="font-size: 20px"
-                      />
-                      </span>
-                      <div class="dropdown">
-                        <!-- <button class="btn btn-secondary dropdown-toggle" type="button" >
-                          Dropdown button
-                        </button> -->
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                          <a class="dropdown-item" href="#">Save Post</a>
-                          <a class="dropdown-item" href="#">Verify</a>
-                          <a class="dropdown-item" href="#">Hide Post</a>
-                          <a class="dropdown-item" href="#">Flag Post</a>
-                          <a class="dropdown-item" href="#">Copy Link</a>
-                          <a class="dropdown-item" href="#">Share Post</a>
                         </div>
                       </div>
                     </div>
-                  </div>
-
-                  <div v-for="media in item.media" :key="media.id">
-                    <img
-                      v-if="media.extension == 'jpg' || media.extension == 'jpeg' || media.extension == 'png' "
-                      :src="media.file"
-                      alt=""
-                      width="100%"
-                      height="auto"
-                      style="object-fit: cover; object-position: top"
-                    />
-                    <video v-else :src="media.file" autoplay playsinline loop 
-                    style="width:100%"
-                     ></video>
-                  </div>
-
-                  <!-- Post Content -->
-                  <div
-                    class="main-writeup"
-                    :class="{ active: item.media.length === 0 }"
-                    :style="{
-                      'background-image': `linear-gradient(45deg, ${colorSplit(
-                        item.color
-                      )}`,
-                    }"
-                  >
-                    <div v-html="item.content"></div>
-                  </div>
-                  <!-- Number of Comments and Reactions  -->
-                  <div class="mb-3 d-flex justify-content-between">
-                    <div class="d-flex align-items-center" style="gap: 10px">
-                      <div>
-                        <span class="amount">{{
-                          dollarFilter(item.worth)
-                        }}</span>
+                    <el-skeleton-item variant="image" style="height: 500px" />
+                    <div style="padding-top: 14px">
+                      <el-skeleton-item
+                        variant="caption"
+                        style="width: 100%; height: 60px"
+                      />
+                      <div
+                        style="
+                          display: flex;
+                          justify-content: space-between;
+                          margin-top: 20px;
+                        "
+                      >
+                        <el-skeleton-item
+                          variant="caption"
+                          style="width: 15%"
+                        />
+                        <el-skeleton-item
+                          variant="caption"
+                          style="width: 15%"
+                        />
                       </div>
-                      <div>
-                        <span class="">{{ item.likes_count }}Likes </span>
+                      <hr />
+                      <div
+                        style="
+                          display: flex;
+                          align-items: center;
+                          justify-content: space-around;
+                          margin-top: 16px;
+                          margin-bottom: 16px;
+                          height: 16px;
+                        "
+                      >
+                        <el-skeleton-item variant="text" style="width: 15%" />
+                        <el-skeleton-item variant="text" style="width: 15%" />
+                        <el-skeleton-item variant="text" style="width: 15%" />
                       </div>
+                      <hr />
                     </div>
+                  </div>
+                </template>
+                <div>
+                  <div class="rounded--card p-3 mb-3" data-aos="fade-up">
                     <div>
-                      <span class="">
-                        {{ item.comments_count }} comment<span
-                          v-show="item.comments_count > 1"
-                          >s</span
+                      <div
+                        class="
+                          d-flex
+                          justify-content-between
+                          align-items-center
+                        "
+                      >
+                        <div
+                          class="d-flex align-items-center mb-3"
+                          style="gap: 15px"
                         >
-                      </span>
-                    </div>
-                  </div>
+                          <div
+                            class="start-post-photo"
+                            role="button"
+                            @click="goToUser(item)"
+                          >
+                            <div v-if="item.user.current_profile_image">
+                              <img
+                                :src="
+                                  item.user.current_profile_image.media.file
+                                "
+                                alt=""
+                              />
+                            </div>
+                            <div v-else>
+                              <img
+                                src="@/assets/img/no_user.png"
+                                alt=""
+                                width="100%"
+                              />
+                            </div>
+                          </div>
+                          <div>
+                            <popper-component
+                              trigger="hover"
+                              :options="{
+                                placement: 'top',
+                                modifiers: { offset: { offset: '0,10px' } },
+                              }"
+                            >
+                              <div class="popper">
+                                <div class="p-2 text-left">
+                                  <div
+                                    class="top-side d-flex align-items-center"
+                                    style="gap: 10px"
+                                  >
+                                    <div
+                                      class="start-post-photo"
+                                      @click="goToUser(item.user)"
+                                    >
+                                      <div
+                                        v-if="item.user.current_profile_image"
+                                      >
+                                        <img
+                                          :src="
+                                            item.user.current_profile_image
+                                              .media.file
+                                          "
+                                          alt=""
+                                        />
+                                      </div>
+                                      <div v-else>
+                                        <img
+                                          src="@/assets/img/no_user.png"
+                                          alt=""
+                                          width="100%"
+                                        />
+                                      </div>
+                                    </div>
+                                    <div>
+                                      <h6 @click="goToUser(item)">
+                                        {{ item.user.name }}
+                                      </h6>
+                                      <small class="text-secondary">
+                                        @{{ item.user.username }}</small
+                                      >
+                                    </div>
+                                  </div>
+                                  <div>
+                                    <small>
+                                      {{
+                                        item.user.followers_count
+                                      }}
+                                      Follower<span
+                                        v-show="item.user.followers_count > 1"
+                                        >s</span
+                                      >
+                                    </small>
+                                  </div>
+                                  <div class="pop--action">
+                                    <button v-if="item.user.following">
+                                      Message
+                                    </button>
+                                    <button v-else @click="followUser(item)">
+                                      <div
+                                        v-if="followLoading"
+                                        class="d-flex justify-content-center"
+                                      >
+                                        <div
+                                          class="spinner-border"
+                                          role="status"
+                                        >
+                                          <span class="sr-only"
+                                            >Loading...</span
+                                          >
+                                        </div>
+                                      </div>
+                                      <span v-else> Follow </span>
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
 
-                  <!-- Like, Comment and Share Post -->
-                  <hr class="m-0" />
-                  <div class="d-flex justify-content-around my-2">
-                    <div
-                      class="d-flex align-items-center reactions--container"
-                      role="button"
-                      style="gap: 10px"
-                      @click="likePost(item)"
-                    >
-                      <IconComponent
-                        icon="flat-color-icons:like"
-                        style="font-size: 24px !important"
-                        v-if="item.liked"
-                      />
-                      <IconComponent
-                        v-else
-                        icon="icon-park-outline:like"
-                        style="color: red; font-size: 24px !important"
-                        role="button"
-                      />
-                      <span>Like</span>
-                    </div>
-                    <div
-                      role="button"
-                      class="d-flex align-items-center reactions--container"
-                      style="gap: 10px"
-                      @click="getComments(item)"
-                    >
-                      <IconComponent
-                        icon="bx:comment"
-                        style="font-size: 24px"
-                      />
-                      <span>Comment</span>
-                    </div>
-                    <div
-                      role="button"
-                      class="d-flex align-items-center reactions--container"
-                      style="gap: 10px"
-                    >
-                      <IconComponent icon="bx:share" style="font-size: 24px" />
-                      <span>Share</span>
-                    </div>
-                  </div>
-                  <hr class="m-0" />
-
-                  <div class="comments mt-3">
-                    <div
-                      class="comment--box d-flex align-items-end"
-                      v-show="comments === item.id"
-                      v-for="comment in commentsList"
-                      :key="comment.id"
-                      style="gap: 3px"
-                    >
-                      <div class="commenter-photo">
-                        <img
-                          v-if="comment.user.current_profile_image"
-                          :src="comment.user.current_profile_image.media.file"
-                          alt=""
-                        />
-                        <img
-                          v-else
-                          src="@/assets/img/no_user.png"
-                          alt=""
-                        />
+                              <h6
+                                slot="reference"
+                                role="button"
+                                class="
+                                  poster--name
+                                  font-weight-bold
+                                  text-capitalize
+                                "
+                                @click="goToUser(item)"
+                              >
+                                {{ item.user.name }}
+                              </h6>
+                            </popper-component>
+                            <p
+                              class="text-secondary small"
+                              style="font-size: 10px"
+                            >
+                              {{
+                                timeStamp(new Date(item.date_created * 1000.0))
+                              }}
+                            </p>
+                          </div>
+                        </div>
+                        <div class="dropleft">
+                          <span
+                            role="button"
+                            id="dropdownMenuButton"
+                            data-toggle="dropdown"
+                            aria-expanded="false"
+                          >
+                            <IconComponent
+                              icon="akar-icons:more-horizontal"
+                              style="font-size: 20px"
+                            />
+                          </span>
+                          <div
+                            class="dropdown-menu"
+                            aria-labelledby="dropdownMenuButton"
+                          >
+                            <div
+                              class="dropdown-item d-flex"
+                              style="gap: 12px"
+                              role="button"
+                              @click="savePost(item)"
+                            >
+                              <span class="text-dark drop--main_text">
+                                <IconComponent
+                                  icon="bi:bookmark-fill"
+                                  v-if="item.saved"
+                                />
+                                <IconComponent icon="bi:bookmark" v-else />
+                              </span>
+                              <span v-if="item.saved">
+                                Post Saved <br />
+                                <small class="text-secondary"
+                                  >Post has been saved</small
+                                >
+                              </span>
+                              <span v-else>
+                                Save Post <br />
+                                <small class="text-secondary"
+                                  >Saved Posts for later</small
+                                >
+                              </span>
+                            </div>
+                            <div
+                              class="dropdown-item d-flex"
+                              style="gap: 12px"
+                              role="button"
+                              @click="getPost(item)"
+                            >
+                              <span class="text-dark drop--main_text"
+                                ><IconComponent
+                                  icon="akar-icons:text-align-right"
+                              /></span>
+                              <span>
+                                Verify <br />
+                                <small class="text-secondary"
+                                  >Details of Post</small
+                                >
+                              </span>
+                            </div>
+                            <div
+                              class="dropdown-item d-flex"
+                              style="gap: 12px"
+                              role="button"
+                              @click="hidePost(item)"
+                            >
+                              <span class="text-dark drop--main_text"
+                                ><IconComponent
+                                  icon="ant-design:minus-circle-outlined"
+                              /></span>
+                              <span>
+                                Hide Post <br />
+                                <small class="text-secondary"
+                                  >Dont see this post again</small
+                                >
+                              </span>
+                            </div>
+                            <div
+                              class="dropdown-item d-flex"
+                              style="gap: 12px"
+                              role="button"
+                              @click="openFlag(item)"
+                            >
+                              <span class="text-dark drop--main_text"
+                                ><IconComponent icon="gis:flag-o"
+                              /></span>
+                              <span>
+                                Flag Post <br />
+                                <small class="text-secondary"
+                                  >I have some concerns</small
+                                >
+                              </span>
+                            </div>
+                            <div
+                              class="dropdown-item d-flex"
+                              style="gap: 12px"
+                              role="button"
+                              v-clipboard:copy="
+                                'https://fidle-desktop/fidle?post_url=' +
+                                item.id
+                              "
+                              v-clipboard:success="onCopy"
+                              v-clipboard:error="onError"
+                            >
+                              <span class="text-dark drop--main_text"
+                                ><IconComponent icon="entypo:link"
+                              /></span>
+                              <span>
+                                Copy Link <br />
+                                <small class="text-secondary">Copy Link</small>
+                              </span>
+                            </div>
+                          </div>
+                          <!-- </div> -->
+                        </div>
                       </div>
-                      <div class="main-comment">
-                        <p>{{ comment.content }}</p>
-                        <span class="like--comment" v-if="comment.has_liked"
-                          ><IconComponent
+
+                      <div v-for="media in item.media" :key="media.id">
+                        <img
+                          v-if="
+                            media.extension == 'jpg' ||
+                            media.extension == 'jpeg' ||
+                            media.extension == 'png'
+                          "
+                          :src="media.file"
+                          alt=""
+                          width="100%"
+                          height="auto"
+                          style="object-fit: cover; object-position: top"
+                        />
+                        <video
+                          v-else
+                          :src="media.file"
+                          playsinline
+                          loop
+                          style="width: 100%"
+                        ></video>
+                      </div>
+
+                      <!-- Post Content -->
+                      <div
+                        class="main-writeup"
+                        :class="{ active: item.media.length === 0 }"
+                        :style="{
+                          'background-image': `linear-gradient(45deg, ${colorSplit(
+                            item.color
+                          )}`,
+                        }"
+                      >
+                        <div v-html="item.content"></div>
+                      </div>
+                      <!-- Number of Comments and Reactions  -->
+                      <div class="mb-3 d-flex justify-content-between">
+                        <div
+                          class="d-flex align-items-center"
+                          style="gap: 10px"
+                        >
+                          <div>
+                            <span class="amount">{{
+                              dollarFilter(item.worth)
+                            }}</span>
+                          </div>
+                          <div>
+                            <span class="">{{ item.likes_count }}Likes </span>
+                          </div>
+                        </div>
+                        <div>
+                          <span class="">
+                            {{ item.comments_count }} comment<span
+                              v-show="item.comments_count > 1"
+                              >s</span
+                            >
+                          </span>
+                        </div>
+                      </div>
+
+                      <!-- Like, Comment and Share Post -->
+                      <hr class="m-0" />
+                      <div class="d-flex justify-content-around my-2">
+                        <div
+                          class="d-flex align-items-center reactions--container"
+                          role="button"
+                          style="gap: 10px"
+                          @click="likePost(item)"
+                        >
+                          <IconComponent
                             icon="flat-color-icons:like"
                             style="font-size: 24px !important"
-                        /></span>
-                        <span
-                          class="like--comment"
-                          @click="likeComment(item, comment)"
-                          role="button"
-                          v-else
-                          ><IconComponent
+                            v-if="item.liked"
+                          />
+                          <IconComponent
+                            v-else
                             icon="icon-park-outline:like"
                             style="color: red; font-size: 24px !important"
                             role="button"
-                        /></span>
+                          />
+                          <span>Like</span>
+                        </div>
+                        <div
+                          role="button"
+                          class="d-flex align-items-center reactions--container"
+                          style="gap: 10px"
+                          @click="getComments(item)"
+                        >
+                          <IconComponent
+                            icon="bx:comment"
+                            style="font-size: 24px"
+                          />
+                          <span>Comment</span>
+                        </div>
+                        <div
+                          role="button"
+                          class="d-flex align-items-center reactions--container"
+                          style="gap: 10px"
+                        >
+                          <IconComponent
+                            icon="bx:share"
+                            style="font-size: 24px"
+                          />
+                          <span>Share</span>
+                        </div>
                       </div>
-                    </div>
-                    <div
-                      class="
-                        start--post
-                        add-comment
-                        d-flex
-                        align-items-center
-                        mt-3
-                      "
-                    >
-                      <div class="commenter-photo">
-                        <img
-                          v-if="user.current_profile_image"
-                          :src="user.current_profile_image.media.file"
-                          alt=""
-                        />
-                        <img
-                          v-else
-                          src="@/assets/img/no_user.png"
-                          alt=""
-                        />
-                      </div>
-                      <div class="w-100">
-                        <form action="" class="form">
-                          <el-input
-                            width="100%"
-                            type="textarea"
-                            id="textarea2"
-                            :autosize="{ minRows: 2, maxRows: 5 }"
-                            placeholder="Add a Comment"
-                            v-model="valueInput"
-                          >
-                          </el-input>
-                          <div
-                            class="your-input-box"
-                            @click="toogleDialogEmoji(item)"
-                            role="button"
-                          >
-                            <IconComponent
-                              icon="fluent:emoji-32-regular"
-                              style="font-size: 20px"
-                              color="var(--main-color)"
+                      <hr class="m-0" />
+
+                      <div class="comments mt-3">
+                        <div
+                          class="comment--box d-flex align-items-end"
+                          v-show="comments === item.id"
+                          v-for="comment in commentsList"
+                          :key="comment.id"
+                          style="gap: 3px"
+                        >
+                          <div class="commenter-photo">
+                            <img
+                              v-if="comment.user.current_profile_image"
+                              :src="
+                                comment.user.current_profile_image.media.file
+                              "
+                              alt=""
                             />
+                            <img v-else src="@/assets/img/no_user.png" alt="" />
                           </div>
-                          <div
-                            class="your-input-box"
-                            @click="postComment(item)"
-                            role="button"
-                          >
-                            <IconComponent
-                              icon="akar-icons:send"
-                              style="font-size: 20px"
-                              color="var(--main-color)"
+                          <div class="main-comment">
+                            <p>{{ comment.content }}</p>
+                            <span class="like--comment" v-if="comment.has_liked"
+                              ><IconComponent
+                                icon="flat-color-icons:like"
+                                style="font-size: 24px !important"
+                            /></span>
+                            <span
+                              class="like--comment"
+                              @click="likeComment(item, comment)"
+                              role="button"
+                              v-else
+                              ><IconComponent
+                                icon="icon-park-outline:like"
+                                style="color: red; font-size: 24px !important"
+                                role="button"
+                            /></span>
+                          </div>
+                        </div>
+                        <div
+                          class="
+                            start--post
+                            add-comment
+                            d-flex
+                            align-items-center
+                            mt-3
+                          "
+                        >
+                          <div class="commenter-photo">
+                            <img
+                              v-if="user.current_profile_image"
+                              :src="user.current_profile_image.media.file"
+                              alt=""
                             />
+                            <img v-else src="@/assets/img/no_user.png" alt="" />
                           </div>
-                        </form>
+                          <div class="w-100">
+                            <form action="" class="form">
+                              <el-input
+                                width="100%"
+                                type="textarea"
+                                id="textarea2"
+                                :autosize="{ minRows: 2, maxRows: 5 }"
+                                placeholder="Add a Comment"
+                                v-model="valueInput"
+                              >
+                              </el-input>
+                              <div
+                                class="your-input-box"
+                                @click="toogleDialogEmoji(item)"
+                                role="button"
+                              >
+                                <IconComponent
+                                  icon="fluent:emoji-32-regular"
+                                  style="font-size: 20px"
+                                  color="var(--main-color)"
+                                />
+                              </div>
+                              <div
+                                class="your-input-box"
+                                @click="postComment(item)"
+                                role="button"
+                              >
+                                <IconComponent
+                                  icon="akar-icons:send"
+                                  style="font-size: 20px"
+                                  color="var(--main-color)"
+                                />
+                              </div>
+                            </form>
+                          </div>
+                        </div>
                       </div>
+                      <VEmojiPicker
+                        v-show="showDialog == item.id"
+                        :pack="emojisNative"
+                        labelSearch="Search"
+                        class="emojis"
+                        style="
+                           {
+                            width: 4px;
+                          }
+                        "
+                        @select="onSelectEmoji"
+                      />
                     </div>
                   </div>
-                  <VEmojiPicker
-                    v-show="showDialog == item.id"
-                    :pack="emojisNative"
-                    labelSearch="Search"
-                    class="emojis"
-                    style="
-                       {
-                        width: 4px;
-                      }
-                    "
-                    @select="onSelectEmoji"
-                  />
                 </div>
-              </div>
+              </el-skeleton>
             </div>
-          </el-skeleton>
+          </div>
         </div>
 
-        <div class="view--more_posts">
-          <button @click="viewMore">View More</button>
+        <div class="col-md-3 bg-white rounded-lg">
+          Statistics
         </div>
       </div>
-        </div>
     </div>
+  </div>
 </template>
 
 
 
 <script>
 import { VEmojiPicker } from "v-emoji-picker";
-import AppLoader from "@/components/static/appLoader.vue";
 import packEmoji from "@/api/emojis.js";
 import {
   timeRange,
@@ -432,7 +575,6 @@ import {
 } from "@/plugins/filter";
 export default {
   components: {
-    AppLoader,
     VEmojiPicker,
   },
   data() {
@@ -463,27 +605,43 @@ export default {
       commentsList: [],
       followLoading: false,
       page: 1,
+      item: {},
+      dataObj: {
+        reason: "",
+      },
     };
   },
   methods: {
+    onCopy: function (e) {
+      console.log(e);
+      this.$message({
+        showClose: true,
+        message: "Copied",
+        type: "info",
+      });
+    },
+    onError: function () {
+      console.log("Failed to copy texts");
+    },
     followUser(item) {
       console.log(item.user.id);
-        this.followLoading = true
-        this.$axios.post(`users/${item.user.id}/follow/`)
-        .then((res)=>{
-            console.log(res.data.message);
-            this.$notify({
-              message: ` You are now following ${item.user.name}`,
-              position: 'bottom-right'
-            });
+      this.followLoading = true;
+      this.$axios
+        .post(`users/${item.user.id}/follow/`)
+        .then((res) => {
+          console.log(res.data.message);
+          this.$notify({
+            message: ` You are now following ${item.user.name}`,
+            position: "bottom-right",
+          });
         })
-        .catch((err)=>{
-            console.log(err);
+        .catch((err) => {
+          console.log(err);
         })
-        .finally(()=>{
-            this.getPosts();
-            this.followLoading = false;
-        })
+        .finally(() => {
+          this.getPosts();
+          this.followLoading = false;
+        });
     },
     async getComments(item) {
       console.log(this.item_id);
@@ -538,69 +696,47 @@ export default {
     toogleDialogEmoji(item) {
       this.showDialog = this.showDialog === item.id ? null : item.id;
     },
-    createFidle() {
-      this.loader = true;
-      let formData = new FormData();
-      formData.append("content", this.payload.content);
-      formData.append("media", this.payload.media);
-      formData.append("_method", "POST");
-      this.$axios
-        .post("posts/", formData)
-        .then((res) => {
-          // this.$router.push("/");
-          console.log(res);
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-        .finally(() => {
-          this.payload = {};
-          this.closePreview();
-          this.closeVideoPreview();
-          this.getPosts();
-          this.loader = false;
-        });
-    },
     getPosts() {
+      let id = this.$route.params.id;
       this.loading = true;
       this.$axios
-        .get("user/feeds")
+        .get(`posts/${id}`)
         .then((res) => {
           console.log(res.data);
-          this.posts = res.data.results;
+          this.item = res.data;
         })
         .catch((err) => {
           console.log(err);
-          this.loading = true
+          this.loading = true;
         })
         .finally(() => {
           this.loading = false;
         });
     },
-    
+
     async viewMore() {
-      this.page = this.page + 1
+      this.page = this.page + 1;
       this.loading = true;
       try {
-        let res = await this.$axios.get(
-          `/user/feeds?page=${this.page}`, 
-        );
+        let res = await this.$axios.get(`/user/feeds?page=${this.page}`);
         console.log(res.data);
-        let newPosts = res.data.results
-        for (let i = 0; i<newPosts.length; i++ ){
+        let newPosts = res.data.results;
+        for (let i = 0; i < newPosts.length; i++) {
           console.log(newPosts[i]);
-          this.posts.push(newPosts[i])
+          this.posts.push(newPosts[i]);
         }
-     console.log(this.posts);
-        
+        console.log(this.posts);
       } catch (error) {
         console.log(error);
       }
-      this.loading = false
+      this.loading = false;
     },
 
-    goToUser(item){
-      this.$router.push({name: 'fidler-profile', params:{id: item.user.id}})
+    goToUser(item) {
+      this.$router.push({
+        name: "fidler-profile",
+        params: { id: item.user.id },
+      });
     },
 
     getUser() {
@@ -664,36 +800,106 @@ export default {
       // var preview = document.getElementById("video_select_preview");
       //   preview.src = "";
     },
+    savePost(item) {
+      this.$axios
+        .post(`posts/${item.id}/save/`)
+        .then((res) => {
+          console.log(res);
+          this.$message({
+            showClose: true,
+            message: "Post Saved",
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+          this.$message({
+            showClose: true,
+            message: "Something went wrong",
+            type: "error",
+          });
+        })
+        .finally(() => {
+          this.getPosts();
+        });
+    },
+    hidePost(item) {
+      this.$axios
+        .post(`posts/${item.id}/hide/`)
+        .then((res) => {
+          console.log(res);
+          this.$message({
+            showClose: true,
+            message: "Post Hidden",
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+          this.$message({
+            showClose: true,
+            message: "Something went wrong",
+            type: "error",
+          });
+        })
+        .finally(() => {
+          this.getPosts();
+        });
+    },
+    openFlag(item) {
+      this.flags = !this.flags;
+      this.val = item.id;
+    },
+    flagPost() {
+      this.$axios
+        .post(`posts/${this.val}/report-abuse/`, this.dataObj)
+        .then((res) => {
+          console.log(res);
+          this.$message({
+            showClose: true,
+            message: "Post Flagged",
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+          this.$message({
+            showClose: true,
+            message: "Something went wrong",
+            type: "error",
+          });
+        })
+        .finally(() => {
+          this.getPosts();
+          this.flags = false;
+        });
+    },
   },
   mounted() {
     this.getPosts();
     this.getUser();
 
-    window.addEventListener('load', videoScroll);
-window.addEventListener('scroll', videoScroll);
+    window.addEventListener("load", videoScroll);
+    window.addEventListener("scroll", videoScroll);
 
-function videoScroll() {
+    function videoScroll() {
+      if (document.querySelectorAll("video[autoplay]").length > 0) {
+        var windowHeight = window.innerHeight,
+          videoEl = document.querySelectorAll("video[autoplay]");
 
-  if ( document.querySelectorAll('video[autoplay]').length > 0) {
-    var windowHeight = window.innerHeight,
-        videoEl = document.querySelectorAll('video[autoplay]');
+        for (var i = 0; i < videoEl.length; i++) {
+          var thisVideoEl = videoEl[i],
+            videoHeight = thisVideoEl.clientHeight,
+            videoClientRect = thisVideoEl.getBoundingClientRect().top;
 
-    for (var i = 0; i < videoEl.length; i++) {
-
-      var thisVideoEl = videoEl[i],
-          videoHeight = thisVideoEl.clientHeight,
-          videoClientRect = thisVideoEl.getBoundingClientRect().top;
-
-      if ( videoClientRect <= ( (windowHeight) - (videoHeight*.5) ) && videoClientRect >= ( 0 - ( videoHeight*.5 ) ) ) {
-        thisVideoEl.play();
-      } else {
-        thisVideoEl.pause();
+          if (
+            videoClientRect <= windowHeight - videoHeight * 0.5 &&
+            videoClientRect >= 0 - videoHeight * 0.5
+          ) {
+            thisVideoEl.play();
+          } else {
+            thisVideoEl.pause();
+          }
+        }
       }
-
     }
-  }
-
-}
   },
   created() {},
   computed: {

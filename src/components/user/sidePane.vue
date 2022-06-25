@@ -34,12 +34,6 @@
                     </router-link>
                 </li>
                 <li>
-                    <router-link to="/privacy-and-policy">
-                        <span> <IconComponent icon="ic:outline-privacy-tip" /> </span>
-                        <span>Privacy and Policy</span>
-                    </router-link>
-                </li>
-                <li>
                     <router-link to="/wallet">
                         <span> <IconComponent icon="clarity:wallet-line" /> </span>
                         <span>Wallet</span>

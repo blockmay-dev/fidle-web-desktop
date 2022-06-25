@@ -11,6 +11,12 @@
                 <input type="search" name="" id="" placeholder="Search">
             </div>
 
+            <div class="mt-3 text-right" role="button" @click="goToMessages">
+                <span class="text-secondary text-underline" style="font-size:0.7rem">
+                    View All >>
+                </span>
+            </div>
+
             <!-- messages tabs -->
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane label="All Messages" name="first">
@@ -90,6 +96,9 @@ import ChatPane from '../chatPane.vue';
                 console.log(err);
             });
         },
+        goToMessages(){
+            this.$router.push('/messenger')
+        }
     },
     mounted() {
         this.getMessages();

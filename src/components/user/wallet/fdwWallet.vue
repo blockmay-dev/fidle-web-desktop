@@ -3,7 +3,7 @@
     <div class="wallet">
       <div class="wallet--balances fpw d-flex justify-content-between">
         <div>
-            <h5 class="small">Available Balance</h5>
+            <h5 class="small mb-2">Available Balance</h5>
             <h2> {{ wallet_balances.FPW }}<span class="small currency-choice">FPW</span>  </h2>
         </div>
         <div>
@@ -20,54 +20,13 @@
           class="
             bg-white
             rounded-sm
-            w-100
+            w-50
             d-flex
             align-items-center
             justify-content-center
           "
           role="button"
-        >
-          <div class="text-center">
-            <div class="icon mb-2">
-              <IconComponent icon="carbon:send-alt-filled" />
-            </div>
-            <div>
-              <h6 class="">Send</h6>
-            </div>
-          </div>
-        </div>
-
-        <div
-          class="
-            bg-white
-            rounded-sm
-            w-100
-            d-flex
-            align-items-center
-            justify-content-center
-          "
-          role="button"
-        >
-          <div class="text-center">
-            <div class="icon mb-2">
-              <IconComponent icon="teenyicons:send-down-solid" />
-            </div>
-            <div>
-              <h6 class="">Receive</h6>
-            </div>
-          </div>
-        </div>
-
-        <div
-          class="
-            bg-white
-            rounded-sm
-            w-100
-            d-flex
-            align-items-center
-            justify-content-center
-          "
-          role="button"
+          @click="swapFidle = !swapFidle"
         >
           <div class="text-center">
             <div class="icon mb-2">
@@ -82,51 +41,72 @@
     </div>
 
     <EarnFidlePower @closeModal="closeFdw" v-show="earning"/>
+    <SwapFidle v-show="swapFidle"  @close="closeSwapModal" />
   </div>
 </template>
 
 <script>
+import SwapFidle from './swapFidle.vue';
 import EarnFidlePower from '@/components/static/earnFidlePower.vue';
 export default {
   components:{
-    EarnFidlePower
+    EarnFidlePower, SwapFidle
   },
     props:[''],
     data(){
         return {
-            wallet_balances: {},
             earning: false,
+            swapFidle: false,
         }
     },
     methods: {
       closeFdw(){
         this.earning = false
       },
-    getWalletBalances() {
+      closeSwapModal() {
+      this.swapFidle = false;
+    },
+     setWalletBalances() {
       this.$axios
         .get("user/wallet-balances")
         .then((res) => {
           console.log(res);
-          if (this.getUser.level.rank == 1) {
-            this.wallet_balances = res.data.balances.demo
+          if (this.getUser.level.rank === 1) {
+            this.wallet = res.data.balances.demo;
+          } else {
+            this.wallet = res.data.balances.main;
           }
-          else {
-            this.wallet_balances = res.data.balances.main
-          }
+          let new_wallet = this.wallet;
+          this.$store.dispatch("updateWallet", { new_wallet });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    setTransactions() {
+      this.$axios
+        .get("user/wallet/transactions/")
+        .then((res) => {
+          console.log(res);
+          let new_transactions = res.data.results;
+          this.$store.dispatch("updateTransaction", { new_transactions });
         })
         .catch((err) => {
           console.log(err);
         });
     },
 
+    
   },
   mounted() {
-    this.getWalletBalances();
   },
   computed: {
     getUser(){
         return this.$store.getters.getUser
+    },
+    wallet_balances(){
+      return this.$store.getters.getWallet
     }
-  }
+  },
 }
 </script>

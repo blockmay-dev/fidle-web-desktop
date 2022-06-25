@@ -5,8 +5,8 @@
         <div class="d-flex" style="gap: 18px">
           <!-- Chat Listing area  -->
           <div class="chat--list">
-            <h6 class="font-weight-bold">Messages</h6>
-            <div class="my-4">
+            <h5 class="font-weight-bold pl-3 pt-3">Messages</h5>
+            <div class="my-4 message-search px-3">
               <input type="search" placeholder="Search for Direct Messages" />
             </div>
 
@@ -15,6 +15,7 @@
                 v-for="item in messages"
                 :key="item.id"
                 class="message--list"
+                :class="{ active: isActive === item.id }"
               >
                 <div
                   class="d-flex justify-content-between"
@@ -32,17 +33,9 @@
                           "
                           alt=""
                         />
-                        <img
-                          v-else
-                          src="@/assets/img/no_user.png"
-                          alt=""
-                        />
+                        <img v-else src="@/assets/img/no_user.png" alt="" />
                       </div>
-                      <img
-                        v-else
-                        src="@/assets/img/no_user.png"
-                        alt=""
-                      />
+                      <img v-else src="@/assets/img/no_user.png" alt="" />
                     </div>
                     <div>
                       <h6 v-if="item.participants.length === 2">
@@ -56,7 +49,7 @@
                     </div>
                   </div>
                   <div>
-                    <small v-if="item.last_message">
+                    <small v-if="item.last_message" style="font-size:11px">
                       {{
                         timeRange(
                           new Date(item.last_message.date_created * 1000.0)
@@ -70,123 +63,67 @@
           </div>
 
           <!-- Chat Box Area  -->
-          <div class="empty--chat" v-if="!on_chat">
-            <div>
-              <el-empty
-                description="Click on a chat to start a conversation"
-              ></el-empty>
-              <hr />
-              <h4>Fidle Messenger</h4>
-              <!-- <p></p> -->
+          <div class="chat">
+            <div class="contact bar" v-if="last.participants">
+              <div class="pic"></div>
+              <div class="name" v-if="last.participants.length === 2"> {{ last.participants[1].name }} </div>
+              <div class="name" v-else> Fidle User </div>
+              <div class="seen" v-if="last.last_message">{{ timeStamp(
+                          new Date(last.last_message.date_created * 1000.0)
+                        ) }}</div>
             </div>
-          </div>
-
-          <div class="chat--box_container" v-else>
-            <div class="messenger--top">
-              <div class="">
-                <div class="" style="gap: 10px">
-                  <div class="active-img"></div>
-                  <div class="">
-                    <h6 class="font-weight-bold" v-if="sender_username">
-                      @{{ sender_username }}
-                    </h6>
-                    <!-- <p class="small text-muted">Online</p>   -->
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="chat--box p-3">
-              <div>
-                <div class="">
-                  <!-- Chat Area -->
-                  <div>
-                    <div
-                      class="mb-3 sender__message d-flex"
-                      style="gap: 10px"
-                      :class="
-                        sender_username !== chat.sender.username
-                          ? 'sender'
-                          : 'reciever'
-                      "
-                      v-for="chat in message"
-                      :key="chat.id"
-                    >
-                      <div class="sender--img">
-                        <div v-if="sender_username === chat.sender.username">
-                          <img
-                            v-if="chat.sender.current_profile_image"
-                            :src="chat.sender.current_profile_image.media.file"
-                            alt=""
-                          />
-                          <img
-                            v-else
-                            src="https://cdn.pixabay.com/photo/2015/03/04/22/35/head-659652_960_720.png"
-                            alt=""
-                          />
-                        </div>
-                      </div>
-
-                      <div>
-                        <div class="main--text">
-                          <p>{{ chat.text }}</p>
-                          <!-- <small class="text-muted" style="font-size: 0.7rem"> {{ timeStamp(chat.created_at) }} </small> -->
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div>
+            <div class="messages" id="chat">
+              <!-- <div class="time">Today at 11:41</div> -->
               <div
-                class="
-                  d-flex
-                  justify-content-between
-                  align-items-center
-                  send--chat
+                v-for="chat in message"
+                :key="chat.id"
+                class="message"
+                :class="
+                  sender_username !== chat.sender.username ? 'parker' : 'stark'
                 "
               >
-                <el-input
-                  type="textarea"
-                  :autosize="{ minRows: 2, maxRows: 4 }"
-                  placeholder="Write your Message"
-                  v-model="valueInput"
-                >
-                </el-input>
-                <div class="d-flex justify-content-between" style="gap: 5px">
-                  <div role="button" @click="sendMessage">
-                    <IconComponent
-                      icon="akar-icons:send"
-                      style="font-size: 20px"
-                      color="var(--main-color)"
-                    />
-                  </div>
-                  <div
-                    class="your-input-box"
-                    @click="toogleDialogEmoji"
-                    role="button"
-                  >
-                    <IconComponent
-                      icon="fluent:emoji-32-regular"
-                      style="font-size: 20px"
-                      color="var(--main-color)"
-                    />
-                  </div>
-                </div>
+                {{ chat.text }}
+              </div>
 
-                <div id="exampleInputEmoji">
-                  <VEmojiPicker
-                    v-show="showDialog"
-                    :pack="emojisNative"
-                    labelSearch="Search"
-                    style="
-                       {
-                        width: 4px;
-                      }
-                    "
-                    @select="onSelectEmoji"
-                  />
-                </div>
+              <!-- <div class="message stark">
+                <div class="typing typing-1"></div>
+                <div class="typing typing-2"></div>
+                <div class="typing typing-3"></div>
+              </div> -->
+            </div>
+            <div class="input">
+              <div
+                class="your-input-box"
+                @click="toogleDialogEmoji"
+                role="button"
+              >
+                <IconComponent
+                  icon="fluent:emoji-32-regular"
+                  style="font-size: 25px"
+                />
+              </div>
+              <input
+                placeholder="Type your message here!"
+                id="textarea"
+                type="text"
+                v-model="valueInput"
+              />
+              <div role="button" @click="sendMessage">
+                <IconComponent icon="akar-icons:send" style="font-size: 25px" />
+              </div>
+
+              <div id="exampleInputEmoji">
+                <VEmojiPicker
+                  v-show="showDialog"
+                  :pack="emojisNative"
+                  labelSearch="Search"
+                  style="
+                     {
+                      width: 4px;
+                    }
+                  "
+                  @select="onSelectEmoji"
+                />
               </div>
             </div>
           </div>
@@ -228,6 +165,8 @@ export default {
       sender_username: "",
       valueInput: "",
       on_chat: false,
+      isActive: false,
+      last: {}
     };
   },
   methods: {
@@ -283,7 +222,10 @@ export default {
         });
     },
     goToMessage(item) {
-      this.sender_username = item.participants[1].username;
+      this.last = item
+      console.log(this.last);
+      this.isActive = this.isActive === item.id ? null : item.id;
+      this.sender_username = item.participants[1].username
       this.$axios
         .get(`/chat/${item.participants[1].username}/`)
         .then((res) => {

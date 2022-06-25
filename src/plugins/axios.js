@@ -35,7 +35,6 @@ instance.interceptors.request.use(function(config) {
     return config;
 }, function(error) {
     // Do something with request error
-    alert("something went wrong")
     return Promise.reject(error);
 });
 
@@ -47,13 +46,13 @@ instance.interceptors.response.use(function(response) {
     return response;
 }, function(error) {
 
-    Toastify({
-        text: 'Something went wrong',
-        className: "info",
-        style: {
-            background: "red",
-        }
-    }).showToast();
+    // Toastify({
+    //     text: 'Something went wrong',
+    //     className: "info",
+    //     style: {
+    //         background: "red",
+    //     }
+    // }).showToast();
 
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error

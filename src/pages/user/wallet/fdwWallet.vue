@@ -5,17 +5,11 @@
             <div class="mt-4">
                 <WalletsView/>
             </div>
-
-            <!-- Transaction History Table -->
-            <div class="my-4">
-                <TransactionsView/>
-            </div>
         </div>
     </div>
 </template>
 
 <script>
-import TransactionsView from '@/components/user/wallet/transactionsView.vue'
 import WalletsView from '@/components/user/wallet/fdwWallet.vue'
 export default {
     data() {
@@ -23,7 +17,7 @@ export default {
             transactions: []
         };
     },
-    components: { TransactionsView, WalletsView },
+    components: { WalletsView },
     methods:{
         
     },

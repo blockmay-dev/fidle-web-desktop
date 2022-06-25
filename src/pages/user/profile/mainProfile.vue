@@ -64,6 +64,7 @@
             </div>
             <div>
               <div
+                @click="profile = !profile"
                 class="edit--profile d-flex align-items-center"
                 style="gap: 10px"
                 role="button"
@@ -167,6 +168,10 @@
         </div>
       </div>
     </div>
+
+
+  <!-- Edit Profile  -->
+  <EditProfile v-show="profile" @close="close"/>
   </div>
 </template>
 
@@ -175,11 +180,13 @@ import UserConnectsVue from '@/components/user/profile/userConnects.vue';
 import PostViewVue from '@/components/user/profile/postView.vue';
 import MediaViewVue from '../../../components/user/profile/mediaView.vue';
 import SavedPosts from '../../../components/user/profile/savedPosts.vue';
+import EditProfile from '@/components/user/profile/editProfile.vue';
 export default {
     data() {
         return {
             user: {},
-            followers: []
+            followers: [],
+            profile: false,
         };
     },
     methods: {
@@ -204,12 +211,15 @@ export default {
                 .catch((err) => {
                 console.log(err);
             });
+        },
+        close(){
+          this.profile = false
         }
     },
     mounted() {
         this.getUser();
         this.getFollowers();
     },
-    components: { UserConnectsVue, PostViewVue, MediaViewVue, SavedPosts }
+    components: { UserConnectsVue, PostViewVue, MediaViewVue, SavedPosts, EditProfile }
 };
 </script>

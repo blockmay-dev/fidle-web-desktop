@@ -120,7 +120,7 @@
 export default {
   data() {
     return {
-      wallet_balances: {},
+      wallet: {},
       options: [
         {
           value: "FDC",
@@ -144,24 +144,17 @@ export default {
         .then((res) => {
           console.log(res);
           if (this.getUser.level.rank === 1) {
-            this.wallet_balances = res.data.balances.demo
+            this.wallet = res.data.balances.demo
           }
           else {
-            this.wallet_balances = res.data.balances.main
+            this.wallet = res.data.balances.main
           }
+          let wallet = this.wallet;
+          this.$store.dispatch('wallets', {wallet})
         })
         .catch((err) => {
           console.log(err);
         });
-    },
-    getWallet(){
-      this.$axios.get("user/wallet")
-      .then((res)=>{
-        console.log(res);
-      })
-      .catch((err)=>{
-        console.log(err);
-      })
     },
     getValue(){
         if (this.value == 'FDC') {
@@ -182,14 +175,19 @@ export default {
 
   },
   mounted() {
-    this.getWalletBalances();
-    this.getWallet()
     this.fdc = true
   },
   computed: {
     getUser(){
         return this.$store.getters.getUser
+    },
+    wallet_balances(){
+      return this.$store.getters.getWallet
     }
+
+  },
+  beforeMount(){
+    this.getWalletBalances()
   }
 };
 </script>
