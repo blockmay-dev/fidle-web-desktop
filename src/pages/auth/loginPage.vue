@@ -153,7 +153,7 @@ export default {
     },
   },
   created(){
-    if(!this.$store.getters.isAuthenticated){
+    if(this.$store.getters.isAuthenticated){
       this.$router.push("/all-posts")
     }
   },
