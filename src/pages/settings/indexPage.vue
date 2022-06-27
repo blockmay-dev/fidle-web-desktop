@@ -36,7 +36,7 @@
                     </div>
                 </li>
             </ul>
-            <div class="p-3 d-flex " style="color:#EB4242; gap:20px">
+            <div class="p-3 d-flex " style="color:#EB4242; gap:20px" role="button" @click="logout = !logout">
                 <span> <IconComponent icon="teenyicons:logout-solid" /> </span>
                 <span>Logout</span>
             </div>
@@ -47,6 +47,8 @@
             <security-settings v-show="security"/>
             <support-settings v-show="support"/>
         </div>
+
+        <LogoutConfirmation v-show="logout" @close="closeModal"/>
       </div>
     </div>
   </div>
@@ -58,17 +60,23 @@ import AboutFidle from '@/components/settings/aboutFidle.vue'
 import AccountSettings from '@/components/settings/accountSettings.vue'
 import SecuritySettings from '@/components/settings/securitySettings.vue'
 import SupportSettings from '@/components/settings/supportSettings.vue'
+import LogoutConfirmation from '@/components/static/logoutConfirmation.vue'
 export default {
     components:{
-        AboutFidle, AccountSettings, SecuritySettings, SupportSettings
-    },
+    AboutFidle,
+    AccountSettings,
+    SecuritySettings,
+    SupportSettings,
+    LogoutConfirmation
+},
     data(){
         return{
             isActive:true,
             account: true,
             security: false,
             support: false,
-            about: false
+            about: false, 
+            logout: false,
         }
     },
     methods:{
@@ -95,6 +103,9 @@ export default {
             this.security = false
             this.support = false
             this.about = true
+        },
+        closeModal(){
+            this.logout = false
         }
     },
     mounted() {

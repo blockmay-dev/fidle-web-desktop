@@ -221,11 +221,32 @@
                         </p>
                       </div>
                     </div>
-                    <div>
-                      <IconComponent
+                    <div class="dropleft">
+                      <span role="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false" >
+                        <IconComponent
                         icon="akar-icons:more-horizontal"
-                        style="font-size: 30px"
+                        style="font-size: 20px"
                       />
+                      </span>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                          <div class="dropdown-item d-flex" style="gap:12px"  role="button" >
+                            <span>
+
+                            </span>
+                            <span>
+                              Convert to NFT
+                            </span>
+                          </div>
+                          <div class="dropdown-item d-flex" style="gap:12px"  role="button" @click="goToPost(item)">
+                            <span>
+
+                            </span>
+                            <span>
+                              Promote Post
+                            </span>
+                          </div>
+                        </div>
+                      <!-- </div> -->
                     </div>
                   </div>
 
@@ -584,9 +605,11 @@ export default {
     },
     closeVideoPreview(){
       this.videoPreview = false;
-      // var preview = document.getElementById("video_select_preview");
-      //   preview.src = "";
-    }
+    },
+    goToPost(item){
+      this.$router.push({name: 'single-fidle', params:{id: item.id}})
+
+    },
   },
   mounted() {
     this.getPosts();

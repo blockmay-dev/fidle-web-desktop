@@ -554,7 +554,8 @@
         </div>
 
         <div class="col-md-3 bg-white rounded-lg">
-          Statistics
+          <div id="chart1" style="max-height:500px">
+          </div>
         </div>
       </div>
     </div>
@@ -564,8 +565,10 @@
 
 
 <script>
+
 import { VEmojiPicker } from "v-emoji-picker";
 import packEmoji from "@/api/emojis.js";
+import ApexCharts from 'apexcharts'
 import {
   timeRange,
   sliceContent,
@@ -576,6 +579,7 @@ import {
 export default {
   components: {
     VEmojiPicker,
+    // apexchart: ApexCharts,
   },
   data() {
     return {
@@ -900,6 +904,29 @@ export default {
         }
       }
     }
+
+
+    var options1 = {
+  chart: {
+    height: 280,
+    type: "radialBar",
+  },
+  series: [67, 84, 97, 61],
+  plotOptions: {
+    radialBar: {
+      dataLabels: {
+        total: {
+          show: true,
+          label: 'TOTAL'
+        }
+      }
+    }
+  },
+  labels: ['TEAM A', 'TEAM B', 'TEAM C', 'TEAM D']
+};
+
+new ApexCharts(document.querySelector("#chart1"), options1).render();
+
   },
   created() {},
   computed: {

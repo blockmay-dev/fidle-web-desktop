@@ -140,3 +140,39 @@
     color: #fff;
     font-size: 0.85rem;
 }
+
+.logout--mask {
+    background-color: rgba(0, 0, 0, 0.6);
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logout--container {
+    background-color: #fff;
+    padding: 1rem;
+    border-radius: 10px;
+}
+
+.logout--container .logout {
+    background-color: var(--blue-200);
+    padding: 0.2rem;
+    border-radius: 5px;
+    border: none;
+    color: #fff;
+    font-size: 0.9rem;
+}
+
+.logout--container .cancel {
+    background-color: #EB4242;
+    padding: 0.2rem;
+    border-radius: 5px;
+    border: none;
+    color: #fff;
+    font-size: 0.9rem;
+}

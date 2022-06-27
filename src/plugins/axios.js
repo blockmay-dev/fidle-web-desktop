@@ -6,7 +6,7 @@ import store from '../store'
 Vue.use(Toastify)
 
 import axios from "axios";
-const BASE_URL = 'https://dev.api.fidle.io/';
+const BASE_URL = 'https://api.fidle.io/';
 
 const instance = axios.create({
     baseURL: BASE_URL,

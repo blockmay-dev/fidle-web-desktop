@@ -152,6 +152,11 @@ export default {
       this.$router.push("/sign-up");
     },
   },
+  created(){
+    if(!this.$store.getters.isAuthenticated){
+      this.$router.push("/all-posts")
+    }
+  },
   components: { AppLoader },
 };
 </script>
