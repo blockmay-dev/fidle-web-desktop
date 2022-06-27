@@ -129,7 +129,8 @@ export default {
         console.log(res);
         let token = res.data.auth_token
         let user = res.data.user
-        this.$store.dispatch("login", {token, user})
+        let loggedIn = true
+          this.$store.dispatch("login", { token, user, loggedIn });
         console.log(token, user);
       })
       .catch((err)=>{

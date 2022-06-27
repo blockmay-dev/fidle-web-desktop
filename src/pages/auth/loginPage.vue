@@ -137,7 +137,8 @@ export default {
         .then((res) => {
           let token = res.data.auth_token;
           let user = res.data.user;
-          this.$store.dispatch("login", { token, user });
+          let loggedIn = true
+          this.$store.dispatch("login", { token, user, loggedIn });
           this.$router.push({name: "all-posts"})
         })
         .catch((err) => {
@@ -153,7 +154,7 @@ export default {
     },
   },
   created(){
-    if(this.$store.getters.isAuthenticated){
+    if(this.$store.getters.isLoggedIn ){
       this.$router.push("/all-posts")
     }
   },

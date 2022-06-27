@@ -15,7 +15,8 @@ const getDefaultState = () => {
         all_notifications: [],
         all_notificationsCount: '',
         stories: [],
-        myStories: []
+        myStories: [],
+        loggedIn: false
     };
 };
 
@@ -26,6 +27,9 @@ export default new Vuex.Store({
     getters: {
         isAuthenticated: state => {
             return state.token;
+        },
+        isLoggedIn: state => {
+            return state.loggedIn;
         },
         getUser: state => {
             return state.user;
@@ -52,6 +56,9 @@ export default new Vuex.Store({
     mutations: {
         SET_TOKEN: (state, token) => {
             state.token = token;
+        },
+        LOGGED_IN: (state, loggedIn) => {
+            state.loggedIn = loggedIn;
         },
         SET_USER: (state, user) => {
             state.user = user;
@@ -94,9 +101,10 @@ export default new Vuex.Store({
         }
     },
     actions: {
-        login: ({ commit }, { token, user }) => {
+        login: ({ commit }, { token, user, loggedIn }) => {
             commit('SET_TOKEN', token);
             commit('SET_USER', user);
+            commit('LOGGED_IN', loggedIn);
         },
         wallets: ({ commit }, { wallet }) => {
             commit('SET_WALLET', wallet);
