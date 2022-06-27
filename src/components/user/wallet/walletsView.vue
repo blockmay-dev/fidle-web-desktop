@@ -143,12 +143,12 @@ export default {
         .get("user/wallet-balances")
         .then((res) => {
           console.log(res);
-          if (this.getUser.level.rank === 1) {
-            this.wallet = res.data.balances.demo
-          }
-          else {
+          // if (this.getUser.level.rank === 1) {
+          //   this.wallet = res.data.balances.demo
+          // }
+          // else {
             this.wallet = res.data.balances.main
-          }
+          // }
           let wallet = this.wallet;
           this.$store.dispatch('wallets', {wallet})
         })

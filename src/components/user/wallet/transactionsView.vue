@@ -72,18 +72,7 @@ export default {
     };
   },
   methods: {
-    setTransactions() {
-      this.$axios
-        .get("user/wallet/transactions/")
-        .then((res) => {
-          console.log(res);
-          let transactions = res.data.results
-          this.$store.dispatch('transactions', { transactions })
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
+    
     viewMore(transaction){
       this.$emit('open', transaction.id)
     },
@@ -96,8 +85,6 @@ export default {
       return this.$store.getters.getTransactions
     }
   },
-  beforeMount() {
-    this.setTransactions();
-  },
+  
 };
 </script>

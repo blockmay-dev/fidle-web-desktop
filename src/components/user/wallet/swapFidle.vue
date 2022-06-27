@@ -11,9 +11,9 @@
           </div>
           <div class="text-center mb-3">
             <h4 class="">Swap</h4>
-            <small class="text-secondary"
+            <!-- <small class="text-secondary"
               >Copy your fidle address or scan code to receive Fidle</small
-            >
+            > -->
           </div>
           <div>
             <div class="d-flex align-items-center mb-2 w-100" v-if="fidle">

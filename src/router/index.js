@@ -67,13 +67,13 @@ const routes = [{
                     component: () =>
                         import ( /* webpackChunkName: "about" */ '../components/stories/chooseType.vue')
                 }, {
-                    path: '/stories/create',
-                    name: 'preview-story',
+                    path: '/stories/view',
+                    name: 'view-story',
                     // route level code-splitting
                     // this generates a separate chunk (about.[hash].js) for this route
                     // which is lazy-loaded when the route is visited.
                     component: () =>
-                        import ( /* webpackChunkName: "about" */ '../components/stories/previewStory.vue')
+                        import ( /* webpackChunkName: "about" */ '../components/stories/viewPostedStories.vue')
                 }, ]
             },
         ]
@@ -178,13 +178,13 @@ const routes = [{
                     component: () =>
                         import ( /* webpackChunkName: "about" */ '../components/stories/chooseType.vue')
                 }, {
-                    path: '/stories/create',
-                    name: 'preview-story',
+                    path: '/stories/view',
+                    name: 'view-story',
                     // route level code-splitting
                     // this generates a separate chunk (about.[hash].js) for this route
                     // which is lazy-loaded when the route is visited.
                     component: () =>
-                        import ( /* webpackChunkName: "about" */ '../components/stories/previewStory.vue')
+                        import ( /* webpackChunkName: "about" */ '../components/stories/viewPostedStories.vue')
                 }, ]
             },
         ]

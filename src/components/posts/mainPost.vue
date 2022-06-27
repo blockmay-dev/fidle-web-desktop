@@ -28,7 +28,7 @@
             </div>
           </div>
           <div class="media--preview mt-3" v-show="imgPreview">
-            <img :src="imgSrc" alt="" />
+            <img :src="imgSrc3" alt="" />
             <div
               class="close-media-preview"
               role="button"
@@ -666,7 +666,7 @@ export default {
         content: "",
       },
       post: {},
-      imgSrc: "",
+      imgSrc3: "",
       disabled: true,
       videoPreview: false,
       loader: false,
@@ -872,7 +872,7 @@ export default {
       console.log(this.payload.media);
       if (e.target.files.length > 0) {
         var src = URL.createObjectURL(e.target.files[0]);
-        this.imgSrc = src;
+        this.imgSrc3 = src;
         this.isActive = false;
         // document.getElementById('message').style.backgroundImage = null;
         // this.payload.color = "";
@@ -893,7 +893,6 @@ export default {
       }
     },
     closePreview() {
-      this.imgSrc = "";
       this.imgPreview = false;
     },
     closeVideoPreview() {

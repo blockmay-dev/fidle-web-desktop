@@ -102,6 +102,32 @@ export default {
       let url = this.search_item;
       this.$router.push({ name: "search-results", query: { q: url } });
     },
+    goToNotification(notification){
+      // console.log(notification);
+        this.$axios.get(`user/notifications/${notification.id}`)
+        .then((res)=>{
+            console.log(res);
+            this.goToPost(notification.data.post_id)
+        })
+        .catch((err)=>{
+            console.log(err);
+        })
+    },
+    goToPost(val){
+      this.$router.push({name: 'single-fidle', params:{id: val}})
+    },
+    getNotificationsStatistics2() {
+      this.$axios
+        .get("/notification-statistics")
+        .then((res) => {
+          console.log(res);
+          let new_notificationsCount = res.data.unread;
+          this.$store.dispatch('updateNotificationsCount', {new_notificationsCount})
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     getNotifications() {
       this.$axios
         .get("/user/notifications")

@@ -96,11 +96,11 @@
                 type="textarea"
                 :autosize="{ minRows: 2, maxRows: 4}"
                 placeholder="Please enter text (Optional)"
-                v-model="payload.content">
+                v-model="dataObj.content">
               </el-input>
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible2 = false">Cancel</el-button>
-          <el-button type="primary" @click="addStory"
+          <el-button type="primary" @click="addPhotoStory"
             >Add Story</el-button
           >
         </span>
@@ -148,6 +148,18 @@ export default {
           message: 'Story Added',
           type: 'success'
         })
+
+         // Update Store 
+      this.$axios
+        .get("user/stories")
+        .then((res) => {
+          console.log(res);
+          let updateStories = res.data.results
+          this.$store.dispatch('updateMyStories', {updateStories})
+        })
+        .catch((err) => {
+          console.log(err);
+        });
       })
       .catch((err)=>{
         console.log(err);
@@ -156,8 +168,40 @@ export default {
         this.dialogFormVisible = false
       })
     },
+    addPhotoStory(){
+      let formData = new FormData();
+      formData.append("content", this.dataObj.content);
+      formData.append("media", this.dataObj.media);
+      formData.append("_method", "POST");
+      this.$axios.post('/user/stories/', formData)
+      .then((res)=>{
+        console.log(res)
+        this.$notify({
+          title: 'Done!',
+          message: 'Story Added',
+          type: 'success'
+        })
+        // Update Store 
+      this.$axios
+        .get("user/stories")
+        .then((res) => {
+          console.log(res);
+          let updateStories = res.data.results
+          this.$store.dispatch('updateMyStories', {updateStories})
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      })
+      
+      .catch((err)=>{
+        console.log(err);
+      })
+      .finally(()=>{
+        this.dialogFormVisible2 = false
+      })
+    },
     onFileChange(e) {
-      // alert('Hello World')
       this.imgPreview = true;
       var input = e.target;
       this.dataObj.media = input.files[0];
@@ -166,8 +210,6 @@ export default {
         var src = URL.createObjectURL(e.target.files[0]);
         this.imgSrc = src;
         this.isActive = false;
-        // document.getElementById('message').style.backgroundImage = null;
-        // this.payload.color = "";
       }
     },
     closePreview() {

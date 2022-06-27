@@ -13,7 +13,9 @@ const getDefaultState = () => {
         wallet: {},
         transactions: [],
         all_notifications: [],
-        all_notificationsCount: ''
+        all_notificationsCount: '',
+        stories: [],
+        myStories: []
     };
 };
 
@@ -39,6 +41,12 @@ export default new Vuex.Store({
         },
         getNotificationsCount: state => {
             return state.all_notificationsCount
+        },
+        getStories: state => {
+            return state.stories
+        },
+        getMyStories: state => {
+            return state.myStories
         }
     },
     mutations: {
@@ -72,6 +80,15 @@ export default new Vuex.Store({
         UPDATE_NOTIFICATIONS_COUNT: (state, new_notificationsCount) => {
             state.all_notificationsCount = new_notificationsCount;
         },
+        SET_STORIES: (state, stories) => {
+            state.stories = stories;
+        },
+        SET_MY_STORIES: (state, myStories) => {
+            state.myStories = myStories;
+        },
+        UPDATE_MY_STORIES: (state, updateStories) => {
+            state.myStories = updateStories;
+        },
         RESET: state => {
             Object.assign(state, getDefaultState());
         }
@@ -104,7 +121,17 @@ export default new Vuex.Store({
         },
         updateNotificationsCount: ({ commit }, { new_notificationsCount }) => {
             commit('UPDATE_NOTIFICATIONS_COUNT', new_notificationsCount);
-        }
+        },
+
+        setStories: ({ commit }, { stories }) => {
+            commit('SET_STORIES', stories);
+        },
+        setMyStories: ({ commit }, { myStories }) => {
+            commit('SET_MY_STORIES', myStories);
+        },
+        updateMyStories: ({ commit }, { updateStories }) => {
+            commit('UPDATE_MY_STORIES', updateStories);
+        },
     },
     modules: {
         auth

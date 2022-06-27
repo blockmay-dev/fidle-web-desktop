@@ -224,6 +224,7 @@
           type="error"
           show-icon>
         </el-alert>
+        <small v-show="err"> Go to <router-link to="/settings">settings</router-link> to set or change Pin</small>
         <div class="text-center mt-3">
           <div class="text-center">
             <h4 class="m-0">

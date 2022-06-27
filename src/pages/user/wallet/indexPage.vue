@@ -40,7 +40,7 @@
 
             <!-- Transaction History Table -->
       <div class="my-4">
-          <TransactionsView @open="openModal"/>
+          <TransactionsView :currency_symbol = "currency" @open="openModal"/>
       </div>
     </el-tabs>
 
@@ -127,12 +127,25 @@ export default {
       user: {},
       modal: false,
       trx_id: '',
-      transaction: {}
+      transaction: {},
+      currency: ''
     };
   },
   methods: {
-    handleClick(tab, event) {
-      console.log(tab, event);
+    handleClick(tab) {
+      console.log(tab.name);
+      if (tab.name == 'second') {
+        this.currency = 'FPW'
+        this.setTransactions()
+      }
+      else if(tab.name == 'third' ){
+        this.currency = 'FIDLE'
+        this.setTransactions()
+      }
+      else {
+        this.currency = ''
+        this.setTransactions()
+      }
     },
     closeUpgrade() {
       this.upgrade = !this.upgrade;
@@ -167,9 +180,27 @@ export default {
                 console.log(err);
             })
         },
+        setTransactions() {
+      let _self = this
+      let currency = _self.currency
+      this.$axios
+        .get("user/wallet/transactions/?currency__symbol="+currency)
+        .then((res) => {
+          console.log(res);
+          let transactions = res.data.results
+          this.$store.dispatch('transactions', { transactions })
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
   },
+  
   mounted() {
     this.getUser();
+  },
+  beforeMount() {
+    this.setTransactions();
   },
   
   components: { MainWalletVue, FidleWalletVue, FdwWalletVue, UpgradeLevel, TransactionsView },
