@@ -431,7 +431,6 @@
                       v-show="comments === item.id"
                       v-for="comment in commentsList"
                       :key="comment.id"
-                      style="gap: 3px"
                     >
                       <div class="commenter-photo">
                         <img
@@ -472,6 +471,8 @@
                         align-items-center
                         mt-3
                       "
+
+                      style="gap: 10px"
                     >
                       <div class="commenter-photo">
                         <img
@@ -551,7 +552,15 @@
           <div class="mb-4 text-right" role="button" @click="verify = false">
             <IconComponent icon="ant-design:close-circle-outlined" style="font-size:30px"/>
           </div>
-          <div class="row mb-3">
+          <div v-if="verify_loading">
+          <div class="d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </div>
+        </div>
+         <div v-else>
+           <div class="row mb-3">
             <span class="col-4 font-weight-bold">Creators Name:</span>
             <span v-if="post.user" class="col-6"> {{ post.user.name }} </span>
           </div>
@@ -567,6 +576,7 @@
             <span class="col-4 font-weight-bold">Verify on Chain</span>
             <span class="col-6"> {{ post.verify_hash }} </span>
           </div>
+         </div>
         </div>
       </div>
 
@@ -678,6 +688,7 @@ export default {
         reason: ''
       },
       val: '',
+      verify_loading: false,
     };
   },
   methods: {
@@ -826,6 +837,7 @@ export default {
     },
     getPost(item){
       this.verify = true
+      this.verify_loading = true
       this.$axios.get(`posts/${item.id}`)
       .then((res)=>{
         console.log(res);
@@ -833,6 +845,9 @@ export default {
       })
       .catch((err)=>{
         console.log(err);
+      })
+      .finally(()=>{
+        this.verify_loading = false
       })
     },
 

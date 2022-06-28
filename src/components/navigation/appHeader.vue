@@ -8,7 +8,7 @@
         </div>
 
         <!-- Search Field -->
-        <div>
+        <div class="search--area">
           <form action="" method="get" @submit.prevent="goToSearch">
             <div class="nav-search-field">
               <IconComponent
@@ -21,13 +21,61 @@
                 name=""
                 id=""
                 placeholder="Search"
+                @keyup="searchItems"
               />
             </div>
           </form>
+          <div class="search--response" v-show="search__item">
+            <div class="d-flex justify-content-center">
+              <span @click="goToSearch" class="w-100" role="button">
+                {{ search_item }}
+              </span>
+              <span>
+                <IconComponent
+                  icon="bytesize:search"
+                  style="color: var(--gray-500)"
+                />
+              </span>
+            </div>
+          </div>
         </div>
+
+        
 
         <!-- User Photo, Notifications and Go Live -->
         <div class="d-flex" style="gap: 15px">
+
+        <!-- Menu Icons  -->
+        <div>
+          <ul class="m-0 d-flex align-items-center top--nav mr-4" style="gap:30px"> 
+            <li>
+              <router-link  to="/all-posts">
+                <span class="d-block text-center"> <IconComponent icon="ci:home-alt-minus" style="font-size:16px"/> </span>
+                <div>
+                  <span style="font-size:14px">Home</span>
+                </div>
+              </router-link>
+            </li>
+            <li>
+              <router-link  to="/settings">
+                <span class="d-block text-center"> <IconComponent icon="clarity:settings-line" /> </span>
+                <div>
+                  <span style="font-size:14px">Settings</span>
+                </div>
+              </router-link>
+            </li>
+            <li>
+              <router-link  to="/wallet">
+                <span class="d-block text-center"> <IconComponent icon="clarity:wallet-line" /> </span>
+                <div>
+                  <span style="font-size:14px">Wallet</span>
+                </div>
+              </router-link>
+            </li>
+          </ul>
+        </div>
+
+
           <div class="user-header-photo" role="button" @click="goToUser">
             <img
               v-if="user.current_profile_image"
@@ -78,10 +126,17 @@ export default {
     return {
       user: {},
       search_item: "",
-      unread: ''
+      unread: "",
+      search__item: false,
     };
   },
   methods: {
+    searchItems() {
+      this.search__item = true;
+      if (this.search_item == "") {
+        this.search__item = false;
+      }
+    },
     getUser() {
       this.$axios
         .get("auth/users/me")
@@ -102,19 +157,20 @@ export default {
       let url = this.search_item;
       this.$router.push({ name: "search-results", query: { q: url } });
     },
-    goToNotification(notification){
+    goToNotification(notification) {
       // console.log(notification);
-        this.$axios.get(`user/notifications/${notification.id}`)
-        .then((res)=>{
-            console.log(res);
-            this.goToPost(notification.data.post_id)
+      this.$axios
+        .get(`user/notifications/${notification.id}`)
+        .then((res) => {
+          console.log(res);
+          this.goToPost(notification.data.post_id);
         })
-        .catch((err)=>{
-            console.log(err);
-        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
-    goToPost(val){
-      this.$router.push({name: 'single-fidle', params:{id: val}})
+    goToPost(val) {
+      this.$router.push({ name: "single-fidle", params: { id: val } });
     },
     getNotificationsStatistics2() {
       this.$axios
@@ -122,7 +178,9 @@ export default {
         .then((res) => {
           console.log(res);
           let new_notificationsCount = res.data.unread;
-          this.$store.dispatch('updateNotificationsCount', {new_notificationsCount})
+          this.$store.dispatch("updateNotificationsCount", {
+            new_notificationsCount,
+          });
         })
         .catch((err) => {
           console.log(err);
@@ -134,41 +192,42 @@ export default {
         .then((res) => {
           console.log(res);
           let all_notifications = res.data.results;
-           this.$store.dispatch('getNotifications', {all_notifications})
+          this.$store.dispatch("getNotifications", { all_notifications });
         })
         .catch((err) => {
           console.log(err);
         });
     },
-     getNotificationsStatistics() {
+    getNotificationsStatistics() {
       this.$axios
         .get("/notification-statistics")
         .then((res) => {
           console.log(res);
           let all_notificationsCount = res.data.unread;
-          this.$store.dispatch('setNotificationsCount', {all_notificationsCount})
+          this.$store.dispatch("setNotificationsCount", {
+            all_notificationsCount,
+          });
         })
         .catch((err) => {
           console.log(err);
         });
     },
   },
-  
+
   mounted() {
     this.getUser();
   },
-  beforeMount(){
+  beforeMount() {
     this.getNotifications();
-    this.getNotificationsStatistics()
+    this.getNotificationsStatistics();
   },
-  computed:{
-    notifications(){
-      return this.$store.getters.getNotifications.slice(0,5)
+  computed: {
+    notifications() {
+      return this.$store.getters.getNotifications.slice(0, 5);
     },
-    notifications_count(){
-      return this.$store.getters.getNotificationsCount
+    notifications_count() {
+      return this.$store.getters.getNotificationsCount;
     },
-
-  }
+  },
 };
 </script>

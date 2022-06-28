@@ -75,11 +75,12 @@
                 class="user-profile-action d-flex align-items-center"
                 style="gap: 10px"
                 role="button"
+                @click="followUser"
               >
                 <span>
                   <IconComponent icon="ci:message" />
                 </span>
-                <span>Send Message</span>
+                <span>Unfollow</span>
               </div>
             </div>
           </div>
@@ -187,6 +188,7 @@ export default {
         })
         .finally(()=>{
             this.getPosts();
+            this.getUser();
             this.followLoading = false;
         })
     },

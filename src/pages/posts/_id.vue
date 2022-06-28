@@ -553,10 +553,89 @@
           </div>
         </div>
 
-        <div class="col-md-3 bg-white rounded-lg">
-          <div id="chart1" style="max-height:500px">
+        <!-- Verify Details  -->
+    <div class="verify--details" v-show="verify">
+        <div class="verify--content">
+          <div class="mb-4 text-right" role="button" @click="verify = false">
+            <IconComponent icon="ant-design:close-circle-outlined" style="font-size:30px"/>
+          </div>
+          <div v-if="verify_loading">
+          <div class="d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
           </div>
         </div>
+         <div v-else>
+           <div class="row mb-3">
+            <span class="col-4 font-weight-bold">Creators Name:</span>
+            <span v-if="post.user" class="col-6"> {{ post.user.name }} </span>
+          </div>
+          <div class="row mb-3">
+            <span class="col-4 font-weight-bold">Date Created:</span>
+            <span class="col-6"> {{ timeStamp(new Date(post.date_created * 1000.0)) }} </span>
+          </div>
+          <div class="row mb-3">
+            <span class="col-4 font-weight-bold">Post Hash</span>
+            <span class="col-6"> {{ post.cid }} </span>
+          </div>
+          <div class="row">
+            <span class="col-4 font-weight-bold">Verify on Chain</span>
+            <span class="col-6"> {{ post.verify_hash }} </span>
+          </div>
+         </div>
+        </div>
+      </div>
+
+ <!-- Report Abuse -->
+      <div class="verify--details" v-show="flags">
+        <div class="verify--content">
+          <div class="mb-4 text-right" role="button" @click="flags = false">
+            <IconComponent icon="ant-design:close-circle-outlined" style="font-size:30px"/>
+          </div>
+          <div class="mb-2">
+            <h3>Flag Post</h3>
+            <small> Why do you want to flag this post? </small>
+          </div>
+          <div>
+            <div>
+              <input type="radio" name="" value="Violence" id="" v-model="dataObj.reason">
+              <label class="ml-2" for="">Violence</label>
+            </div>
+            <div>
+              <input type="radio" name="" id="" value="Harassment" v-model="dataObj.reason">
+              <label class="ml-2" for="">Harassment</label>
+            </div>
+            <div>
+              <input type="radio" name="" id="" value="Suicide or Self Injury" v-model="dataObj.reason">
+              <label class="ml-2" for="">Suicide or Self-Injury</label>
+            </div>
+            <div>
+              <input type="radio" name="" id="" value="Misleading Information" v-model="dataObj.reason">
+              <label class="ml-2" for="">Misleading Information</label>
+            </div>
+            <div>
+              <input type="radio" name="" id="" value="Hate Speech" v-model="dataObj.reason">
+              <label class="ml-2" for="">Hate Speech</label>
+            </div>
+            <div>
+              <input type="radio" name="" id="" value="Spam" v-model="dataObj.reason">
+              <label class="ml-2" for="">Spam</label>
+            </div>
+            <div>
+              <input type="radio" name="" id="" value="Terrorism" v-model="dataObj.reason">
+              <label class="ml-2" for="">Terrorism</label>
+            </div>
+            <div>
+              <input type="radio" name="" id="" value="Unathorized Sales" v-model="dataObj.reason">
+              <label class="ml-2" for="">Unathorized Sales</label>
+            </div>
+          </div>
+          <div class="mt-2">
+            <button @click="flagPost">Report</button>
+          </div>
+        </div>
+      </div>
       </div>
     </div>
   </div>
@@ -613,6 +692,10 @@ export default {
       dataObj: {
         reason: "",
       },
+       verify_loading: false,
+      verify: false,
+      flags: false,
+      post: {}
     };
   },
   methods: {
@@ -742,7 +825,21 @@ export default {
         params: { id: item.user.id },
       });
     },
-
+    getPost(item){
+      this.verify = true
+      this.verify_loading = true
+      this.$axios.get(`posts/${item.id}`)
+      .then((res)=>{
+        console.log(res);
+        this.post = res.data
+      })
+      .catch((err)=>{
+        console.log(err);
+      })
+      .finally(()=>{
+        this.verify_loading = false
+      })
+    },
     getUser() {
       this.$axios
         .get("auth/users/me")
