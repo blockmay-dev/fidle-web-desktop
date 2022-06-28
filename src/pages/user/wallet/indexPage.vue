@@ -12,7 +12,7 @@
                 role="button"
                 style="
                   text-decoration: underline !important;
-                  color: var(--blue-200);
+                  color: #EB4242;
                 "
                 @click="upgrade = !upgrade"
               >
@@ -20,7 +20,7 @@
               </p>
             </div>
             <div class="mt-2">
-              <p class="small" style="color: var(--blue-200)">
+              <p class="small" style="color: #EB4242">
                 This is a demo account for basic level. The money you make here
                 will be reset once you upgrade your account
               </p>
