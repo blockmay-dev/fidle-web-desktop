@@ -367,7 +367,7 @@
                         }}</span>
                       </div>
                       <div>
-                        <span class="">{{ item.likes_count }}Likes </span>
+                        <span class="">{{ item.likes_count }} Like<span v-show="item.likes_count > 1">s</span> </span>
                       </div>
                     </div>
                     <div>

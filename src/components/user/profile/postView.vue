@@ -284,7 +284,7 @@
                         }}</span>
                       </div>
                       <div>
-                        <span class="">{{ item.likes_count }}Likes </span>
+                        <span class="">{{ item.likes_count }} Likes </span>
                       </div>
                     </div>
                     <div>
