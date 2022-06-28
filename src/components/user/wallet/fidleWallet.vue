@@ -5,7 +5,7 @@
         <h5 class="small mb-2">Available Balance</h5>
         <h2>
           {{ wallet_balances.FIDLE
-          }}<span class="small currency-choice">FDC</span>
+          }}<span class="small currency-choice">FIDLE</span>
         </h2>
         <p>~${{ wallet_balances.FIDLE_USD }}</p>
       </div>

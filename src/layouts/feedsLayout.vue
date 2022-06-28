@@ -10,6 +10,11 @@
 <script>
 import AppHeader from '@/components/navigation/appHeader.vue';
 export default {
-    components: { AppHeader }
+    components: { AppHeader },
+    created(){
+    if(!this.$store.getters.isLoggedIn ){
+      this.$router.push("/")
+    }
+    }
 }
 </script>

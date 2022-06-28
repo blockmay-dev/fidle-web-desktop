@@ -2,14 +2,14 @@
     <div>
         <div class="container-fluid py-4">
             <div class="row">
-                <div class="col-md-2">
-                    <LeftSide class="position-fixed" style="width:220px"/>
+                <div class="">
+                    <LeftSide class="position-fixed" style="width:205px; ;"/>
                 </div>
-                <div class="col-md-7">
-                    <CenterArea/>
+                <div class="col-9">
+                    <CenterArea style="margin-left:220px;"/>
                 </div>
-                <div class="col-md-3">
-                    <RightSide class="position-fixed" style="width:330px; height: 80vh; overflow-y: auto;"/>
+                <div class="col-3">
+                    <RightSide class="position-fixed" style="width:320px; height: 80vh; overflow-y: auto; top: 100px;"/>
                 </div>
             </div>
         </div>

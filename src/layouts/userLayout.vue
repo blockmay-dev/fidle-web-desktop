@@ -16,6 +16,11 @@
 import AppHeader from '@/components/navigation/appHeader.vue';
 import SidePane from '@/components/user/sidePane.vue';
 export default {
-    components: { AppHeader, SidePane }
+    components: { AppHeader, SidePane },
+    created(){
+    if(!this.$store.getters.isLoggedIn ){
+      this.$router.push("/")
+    }
+  }
 }
 </script>

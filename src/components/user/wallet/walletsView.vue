@@ -17,7 +17,7 @@
                     /> 
                     </span>
                   </div>
-                  <h1 class="font-weight-bold text-white" v-if="fdc"> <span v-if="visible">{{ wallet_balances.FIDLE }} <span class="currency-choice small">FDC</span></span>
+                  <h1 class="font-weight-bold text-white" v-if="fdc"> <span v-if="visible">{{ wallet_balances.FIDLE }} <span class="currency-choice small">FIDLE</span></span>
                   <span v-else> ********** </span>
                   </h1>
                   <h1 class="font-weight-bold text-white" v-else> <span v-if="visible">{{ wallet_balances.FPW }} <span class="small currency-choice">FPW</span></span> 
@@ -28,7 +28,7 @@
                   </p>
                 </div>
                 <div class="switch--currency">
-                  <el-select v-model="value" @change="getValue" placeholder="FDC">
+                  <el-select v-model="value" @change="getValue" placeholder="FIDLE">
                     <el-option
                       v-for="item in options"
                       :key="item.value"
@@ -80,7 +80,7 @@
                   <img src="@/assets/img/fidlecoin.svg" alt="" />
                 </div>
                 <div>
-                  <h5>FDC</h5>
+                  <h5>FIDLE</h5>
                 </div>
                 <div>
                   <h2 v-if="visible"> {{ wallet_balances.FIDLE }} </h2>
@@ -123,8 +123,8 @@ export default {
       wallet: {},
       options: [
         {
-          value: "FDC",
-          label: "FDC",
+          value: "FIDLE",
+          label: "FIDLE",
         },
         {
           value: "FPW",
@@ -157,7 +157,7 @@ export default {
         });
     },
     getValue(){
-        if (this.value == 'FDC') {
+        if (this.value == 'FIDLE') {
             this.fdc = true
         }
         else {
