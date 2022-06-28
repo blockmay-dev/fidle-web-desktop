@@ -3,7 +3,7 @@
         <div class="container-fluid py-4">
             <div class="row">
                 <div class="col-md-2">
-                    <LeftSide/>
+                    <LeftSide class="position-fixed" style="width:15%"/>
                 </div>
                 <div class="col-md-7">
                     <CenterArea/>

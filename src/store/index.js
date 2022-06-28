@@ -106,6 +106,9 @@ export default new Vuex.Store({
             commit('SET_USER', user);
             commit('LOGGED_IN', loggedIn);
         },
+        logout: ({ commit }) => {
+            commit('RESET', '');
+        },
         wallets: ({ commit }, { wallet }) => {
             commit('SET_WALLET', wallet);
         },
