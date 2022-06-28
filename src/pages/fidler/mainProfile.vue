@@ -37,9 +37,7 @@
         <div class="mt-4">
           <h2 class="text-capitalize"> {{ user.name }} </h2>
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut quod id
-            labore obcaecati eum, non voluptas facilis illo molestiae facere
-            optio quos soluta, assumenda vitae nam? Suscipit quaerat et illo.
+           <IconComponent icon="akar-icons:location" /> <span> {{ user.city }}, {{ user.country }} </span>
           </p>
           <div class="d-flex justify-content-between mt-3">
             <div class="">

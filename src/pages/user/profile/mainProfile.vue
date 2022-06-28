@@ -21,7 +21,7 @@
           </div>
         </div>
       </div>
-      <div class="user-content d-flex" style="gap: 30px">
+      <div class="user-content d-flex" v-if="user" style="gap: 30px">
         <div class="profile--photo">
           <img
             v-if="user.current_profile_image"
@@ -37,12 +37,10 @@
         <div class="mt-4">
           <h2> {{ user.name }} </h2>
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut quod id
-            labore obcaecati eum, non voluptas facilis illo molestiae facere
-            optio quos soluta, assumenda vitae nam? Suscipit quaerat et illo.
+             <IconComponent icon="akar-icons:location" /> <span> {{ user.city }}, {{ user.country }} </span>
           </p>
-          <div class="d-flex justify-content-between mt-3">
-            <div class="">
+          <div class="row align-items-center mt-3">
+            <div class="col-md-6">
               <div class="mt-2 d-flex align-items-center" style="gap: 20px">
                 <span class="small"> {{ user.followers_count }}   Followers</span>
                 <span class="small">{{ user.following_count }} Following</span>
@@ -62,7 +60,7 @@
                 </div>
               </div>
             </div>
-            <div>
+            <div class="col-md-6 mr-auto">
               <div
                 @click="profile = !profile"
                 class="edit--profile d-flex align-items-center"
