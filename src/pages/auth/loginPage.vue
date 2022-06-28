@@ -140,9 +140,14 @@ export default {
           let loggedIn = true
           this.$store.dispatch("login", { token, user, loggedIn });
           this.$router.push({name: "all-posts"})
+
         })
         .catch((err) => {
           this.errMessages = err.response.data
+          this.$message({
+          showClose: true,
+          message: 'Incorrect Login Credentials'
+        });
         })
         .finally(()=>{
             this.loader = false;

@@ -259,7 +259,7 @@
                       height="100%"
                       style="object-fit: cover; object-position: top"
                     />
-                    <video v-else :src="media.file"  playsinline loop 
+                    <video v-else :src="media.file" playsinline loop 
                      ></video>
                   </div>
 

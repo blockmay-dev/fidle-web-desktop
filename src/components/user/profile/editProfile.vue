@@ -13,14 +13,14 @@
                         <button class="save--btn" @click="$emit('close')">Save</button>
                     </div>
                 </div>
-                <div :style="{'background-image': `userData.profile_image`}" class="user--image p-3">
+                <div v-if="userData" :style="{'background-image': `${userData.profile_image.media.file}`}" class="user--image p-3">
                     <img v-if="userData.current_profile_image"
-                        :src="userData.current_profile_image"
+                        :src="userData.current_profile_image.media.file"
                         class=""
                         alt=""
                     />
                     <img v-else
-                        src="https://cdn.pixabay.com/photo/2015/03/04/22/35/head-659652_960_720.png"
+                        src="@/assets/img/no_user.png"
                         class=""
                         alt=""
                     />
@@ -63,23 +63,12 @@
                                 <option v-for="(city, index) in cities" :key="index" :value="city.id">{{ city.name}} </option>
                             </select>
                         </div>
+                        <div class="mb-3">
+                            <label for="">Bio</label>
+                           <textarea name="" id="" cols="30" rows="10"></textarea>
+                        </div>
                     </form>
 
-                    <div class="update--password">
-                        <h6 class="mb-3 font-weight-bold" style="color: var(--main-color)">Update Password</h6>
-                         <div class="mb-2">
-                            <label for="">Old Password</label>
-                            <input type="text">
-                        </div>
-                         <div class="mb-2">
-                            <label for="">New Password</label>
-                            <input type="text">
-                        </div>
-                         <div class="mb-2">
-                            <label for="">Confirm Password</label>
-                            <input type="text">
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -100,6 +89,7 @@ export default {
                 country_id: '',
                 state_id: '',
                 city_id: '',
+                bio: '',
             },
             countries: '',
             cities:'',

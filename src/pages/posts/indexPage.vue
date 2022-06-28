@@ -3,13 +3,13 @@
         <div class="container-fluid py-4">
             <div class="row">
                 <div class="col-md-2">
-                    <LeftSide class="position-fixed" style="width:15%"/>
+                    <LeftSide class="position-fixed" style="width:220px"/>
                 </div>
                 <div class="col-md-7">
                     <CenterArea/>
                 </div>
                 <div class="col-md-3">
-                    <RightSide/>
+                    <RightSide class="position-fixed" style="width:330px; height: 80vh; overflow-y: auto;"/>
                 </div>
             </div>
         </div>
