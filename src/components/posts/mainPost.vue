@@ -371,7 +371,7 @@
                       </div>
                     </div>
                     <div>
-                      <span class="">
+                      <span class="" role="button" @click="getComments(item)">
                         {{ item.comments_count }} comment<span
                           v-show="item.comments_count > 1"
                           >s</span
@@ -418,6 +418,7 @@
                       role="button"
                       class="d-flex align-items-center reactions--container"
                       style="gap: 10px"
+                      @click="sharePost(item)"
                     >
                       <IconComponent icon="bx:share" style="font-size: 24px" />
                       <span>Share</span>
@@ -985,6 +986,13 @@ export default {
     },
     viewSelection(){
       console.log(this.dataObj);
+    },
+    async sharePost(item){
+        navigator.share({
+        title: 'Fidle The worlds first decentralized social network for creators',
+        text: '',
+        url: 'https://fidle-desktop/fidle'+item.id
+      })
     }
   },
   mounted() {
@@ -1022,6 +1030,9 @@ function videoScroll() {
     emojisNative() {
       return packEmoji;
     },
+    webShareApiSupported() {
+    return navigator.share
+  }
   },
 };
 </script>

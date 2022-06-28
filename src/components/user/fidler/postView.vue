@@ -272,7 +272,7 @@
                       </div>
                     </div>
                     <div>
-                      <span class="">
+                      <span class="" role="button" @click="getComments(item)">
                         {{ item.comments_count }} comment<span
                           v-show="item.comments_count > 1"
                           >s</span
