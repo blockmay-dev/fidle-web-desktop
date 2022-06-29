@@ -37,6 +37,12 @@
         <div class="mt-4">
           <h2> {{ user.name }} </h2>
           <p>
+            <span  v-shw style="color:var(--main-color); text-decoration: underline !important" role="button">Update Bio</span>
+            <span>
+              {{ user.bio }}
+            </span>
+          </p>
+          <p>
              <IconComponent icon="akar-icons:location" /> <span> {{ user.city }}, {{ user.country }} </span>
           </p>
           <div class="row align-items-center mt-3">

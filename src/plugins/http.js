@@ -4,7 +4,7 @@ import Toastify from 'toastify-js'
 Vue.use(Toastify)
 
 import axios from "axios";
-const BASE_URL = 'https://api.fidle.io/';
+const BASE_URL = process.env.VUE_APP_ROOT_API;
 
 const http = axios.create({
     baseURL: BASE_URL,

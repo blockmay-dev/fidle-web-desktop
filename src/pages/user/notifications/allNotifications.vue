@@ -39,6 +39,11 @@
             </div>
           </div>
         </div>
+
+
+        <div class="view--more_posts mb-3">
+          <button @click="viewMore">View More</button>
+        </div>
       </div>
     </div>
   </div>
@@ -60,6 +65,8 @@ export default {
       sliceContent,
       dollarFilter,
       colorSplit,
+      page: 1,
+      posts: []
     };
   },
   methods: {
@@ -73,6 +80,28 @@ export default {
         .catch((err)=>{
             console.log(err);
         })
+    },
+    async viewMore(){
+      this.page = this.page + 1
+      this.loading = true;
+      try {
+        let res = await this.$axios.get(
+          `user/notifications?page=${this.page}`, 
+        );
+        console.log(res.data);
+        let newPosts = res.data.results
+        for (let i = 0; i < newPosts.length; i++ ){
+          // console.log(newPosts[i]);
+          // this.posts.push(newPosts[i])
+          let new_notifications = newPosts[i]
+          console.log(new_notifications);
+          this.$store.dispatch('updateNotification', { new_notifications })
+        }
+        
+      } catch (error) {
+        console.log(error);
+      }
+      this.loading = false
     },
     goToPost(val){
       this.$router.push({name: 'single-fidle', params:{id: val}})

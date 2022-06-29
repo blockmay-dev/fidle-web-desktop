@@ -79,7 +79,7 @@ export default new Vuex.Store({
             state.all_notifications = all_notifications;
         },
         UPDATE_NOTIFICATIONS: (state, new_notifications) => {
-            state.notifications = new_notifications;
+            state.all_notifications.push(new_notifications);
         },
         SET_NOTIFICATIONS_COUNT: (state, all_notificationsCount) => {
             state.all_notificationsCount = all_notificationsCount;
