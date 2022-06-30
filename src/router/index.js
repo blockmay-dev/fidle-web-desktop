@@ -212,7 +212,7 @@ const routes = [{
 
 const router = new VueRouter({
     mode: 'history',
-    base: process.env.VUE_APP_ROOT_API,
+    base: process.env.BASE_URL,
     scrollBehavior() {
         return window.scrollTo({ top: 0, behavior: 'smooth' });
     },

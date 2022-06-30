@@ -37,13 +37,13 @@
         <div class="mt-4">
           <h2> {{ user.name }} </h2>
           <p>
-            <span  v-shw style="color:var(--main-color); text-decoration: underline !important" role="button">Update Bio</span>
+            <span class="small" @click="editProfile" v-show="user.bio == '' " style="color:var(--main-color); text-decoration: underline !important" role="button">Update Bio</span>
             <span>
               {{ user.bio }}
             </span>
           </p>
-          <p>
-             <IconComponent icon="akar-icons:location" /> <span> {{ user.city }}, {{ user.country }} </span>
+          <p >
+             <span class="small" v-show="user.country !== '' "><IconComponent icon="akar-icons:location" /> <span> {{ user.city }}, {{ user.country }} </span></span>
           </p>
           <div class="row align-items-center mt-3">
             <div class="col-md-6">
@@ -68,7 +68,7 @@
             </div>
             <div class="col-md-6 mr-auto">
               <div
-                @click="profile = !profile"
+                @click="editProfile"
                 class="edit--profile d-flex align-items-center"
                 style="gap: 10px"
                 role="button"
@@ -133,6 +133,18 @@
             >Connects</a
           >
         </li>
+         <li class="nav-item" role="presentation">
+          <a
+            class="nav-link"
+            id="contact-tab"
+            data-toggle="tab"
+            href="#connect"
+            role="tab"
+            aria-controls="connect"
+            aria-selected="false"
+            >NFTs</a
+          >
+        </li>
       </ul>
     </div>
 
@@ -175,7 +187,7 @@
 
 
   <!-- Edit Profile  -->
-  <EditProfile v-show="profile" @close="close"/>
+  <EditProfile @close="close" v-show="profile"/>
   </div>
 </template>
 
@@ -184,26 +196,29 @@ import UserConnectsVue from '@/components/user/profile/userConnects.vue';
 import PostViewVue from '@/components/user/profile/postView.vue';
 import MediaViewVue from '../../../components/user/profile/mediaView.vue';
 import SavedPosts from '../../../components/user/profile/savedPosts.vue';
-import EditProfile from '@/components/user/profile/editProfile.vue';
+import EditProfile from '../../../components/user/profile/editProfile.vue';
 export default {
     data() {
         return {
-            user: {},
+            // user: {},
             followers: [],
             profile: false,
         };
     },
     methods: {
-        getUser() {
-            this.$axios.get("auth/users/me")
-                .then((res) => {
-                console.log(res);
-                this.user = res.data;
-            })
-                .catch((err) => {
-                console.log(err);
-            });
-        },
+      editProfile(){
+        this.profile = !this.profile
+      },
+        // getUser() {
+        //     this.$axios.get("auth/users/me")
+        //         .then((res) => {
+        //         console.log(res);
+        //         this.user = res.data;
+        //     })
+        //         .catch((err) => {
+        //         console.log(err);
+        //     });
+        // },
         getFollowers() {
             this.$axios.get("user/followers")
                 .then((res) => {
@@ -221,8 +236,13 @@ export default {
         }
     },
     mounted() {
-        this.getUser();
+        // this.getUser();
         this.getFollowers();
+    },
+    computed:{
+      user(){
+        return this.$store.getters.getUser
+      }
     },
     components: { UserConnectsVue, PostViewVue, MediaViewVue, SavedPosts, EditProfile }
 };

@@ -26,18 +26,10 @@
             <div class="mb-4 d-flex align-items-center justify-content-between">
               <div>
                 <small> {{ level.name }} </small>
-                <h5 class="upgrade--amount" v-show="level.rank === 2">
-                  10 FIDLE/ <sup>One Time</sup>
+                <h5 class="upgrade--amount">
+                  {{dollarFilter2(level.upgrade_fee)}}/ <sup>One Time</sup>
                 </h5>
-                <h5 class="upgrade--amount" v-show="level.rank === 3">
-                  32 FIDLE/ <sup>One Time</sup>
-                </h5>
-                <h5 class="upgrade--amount" v-show="level.rank === 4">
-                  85 FIDLE/ <sup>One Time</sup>
-                </h5>
-                <h5 class="upgrade--amount" v-show="level.rank === 5">
-                  180 FIDLE/ <sup>One Time</sup>
-                </h5>
+                <span style="font-size:14px"> {{ level.upgrade_fee_fidle }}<span style="font-size:10px">FIDLE</span> </span>
               </div>
               <div class="icon__box">
                 <span class="icon">
@@ -138,9 +130,23 @@
 </template>
 
 <script>
+import {
+  timeRange,
+  sliceContent,
+  dollarFilter,
+  colorSplit,
+  timeStamp,
+  dollarFilter2
+} from "@/plugins/filter";
 export default {
   data() {
     return {
+      timeStamp,
+      timeRange,
+      sliceContent,
+      dollarFilter,
+      colorSplit,
+      dollarFilter2,
       levels: [],
       user: {},
       loading: false,
@@ -189,6 +195,7 @@ export default {
           let levelsList = res.data;
           let editedList = levelsList.slice(Number(this.currentLevel), 5);
           this.levels = editedList;
+          console.log(this.levels);
         })
         .catch((err) => {
           console.log(err);

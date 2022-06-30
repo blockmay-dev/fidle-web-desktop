@@ -47,7 +47,8 @@
     font-size: 1.3rem;
 }
 
-.notifications-bar.read p {
+.notifications-bar.read p,
+.notitfications-top.read p {
     color: #d7d7d7;
 }
 
@@ -98,4 +99,18 @@
 
 .top--nav .router-link-exact-active {
     color: var(--blue-200);
+}
+
+.unread--dot {
+    height: 7px;
+    width: 7px;
+    border-radius: 50%;
+    background-color: red;
+}
+
+.notification--count {
+    background-color: red;
+    padding: 0.3rem;
+    color: #fff;
+    border-radius: 20px;
 }

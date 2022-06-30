@@ -31,7 +31,7 @@
               >Unread Notifications
               <span class="badge badge-pill badge-danger">
                 {{
-                notifications_count
+                notifications_count.unread
               }}
               </span>
             </a>

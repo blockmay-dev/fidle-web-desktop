@@ -73,7 +73,7 @@
                 </div>
               </div>
             </template>
-            <div>
+            <div class="mb-4">
               <div
                 v-for="item in posts.results"
                 :key="item.id"

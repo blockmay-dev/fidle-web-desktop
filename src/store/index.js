@@ -16,7 +16,10 @@ const getDefaultState = () => {
         all_notificationsCount: '',
         stories: [],
         myStories: [],
-        loggedIn: false
+        loggedIn: false,
+        tags: [],
+        post_analytics: [],
+        single_post: {}
     };
 };
 
@@ -51,6 +54,15 @@ export default new Vuex.Store({
         },
         getMyStories: state => {
             return state.myStories
+        },
+        getTags: state => {
+            return state.tags
+        },
+        getPostAnalytics: state => {
+            return state.post_analytics
+        },
+        getSinglePost: state => {
+            return state.single_post
         }
     },
     mutations: {
@@ -62,6 +74,9 @@ export default new Vuex.Store({
         },
         SET_USER: (state, user) => {
             state.user = user;
+        },
+        UPDATE_USER: (state, userData) => {
+            state.user = userData;
         },
         SET_WALLET: (state, wallet) => {
             state.wallet = wallet;
@@ -96,6 +111,18 @@ export default new Vuex.Store({
         UPDATE_MY_STORIES: (state, updateStories) => {
             state.myStories = updateStories;
         },
+        SET_TAGS: (state, tags) => {
+            state.tags = tags;
+        },
+        UPDATE_TAGS: (state, new_tags) => {
+            state.tags = new_tags;
+        },
+        SET_POST_ANALYTICS: (state, post_analytics) => {
+            state.post_analytics = post_analytics;
+        },
+        SET_SINGLE_POST: (state, single_post) => {
+            state.single_post = single_post;
+        },
         RESET: state => {
             Object.assign(state, getDefaultState());
         }
@@ -105,6 +132,9 @@ export default new Vuex.Store({
             commit('SET_TOKEN', token);
             commit('SET_USER', user);
             commit('LOGGED_IN', loggedIn);
+        },
+        updateUser: ({ commit }, { userData }) => {
+            commit('UPDATE_USER', userData);
         },
         logout: ({ commit }) => {
             commit('RESET', '');
@@ -143,6 +173,18 @@ export default new Vuex.Store({
         updateMyStories: ({ commit }, { updateStories }) => {
             commit('UPDATE_MY_STORIES', updateStories);
         },
+        setTags: ({ commit }, { tags }) => {
+            commit('SET_TAGS', tags);
+        },
+        updateTags: ({ commit }, { new_tags }) => {
+            commit('UPDATE_TAGS', new_tags);
+        },
+        setPostAnalytics: ({ commit }, { post_analytics }) => {
+            commit('SET_POST_ANALYTICS', post_analytics)
+        },
+        setSinglePost: ({ commit }, { single_post }) => {
+            commit('SET_SINGLE_POST', single_post)
+        }
     },
     modules: {
         auth

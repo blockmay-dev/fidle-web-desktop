@@ -40,7 +40,7 @@
                 </div>
               </div>
 
-              <div class="mt-3 d-flex" style="gap: 10px" v-if="fdc">
+              <!-- <div class="mt-3 d-flex" style="gap: 10px" v-if="fdc">
                 <button
                   class="
                     withdraw--button
@@ -70,11 +70,11 @@
                   </span>
                   <span class="font-weight-bold">Add Funds</span>
                 </button>
-              </div>
+              </div> -->
             </div>
           </div>
           <div class="wallet--values d-flex" style="gap: 20px">
-            <div class="wallet-each-item w-100 bg-white d-flex justify-content-center">
+            <div class="wallet-each-item w-100 bg-white d-flex justify-content-center" role="button" @click="toWallet('second')">
               <div class="wallet--item">
                 <div>
                   <img src="@/assets/img/fidlecoin.svg" alt="" />
@@ -91,7 +91,7 @@
                 <IconComponent icon="la:angle-right" />
               </div>
             </div>
-            <div class="wallet-each-item w-100 bg-white d-flex justify-content-center">
+            <div class="wallet-each-item w-100 bg-white d-flex justify-content-center" role="button" @click="toWallet('third')">
               <div class="wallet--item">
                 <div>
                   <img src="@/assets/img/fidlepower.svg" alt="" />
@@ -163,6 +163,9 @@ export default {
         else {
             this.fdc = false
         }
+    },
+    toWallet(value){
+      this.$emit('toWallet', value )
     },
     hideBalance(){
       this.visible = !this.visible;

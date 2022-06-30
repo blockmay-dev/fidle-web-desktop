@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div>
+    <div class="mb-4">
       <div class="media--files profile--section p-3">
         <div class="media" v-for="media in mediaData" :key="media.id" @click="goToPost(media)" role="button">
           <div v-for="file in media.media" :key="file.id">

@@ -155,7 +155,7 @@ export default {
     },
     getAmount() {
       if (this.fidle) {
-        this.payload.amount = this.amount * 100;
+        this.payload.amount = this.amount * 1000;
         if (this.amount > this.walletBalances.FIDLE) {
           alert("You can't swap above your current wallet balance");
           this.amount = "";
@@ -166,7 +166,7 @@ export default {
           this.payload.amount = "";
         }
       } else {
-        this.payload.amount = this.amount / 100;
+        this.payload.amount = this.amount / 1000;
         if (this.amount > this.walletBalances.FPW) {
           alert("You can't swap above your current wallet balance");
           this.amount = "";

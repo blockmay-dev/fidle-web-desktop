@@ -111,10 +111,10 @@
       </div>
 
       <!-- Main Post Content  -->
-      <div class="">
+      <div class="mb-4">
 
         <div class="">
-          <el-skeleton style="" :loading="loading" animated :count="20">
+          <el-skeleton style="" :loading="loading" animated :count="1">
             <template slot="template">
               <div class="rounded--card p-3 mt-3">
                 <div>
@@ -231,18 +231,26 @@
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                           <div class="dropdown-item d-flex" style="gap:12px"  role="button" >
                             <span>
-
+                              <IconComponent icon="icon-park-outline:weixin-market" />
                             </span>
                             <span>
                               Convert to NFT
                             </span>
                           </div>
-                          <div class="dropdown-item d-flex" style="gap:12px"  role="button" @click="goToPost(item)">
+                          <div class="dropdown-item d-flex" style="gap:12px"  role="button" @click="promotePost(item)">
                             <span>
-
+                              <IconComponent icon="carbon:analytics" />
                             </span>
                             <span>
                               Promote Post
+                            </span>
+                          </div>
+                          <div class="dropdown-item d-flex" style="gap:12px"  role="button" @click="goToPost(item)">
+                            <span>
+                              <IconComponent icon="icon-park-outline:blockchain" />
+                            </span>
+                            <span>
+                              Verify on the Blockchain
                             </span>
                           </div>
                         </div>
@@ -351,7 +359,7 @@
                       </div>
                       
                     </div>
-                    <div class="start--post add-comment d-flex  align-items-center mt-3" >
+                    <div class="start--post add-comment d-flex  align-items-center mt-3" style="gap:20px">
                       <div class="commenter-photo">
                         <img
                           v-if="user.current_profile_image"
@@ -406,6 +414,9 @@
 
         <!-- App Loader -->
        <AppLoader :loader="loader" />
+
+       <!-- Promote Post Modal  -->
+      <PromotePost v-show="promote_post" :post_statistics="postStatistics" :single_post="singlePost" @close="promote_post = false"/>
     </div>
   </div>
 </template>
@@ -421,12 +432,17 @@ import {
   colorSplit,
   timeStamp,
 } from "@/plugins/filter";
+import PromotePost from "../post/promotePost.vue";
 export default {
   components: {
-    AppLoader, VEmojiPicker
-  },
+    AppLoader,
+    VEmojiPicker,
+    PromotePost
+},
   data() {
     return {
+      promote_post: false,
+      postStatistics: null,
       comments: false,
       showDialog: false,
       timeStamp,
@@ -450,10 +466,45 @@ export default {
       videoPreview: false,
       loader: false,
       valueInput: "",
-      commentsList: []
+      commentsList: [],
+      singlePost:{}
     };
   },
   methods: {
+    promotePost(item){
+      this.promote_post = true;
+      this.postId = item.id
+        this.getStatistics()
+        this.getPost()
+    },
+     // Get Post By Id
+        getPost(){
+          this.$axios.get(`posts/${this.postId}`)
+          .then((res)=>{
+            console.log(res.data);
+            this.singlePost = res.data
+          
+          })
+          .catch((err)=>{
+            console.log(err);
+        })
+        },
+    getStatistics(){
+      this.$axios.get(`/user/posts/${this.postId}/statistic/`)
+        .then((res)=>{
+            console.log(res);
+            let data = []
+            data.push({x:"Views",
+            y: res.data.views}, {x: "Likes", y:res.data.likes}, {x: "Comments", y:res.data.comments});
+            let post_analytics = data
+            this.postStatistics = post_analytics
+            // this.$store.dispatch('setPostAnalytics', {post_analytics})
+            // console.log(data);
+        })
+        .catch((err)=>{
+            console.log(err);
+        })
+    },
     async getComments(item){
       console.log(this.item_id);
     this.comments = ( this.comments === item.id ) ? null : item.id;

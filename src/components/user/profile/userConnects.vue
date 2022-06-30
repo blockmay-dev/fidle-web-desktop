@@ -1,5 +1,5 @@
 <template>
-  <div class="profile--section p-3">
+  <div class="profile--section p-3 mb-4">
     <el-tabs v-model="activeName">
     <el-tab-pane label="Followers" name="first">
       <div class="row">

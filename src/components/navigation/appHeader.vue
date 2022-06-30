@@ -40,41 +40,49 @@
           </div>
         </div>
 
-        
-
         <!-- User Photo, Notifications and Go Live -->
         <div class="d-flex" style="gap: 15px">
-
-        <!-- Menu Icons  -->
-        <div>
-          <ul class="m-0 d-flex align-items-center top--nav mr-4" style="gap:30px"> 
-            <li>
-              <router-link  to="/all-posts">
-                <span class="d-block text-center"> <IconComponent icon="ci:home-alt-minus" style="font-size:16px"/> </span>
-                <div>
-                  <span style="font-size:14px">Home</span>
-                </div>
-              </router-link>
-            </li>
-            <li>
-              <router-link  to="/settings">
-                <span class="d-block text-center"> <IconComponent icon="clarity:settings-line" /> </span>
-                <div>
-                  <span style="font-size:14px">Settings</span>
-                </div>
-              </router-link>
-            </li>
-            <li>
-              <router-link  to="/wallet">
-                <span class="d-block text-center"> <IconComponent icon="clarity:wallet-line" /> </span>
-                <div>
-                  <span style="font-size:14px">Wallet</span>
-                </div>
-              </router-link>
-            </li>
-          </ul>
-        </div>
-
+          <!-- Menu Icons  -->
+          <div>
+            <ul
+              class="m-0 d-flex align-items-center top--nav mr-4"
+              style="gap: 30px"
+            >
+              <li>
+                <router-link to="/all-posts">
+                  <span class="d-block text-center">
+                    <IconComponent
+                      icon="ci:home-alt-minus"
+                      style="font-size: 16px"
+                    />
+                  </span>
+                  <div>
+                    <span style="font-size: 14px">Home</span>
+                  </div>
+                </router-link>
+              </li>
+              <li>
+                <router-link to="/settings">
+                  <span class="d-block text-center">
+                    <IconComponent icon="clarity:settings-line" />
+                  </span>
+                  <div>
+                    <span style="font-size: 14px">Settings</span>
+                  </div>
+                </router-link>
+              </li>
+              <li>
+                <router-link to="/wallet">
+                  <span class="d-block text-center">
+                    <IconComponent icon="clarity:wallet-line" />
+                  </span>
+                  <div>
+                    <span style="font-size: 14px">Wallet</span>
+                  </div>
+                </router-link>
+              </li>
+            </ul>
+          </div>
 
           <div class="user-header-photo" role="button" @click="goToUser">
             <img
@@ -91,10 +99,62 @@
             />
           </div>
 
-          <el-dropdown>
-            <div class="app-header-icon">
+          <div class="notifications--container">
+            <el-popover placement="bottom" class="p-0" trigger="click">
+            <div class="p-3 shadow-sm mb-3 d-flex align-items-center justify-content-between">
+              <span class="font-weight-bold" style="color: #000"
+                >NOTIFICATIONS <small class="notification--count"> {{ notifications_count.unread }} unread </small> </span
+              >
+              <small role="button" class="text-secondary"><router-link to="/notifications">View All >>></router-link> </small>
+            </div>
+            <div style="width: 300px; height: 400px; overflow-y: auto">
+              <div v-for="notification in notifications" :key="notification.id" class="pr-2">
+                <div
+                  class="d-flex align-items-start py-2 notitfications-top"
+                  style="gap: 10px"
+                  role="button"
+                  @click="goToNotification(notification)"
+                   :class="{read: notification.read }"
+                >
+                  <div>
+                    <span class="notification--type" v-if="notification.type">
+                      <IconComponent
+                        v-show="notification.data.type == 'post_like'"
+                        icon="flat-color-icons:like"
+                      />
+                      <IconComponent
+                        v-show="notification.data.type == 'comment'"
+                        icon="ep:comment"
+                      />
+                      <IconComponent
+                        v-show="notification.data.type == 'post'"
+                        icon="material-symbols:post-add"
+                      />
+                      <IconComponent
+                        v-show="notification.data.type == 'follow'"
+                        icon="carbon:user-follow"
+                      />
+                    </span>
+                  </div>
+                  <div>
+                    <p style="word-break: normal;">{{ notification.title }}</p>
+                    <span style="color: var(--blue-300)">{{
+                      timeRange(new Date(notification.date_created * 1000.0))
+                    }}</span>
+                  </div>
+                  <div class="unread--dot ml-auto" v-show="!notification.read"></div>
+                </div>
+                <hr />
+              </div>
+
+              <div class="view--more_posts mb-3">
+                <button @click="viewMore">View More</button>
+              </div>
+            </div>
+            <!-- <el-button slot="reference">Click to activate</el-button> -->
+            <div class="app-header-icon" slot="reference" role="button">
               <div class="notification-icon">
-                <el-badge :value="notifications_count" class="item">
+                <el-badge is-dot class="item">
                   <IconComponent
                     icon="ion:notifications-outline"
                     style="color: #000; font-size: 20px"
@@ -102,16 +162,8 @@
                 </el-badge>
               </div>
             </div>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item
-                v-for="notification in notifications"
-                :key="notification.id"
-              >
-                <h6>{{ notification.title }}</h6>
-                <small> {{ notification.body }} </small>
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
+          </el-popover>
+          </div>
 
           <!-- </div> -->
         </div>
@@ -121,31 +173,69 @@
 </template>
 
 <script>
+import {
+  timeRange,
+  sliceContent,
+  dollarFilter,
+  colorSplit,
+  timeStamp,
+} from "@/plugins/filter";
 export default {
   data() {
     return {
-      user: {},
+      timeStamp,
+      timeRange,
+      sliceContent,
+      dollarFilter,
+      colorSplit,
       search_item: "",
       unread: "",
       search__item: false,
+      read: false,
+      page: 1,
     };
   },
   methods: {
+    goToNotification(notification){
+      // console.log(notification);
+        this.$axios.get(`user/notifications/${notification.id}`)
+        .then((res)=>{
+            console.log(res);
+            this.goToPost(notification.data.post_id)
+        })
+        .catch((err)=>{
+            console.log(err);
+        })
+    },
+    
+    goToPost(val){
+      this.$router.push({name: 'single-fidle', params:{id: val}})
+    },
     searchItems() {
       this.search__item = true;
       if (this.search_item == "") {
         this.search__item = false;
       }
     },
-    getUser() {
-      this.$axios
-        .get("auth/users/me")
-        .then((res) => {
-          this.user = res.data;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+     async viewMore(){
+      this.page = this.page + 1
+      this.loading = true;
+      try {
+        let res = await this.$axios.get(
+          `user/notifications?page=${this.page}`, 
+        );
+        console.log(res.data);
+        let newPosts = res.data.results
+        for (let i = 0; i < newPosts.length; i++ ){
+          let new_notifications = newPosts[i]
+          console.log(new_notifications);
+          this.$store.dispatch('updateNotification', { new_notifications })
+        }
+        
+      } catch (error) {
+        console.log(error);
+      }
+      this.loading = false
     },
     goToUser() {
       this.$router.push("/profile");
@@ -157,27 +247,13 @@ export default {
       let url = this.search_item;
       this.$router.push({ name: "search-results", query: { q: url } });
     },
-    goToNotification(notification) {
-      // console.log(notification);
-      this.$axios
-        .get(`user/notifications/${notification.id}`)
-        .then((res) => {
-          console.log(res);
-          this.goToPost(notification.data.post_id);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    goToPost(val) {
-      this.$router.push({ name: "single-fidle", params: { id: val } });
-    },
+   
     getNotificationsStatistics2() {
       this.$axios
         .get("/notification-statistics")
         .then((res) => {
           console.log(res);
-          let new_notificationsCount = res.data.unread;
+          let new_notificationsCount = res.data;
           this.$store.dispatch("updateNotificationsCount", {
             new_notificationsCount,
           });
@@ -203,7 +279,7 @@ export default {
         .get("/notification-statistics")
         .then((res) => {
           console.log(res);
-          let all_notificationsCount = res.data.unread;
+          let all_notificationsCount = res.data;
           this.$store.dispatch("setNotificationsCount", {
             all_notificationsCount,
           });
@@ -223,11 +299,14 @@ export default {
   },
   computed: {
     notifications() {
-      return this.$store.getters.getNotifications.slice(0, 5);
+      return this.$store.getters.getNotifications;
     },
     notifications_count() {
       return this.$store.getters.getNotificationsCount;
     },
+    user(){
+      return this.$store.getters.getUser
+    }
   },
 };
 </script>

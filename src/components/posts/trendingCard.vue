@@ -4,45 +4,50 @@
       <div class="rounded--card">
         <h6 class="text-secondary p-3">Trends for You</h6>
         <hr class="m-0">
-        <div class="p-3">
-            <div class="trend d-flex justify-content-between mt-2">
+        <div class="p-3" style="height:200px; overflow-y: auto;">
+            <div class="trend d-flex justify-content-between mt-2" v-for="tag in tags" :key="tag.id">
                 <div>
-                    <h6>#Fidle</h6>
-                    <small class="text-secondary">Social Media</small>
+                    <h6> {{ tag.tag }} </h6>
+                    <small class="text-secondary"> {{ tag.posts_count }} post<span v-if="tag.posts_count > 1">s</span>  </small>
                 </div>
-                <div>
+                <!-- <div>
                     <IconComponent icon="akar-icons:more-horizontal" />
-                </div>
+                </div> -->
             </div>
-            <div class="trend d-flex justify-content-between mt-2">
-                <div>
-                    <h6>#Fidle</h6>
-                    <small class="text-secondary">Social Media</small>
-                </div>
-                <div>
-                    <IconComponent icon="akar-icons:more-horizontal" />
-                </div>
-            </div>
-            <div class="trend d-flex justify-content-between mt-2">
-                <div>
-                    <h6>#Fidle</h6>
-                    <small class="text-secondary">Social Media</small>
-                </div>
-                <div>
-                    <IconComponent icon="akar-icons:more-horizontal" />
-                </div>
-            </div>
-            <div class="trend d-flex justify-content-between mt-2">
-                <div>
-                    <h6>#Fidle</h6>
-                    <small class="text-secondary">Social Media</small>
-                </div>
-                <div>
-                    <IconComponent icon="akar-icons:more-horizontal" />
-                </div>
-            </div>
+            
         </div>
       </div>
     </div>
   </div>
 </template>
+
+<script>
+export default {
+    data(){
+        return{
+
+        }
+    },
+    methods:{
+        getTags(){
+            this.$axios.get('hashtags')
+            .then((res)=>{
+                console.log(res);
+                let tags = res.data
+                this.$store.dispatch('setTags', {tags})
+            })
+            .catch((err)=>{
+                console.log(err);
+            })
+        }
+    },
+    beforeMount(){
+        this.getTags()
+    },
+    computed:{
+        tags(){
+            return this.$store.getters.getTags
+        }
+    }
+}
+</script>

@@ -36,8 +36,9 @@
         </div>
         <div class="mt-4">
           <h2 class="text-capitalize"> {{ user.name }} </h2>
-          <p>
-           <IconComponent icon="akar-icons:location" /> <span> {{ user.city }}, {{ user.country }} </span>
+          <p> {{ user.bio }} </p>
+          <p >
+             <span v-if="user"><IconComponent icon="akar-icons:location" /> <span> {{ user.city }}, {{ user.country }} </span></span>
           </p>
           <div class="d-flex justify-content-between mt-3">
             <div class="">

@@ -179,9 +179,12 @@
                 :key="item.id"
                 class="rounded--card p-3 mt-3"
                 data-aos="fade-up"
+                :class="{shared: item.is_shared}"
               >
+                
                 <div>
                   <div
+
                     class="d-flex justify-content-between align-items-center"
                   >
                     <div
@@ -359,7 +362,7 @@
                     <div v-html="item.content"></div>
                   </div>
                   <!-- Number of Comments and Reactions  -->
-                  <div class="mb-3 d-flex justify-content-between">
+                  <div class="mb-3 d-flex justify-content-between mt-3">
                     <div class="d-flex align-items-center" style="gap: 10px">
                       <div>
                         <span class="amount">{{
@@ -414,15 +417,30 @@
                       />
                       <span>Comment</span>
                     </div>
-                    <div
+
+                    <el-popover
+                      placement="bottom"
+                      width="200"
+                      trigger="click">
+                      <div>
+                        <ul class="m-0">
+                          <li role="button" class="mb-2" @click="shareToFeed(item)"><span>Share to Feed</span></li>
+                          <li role="button" @click="shareWithContent(item)"><span>Share with a thought</span></li>
+                        </ul>
+                      </div>
+                      <!-- <el-button slot="reference" style="background-color: none; border:none"> -->
+                        <div
+                        slot="reference"
                       role="button"
                       class="d-flex align-items-center reactions--container"
                       style="gap: 10px"
-                      @click="sharePost(item)"
                     >
                       <IconComponent icon="bx:share" style="font-size: 24px" />
                       <span>Share</span>
                     </div>
+                      <!-- </el-button> -->
+                    </el-popover>
+
                   </div>
                   <hr class="m-0" />
 
@@ -656,6 +674,7 @@ export default {
   },
   data() {
     return {
+      shared: false,
       flags: false,
       verify: false,
       comments: false,
@@ -693,6 +712,30 @@ export default {
     };
   },
   methods: {
+    shareToFeed(item){
+      let payload = {
+        parent_id: item.id
+      }
+      this.$axios.post('posts/', payload)
+      .then((res)=>{
+        console.log(res);
+      })
+      .catch((err)=>{
+        console.log(err);
+      })
+    },
+    shareWithContent(item){
+      let payload = {
+        parent_id: item.id
+      }
+      this.$axios.post('posts/', payload)
+      .then((res)=>{
+        console.log(res);
+      })
+      .catch((err)=>{
+        console.log(err);
+      })
+    },
     onCopy: function (e) {
        console.log(e);
        this.$message({
@@ -818,7 +861,7 @@ export default {
     
     async viewMore() {
       this.page = this.page + 1
-      this.loading = true;
+      // this.loading = true;
       try {
         let res = await this.$axios.get(
           `/user/feeds?page=${this.page}`, 
@@ -834,7 +877,7 @@ export default {
       } catch (error) {
         console.log(error);
       }
-      this.loading = false
+      // this.loading = false
     },
     getPost(item){
       this.verify = true

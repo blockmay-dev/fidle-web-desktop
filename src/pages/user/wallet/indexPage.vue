@@ -29,7 +29,7 @@
         </div>
       </div>
       <el-tab-pane label="Wallet" name="first">
-        <MainWalletVue />
+        <MainWalletVue @toWallet="toWallet"/>
       </el-tab-pane>
       <el-tab-pane label="Fidle Power" name="second">
         <FdwWalletVue />
@@ -132,6 +132,9 @@ export default {
     };
   },
   methods: {
+    toWallet(value){
+      console.log(value);
+    },
     handleClick(tab) {
       console.log(tab.name);
       if (tab.name == 'second') {
