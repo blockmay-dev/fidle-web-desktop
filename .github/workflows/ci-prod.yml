@@ -31,8 +31,10 @@ jobs:
          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build the image
-        run:  docker build -t geofferyj/fidle-backend .
+        run:  docker build -t geofferyj/fidle-frontend-desktop .
 
-      - name: Push the image
-        run:  make push-image tag=latest
-        # run:  make push-image tag=prod-${{ steps.current-time.outputs.formattedTime }}-${GITHUB_SHA::10} 
+      - name: tag the image
+        run:  docker tag geofferyj/fidle-frontend-desktop geofferyj/fidle-frontend-desktop:latest
+      
+      - name push the image
+        run:  docker push geofferyj/fidle-frontend-desktop:latest
