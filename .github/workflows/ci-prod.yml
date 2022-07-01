@@ -31,10 +31,10 @@ jobs:
          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build the image
-        run:  docker build -t geofferyj/fidle-frontend-desktop .
+        run:  docker build -t blockmay/fidle-frontend-desktop .
 
       - name: tag the image
-        run:  docker tag geofferyj/fidle-frontend-desktop geofferyj/fidle-frontend-desktop:latest
+        run:  docker tag blockmay/fidle-frontend-desktop blockmay/fidle-frontend-desktop:latest
       
       - name: push the image
-        run:  docker push geofferyj/fidle-frontend-desktop:latest
+        run:  docker push blockmay/fidle-frontend-desktop:latest
