@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../layouts/feedsLayout.vue'
 import UserView from '../layouts/userLayout.vue'
-import store from '../store/modules/auth'
+// import store from '../store/modules/auth'
 
 Vue.use(VueRouter)
 
@@ -67,24 +67,16 @@ const routes = [{
         path: '/feeds',
         component: HomeView,
         async beforeEnter(to, from, next) {
-            // try {
-            var loggedIn;
-            loggedIn = store.getters.isLoggedIn
-            if (loggedIn) {
-                next();
-            } else {
-
+            var loggedIn
+            loggedIn = localStorage.getItem("loggedIn")
+            if (!loggedIn) {
                 next({
                     name: "sign-in",
                     query: { redirectFrom: to.fullPath },
                 });
+            } else {
+                next();
             }
-            // } catch (e) {
-            //     next({
-            //         name: "sign-in",
-            //         query: { redirectFrom: to.fullPath },
-            //     });
-            // }
         },
         children: [{
                 path: '/feeds',
@@ -153,15 +145,15 @@ const routes = [{
         path: '/profile',
         component: UserView,
         async beforeEnter(to, from, next) {
-            var loggedIn;
-            loggedIn = store.getters.isLoggedIn
-            if (loggedIn) {
-                next();
-            } else {
+            var loggedIn
+            loggedIn = localStorage.getItem("loggedIn")
+            if (!loggedIn) {
                 next({
                     name: "sign-in",
                     query: { redirectFrom: to.fullPath },
                 });
+            } else {
+                next();
             }
         },
         children: [{

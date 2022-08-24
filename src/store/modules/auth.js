@@ -105,6 +105,7 @@ export default {
                     commit('SET_USER', res.data.user);
                     let token = res.data.auth_token;
                     localStorage.setItem('token', token)
+                    localStorage.setItem('loggedIn', true)
                     let loggedIn = true
                     commit('SET_LOGGED_IN', loggedIn)
                     console.log(res);
