@@ -75,10 +75,17 @@ export default {
   },
   methods: {
   },
-  computed:{
-    notifications_count(){
-      return this.$store.getters.getNotificationsCount
+  beforeMount() {
+    this.$store.dispatch("notifications/allNotifications")
+    this.$store.dispatch("notifications/getNotificationsStatistics")
+  },
+  computed: {
+    notifications_count() {
+      return this.$store.getters["notifications/notificationsCount"]
     },
-  }
+    user(){
+      return this.$store.getters["auth/getUser"]
+    }
+  },
 };
 </script>

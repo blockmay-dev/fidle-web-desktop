@@ -99,7 +99,6 @@ export default {
     ReceiveFidle,
     SwapFidle,
   },
-  props: [""],
   data() {
     return {
       send_fidle: false,
@@ -110,8 +109,6 @@ export default {
   methods: {
     closeModal() {
       this.send_fidle = false;
-      this.setWalletBalances();
-      this.setTransactions();
     },
     closeReceiveModal() {
       this.receiveFidle = false;
@@ -119,43 +116,16 @@ export default {
     closeSwapModal() {
       this.swapFidle = false;
     },
-    setWalletBalances() {
-      this.$axios
-        .get("user/wallet-balances")
-        .then((res) => {
-          console.log(res);
-          if (this.getUser.level.rank === 1) {
-            this.wallet = res.data.balances.demo;
-          } else {
-            this.wallet = res.data.balances.main;
-          }
-          let new_wallet = this.wallet;
-          this.$store.dispatch("updateWallet", { new_wallet });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    setTransactions() {
-      this.$axios
-        .get("user/wallet/transactions/")
-        .then((res) => {
-          console.log(res);
-          let new_transactions = res.data.results;
-          this.$store.dispatch("updateTransaction", { new_transactions });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
   },
 
   computed: {
     getUser() {
-      return this.$store.getters.getUser;
+      return this.$store.getters['auth/getUser']
     },
     wallet_balances() {
-      return this.$store.getters.getWallet;
+      var wallet;
+      wallet = this.$store.getters["user/walletBalance"].main;
+      return wallet;
     },
   },
 };

@@ -5,13 +5,35 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta property="og:url" content="https://www.fidle.io" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Fidle | The world's first decentralized social network for creators" />
+    <meta property="og:description" content="The world's first decentralized social network for creators" />
+    <meta property="og:image" content="https://fidle.io/img/login-img.294ed993.png" />
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
     <!-- <title><%= htmlWebpackPlugin.options.title %></title> -->
     <title>Fidle | The world's first decentralized social network for creators </title>
     <script type="text/javascript">
-        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|OperaMini/i.test(navigator.userAgent)) {
-            document.location = "https://m.fidle.io";
+        console.log(window);
+        if (window.location.search !== "") {
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|OperaMini/i.test(navigator.userAgent)) {
+                if (window.location.search.includes("referral_code")) {
+                    document.location.href = "https://m.fidle.io/r" + window.location.search
+                } else {
+                    document.location.href = "https://m.fidle.io"
+                }
+            }
+
         }
+        // if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|OperaMini/i.test(navigator.userAgent)) {
+        //     alert("phone")
+        // } else {
+        //     console.log(window.location.search);
+        //     if (condition) {
+
+        //     }
+        //     document.location = "https://m.fidle.io"+window.location.search;
+        // }
     </script>
 </head>
 

@@ -6,7 +6,7 @@
           class="px-3 pt-3 d-flex align-items-center justify-content-between"
         >
           <h6 class="">Suggested for you</h6>
-          <h6 class="small text-secondary">See all</h6>
+          <h6 class="small text-secondary" @click="seeSuggestions" role="button">See all</h6>
         </div>
         <div class="p-3">
           <!-- Suggestions Tabs -->
@@ -46,44 +46,26 @@
 export default {
   data() {
     return {
-      suggestions: []
     };
   },
   methods: {
-    getSuggestions() {
-      this.$axios
-        .get("users-suggestion/")
-        .then((res) => {
-          console.log(res.data);
-          this.suggestions = res.data.results.slice(0,5);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+    seeSuggestions(){
+      this.$router.push('/suggestions')
     },
     goToUser(suggestion){
         this.$router.push({name: 'fidler-profile', params:{id: suggestion.id}})
       },
     followUser(suggestion) {
-        this.$axios.post(`users/${suggestion.id}/follow/`)
-        .then((res)=>{
-            console.log(res);
-        })
-        .catch((err)=>{
-            console.log(err);
-        })
-        .finally(()=>{
-            this.$notify({
-              title: 'Awesome',
-              message: `You are now following ${suggestion.name}`,
-              position: 'bottom-right'
-            });
-            this.getSuggestions()
-        })
+        this.$store.dispatch("suggestions/followUser", suggestion.id)
     },
   },
-  mounted(){
-    this.getSuggestions()
+  beforeMount(){
+    this.$store.dispatch('suggestions/allSuggestions')
+  },
+  computed:{
+    suggestions(){
+      return this.$store.getters['suggestions/allSuggestions'].slice(0,5)
+    }
   }
 };
 </script>

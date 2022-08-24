@@ -1,7 +1,9 @@
 <template>
     <div>
         <div>
-            Add New Post
+            <div>
+                Boosted Posts
+            </div>
         </div>
     </div>
 </template>

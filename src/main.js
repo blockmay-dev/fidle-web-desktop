@@ -41,6 +41,19 @@ Vue.prototype.$http = http
 import AOS from 'aos'
 import 'aos/dist/aos.css'
 
+
+// let token = localStorage.getItem("token")
+
+let token;
+token = localStorage.getItem("token");
+const socket = new WebSocket(
+    "wss://api.fidle.io/websocket/?token=" + token
+);
+
+
+Vue.prototype.$socket = socket;
+console.log(socket);
+
 Vue.config.productionTip = false
 
 new Vue({

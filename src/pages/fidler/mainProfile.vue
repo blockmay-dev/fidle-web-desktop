@@ -12,11 +12,7 @@
           >
             <p v-if="user.level" class="text-white">{{ user.level.name }}</p>
           </div>
-          <div
-            v-else
-            class="cover--area p-3"
-            style="background: #b8b8b8"
-          >
+          <div v-else class="cover--area p-3" style="background: #b8b8b8">
             <p v-if="user.level" class="text-white">{{ user.level.name }}</p>
           </div>
         </div>
@@ -28,42 +24,46 @@
             :src="user.current_profile_image.media.file"
             alt=""
           />
-          <img
-            v-else
-            src="@/assets/img/no_user.png"
-            alt=""
-          />
+          <img v-else src="@/assets/img/no_user.png" alt="" />
         </div>
         <div class="mt-4">
-          <h2 class="text-capitalize"> {{ user.name }} </h2>
-          <p> {{ user.bio }} </p>
-          <p >
-             <span v-if="user"><IconComponent icon="akar-icons:location" /> <span> {{ user.city }}, {{ user.country }} </span></span>
+          <h2 class="text-capitalize">{{ user.name }}</h2>
+          <p>{{ user.bio }}</p>
+          <p>
+            <span v-if="user"
+              ><IconComponent icon="akar-icons:location" />
+              <span> {{ user.city }}, {{ user.country }} </span></span
+            >
           </p>
-          <div class="d-flex justify-content-between mt-3">
+          <div class="d-flex justify-content-between mt-3" style="gap: 20px">
             <div class="">
               <div class="mt-2 d-flex align-items-center" style="gap: 20px">
-                <span class="small"> {{ user.followers_count }}   Followers</span>
+                <span class="small"> {{ user.followers_count }} Followers</span>
                 <span class="small">{{ user.following_count }} Following</span>
               </div>
               <div class="d-flex align-items-center mt-3">
-                  <div class="followers--photo" v-for="follower in followers" :key="follower.id">
-                    <img
-                        v-if="follower.current_profile_image"
-                        :src="follower.current_profile_image.media.file"
-                        alt=""
-                    />
-                    <img
-                        v-else
-                        src="@/assets/img/no_user.png"
-                        alt=""
-                    />
+                <div
+                  class="followers--photo"
+                  v-for="follower in followers"
+                  :key="follower.id"
+                >
+                  <img
+                    v-if="follower.current_profile_image"
+                    :src="follower.current_profile_image.media.file"
+                    alt=""
+                  />
+                  <img v-else src="@/assets/img/no_user.png" alt="" />
                 </div>
               </div>
             </div>
             <div>
               <div
-                class="user-profile-action d-flex align-items-center justify-content-center"
+                class="
+                  user-profile-action
+                  d-flex
+                  align-items-center
+                  justify-content-center
+                "
                 style="gap: 10px"
                 role="button"
                 v-if="!user.following"
@@ -74,14 +74,16 @@
               <div
                 v-else
                 class="user-profile-action d-flex align-items-center"
-                style="gap: 10px"
+                style="gap: 3px"
                 role="button"
-                @click="followUser"
               >
                 <span>
-                  <IconComponent icon="ci:message" />
+                  <i
+                    class="el-icon-chat-dot-square"
+                    style="font-size: 20px"
+                  ></i>
                 </span>
-                <span>Unfollow</span>
+                <span>Send Message</span>
               </div>
             </div>
           </div>
@@ -129,7 +131,7 @@
       </ul>
     </div>
 
-    <div class=" mt-3">
+    <div class="mt-3">
       <div class="tab-content" id="myTabContent">
         <div
           class="tab-pane fade show active"
@@ -137,7 +139,7 @@
           role="tabpanel"
           aria-labelledby="home-tab"
         >
-          <PostViewVue/>
+          <PostViewVue />
         </div>
         <div
           class="tab-pane fade"
@@ -145,7 +147,7 @@
           role="tabpanel"
           aria-labelledby="profile-tab"
         >
-          <MediaViewVue/>
+          <MediaViewVue />
         </div>
         <div
           class="tab-pane fade"
@@ -153,7 +155,7 @@
           role="tabpanel"
           aria-labelledby="connect-tab"
         >
-          <UserConnectsVue/>
+          <UserConnectsVue />
         </div>
       </div>
     </div>
@@ -161,65 +163,45 @@
 </template>
 
 <script>
-import UserConnectsVue from '@/components/user/fidler/userConnects.vue';
-import PostViewVue from '@/components/user/fidler/postView.vue';
-import MediaViewVue from '../../components/user/fidler/mediaView.vue';
+import UserConnectsVue from "@/components/user/fidler/userConnects.vue";
+import PostViewVue from "@/components/user/fidler/postView.vue";
+import MediaViewVue from "../../components/user/fidler/mediaView.vue";
 export default {
-    data() {
-        return {
-            user: {},
-            followers: [],
-            id: this.$route.params.id,
-            followLoading: false
-        };
+  data() {
+    return {
+      id: this.$route.params.id,
+      followLoading: false,
+    };
+  },
+  methods: {
+    followUser() {
+      var query = this.$route.query.fidler;
+      if (query !== "") {
+        this.$store.dispatch("fidler/followUser", query);
+        this.$store.dispatch("suggestions/allSuggestions");
+      } else {
+        this.$store.dispatch("fidler/followUser", this.id);
+      }
     },
-    methods: {
-      followUser() {
-        this.followLoading = true
-        this.$axios.post(`users/${this.id}/follow/`)
-        .then((res)=>{
-            console.log(res.data.message);
-            this.$notify({
-              message: ` You are now following ${this.user.name}`,
-              position: 'bottom-right'
-            });
-        })
-        .catch((err)=>{
-            console.log(err);
-        })
-        .finally(()=>{
-            this.getPosts();
-            this.getUser();
-            this.followLoading = false;
-        })
+  },
+  beforeMount() {
+    var query = this.$route.query.fidler;
+    if (query !== "") {
+      this.$store.dispatch("fidler/getFidler", query);
+      this.$store.dispatch("fidler/getFollowers", query);
+    } else {
+      this.$store.dispatch("fidler/getFidler", this.id);
+      this.$store.dispatch("fidler/getFollowers", this.id);
+    }
+  },
+  components: { UserConnectsVue, PostViewVue, MediaViewVue },
+  computed: {
+    user() {
+      return this.$store.getters["fidler/getFidler"];
     },
-        getUser() {
-            this.$axios.get("users/"+this.id+'/')
-                .then((res) => {
-                console.log(res);
-                this.user = res.data;
-            })
-                .catch((err) => {
-                console.log(err);
-            });
-        },
-        getFollowers() {
-            this.$axios.get(`users/${this.id}/followers`)
-                .then((res) => {
-                console.log(res);
-                let followers = res.data.results;
-                console.log(followers);
-                this.followers = followers.slice(0, 5);
-            })
-                .catch((err) => {
-                console.log(err);
-            });
-        }
+    followers() {
+      return this.$store.getters["fidler/getFiveFollowers"];
     },
-    mounted() {
-        this.getUser();
-        this.getFollowers();
-    },
-    components: { UserConnectsVue, PostViewVue, MediaViewVue }
+  },
 };
 </script>

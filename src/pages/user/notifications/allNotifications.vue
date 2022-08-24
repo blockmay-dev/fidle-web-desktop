@@ -74,11 +74,11 @@ export default {
       // console.log(notification);
         this.$axios.get(`user/notifications/${notification.id}`)
         .then((res)=>{
-            console.log(res);
             this.goToPost(notification.data.post_id)
+            console.log(res)
         })
         .catch((err)=>{
-            console.log(err);
+            return err;
         })
     },
     async viewMore(){
@@ -91,8 +91,6 @@ export default {
         console.log(res.data);
         let newPosts = res.data.results
         for (let i = 0; i < newPosts.length; i++ ){
-          // console.log(newPosts[i]);
-          // this.posts.push(newPosts[i])
           let new_notifications = newPosts[i]
           console.log(new_notifications);
           this.$store.dispatch('updateNotification', { new_notifications })
@@ -106,24 +104,18 @@ export default {
     goToPost(val){
       this.$router.push({name: 'single-fidle', params:{id: val}})
     },
-    getNotificationsStatistics() {
-      this.$axios
-        .get("/notification-statistics")
-        .then((res) => {
-          console.log(res);
-          let new_notificationsCount = res.data.unread;
-          this.$store.dispatch('updateNotificationsCount', {new_notificationsCount})
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
   },
  
-  computed:{
-    allNotifications(){
-      return this.$store.getters.getNotifications
+  computed: {
+    allNotifications() {
+      return this.$store.getters["notifications/allNotifications"];
+    },
+    notifications_count() {
+      return this.$store.getters["notifications/notificationsCount"];
+    },
+    user(){
+      return this.$store.getters["auth/getUser"]
     }
-  }, 
+  },
 };
 </script>

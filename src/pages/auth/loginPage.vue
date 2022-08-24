@@ -116,8 +116,6 @@ export default {
         username: "",
         password: "",
       },
-      loader: false,
-      errMessages: {}
     };
   },
   methods: {
@@ -131,39 +129,24 @@ export default {
       }
     },
     login() {
-      this.loader = true;
-      this.$http
-        .post("/auth/token/login", this.credentials)
-        .then((res) => {
-          let token = res.data.auth_token;
-          let user = res.data.user;
-          let loggedIn = true
-          this.$store.dispatch("login", { token, user, loggedIn });
-          this.$router.push({name: "all-posts"})
-
-        })
-        .catch((err) => {
-          this.errMessages = err.response.data
-          this.$message({
-          showClose: true,
-          message: 'Incorrect Login Credentials'
-        });
-        })
-        .finally(()=>{
-            this.loader = false;
-            this.credentials = {}
-        })
+      this.$store.dispatch("auth/userLogin", this.credentials)
     },
     goToLogin() {
       this.$router.push("/sign-up");
     },
   },
   created(){
-    if(this.$store.getters.isLoggedIn ){
-      this.$router.push("/all-posts")
-    }
+    
   },
   components: { AppLoader },
+  computed:{
+    loader(){
+      return this.$store.getters["auth/isLoading"]
+    },
+    errMessages(){
+      return this.$store.getters["auth/isError"]
+    }
+  }
 };
 </script>
 

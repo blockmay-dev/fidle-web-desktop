@@ -7,6 +7,7 @@
           <img src="@/assets/img/logo.svg" width="50" alt="" />
         </div>
 
+         
         <!-- Search Field -->
         <div class="search--area">
           <form action="" method="get" @submit.prevent="goToSearch">
@@ -49,7 +50,7 @@
               style="gap: 30px"
             >
               <li>
-                <router-link to="/all-posts">
+                <router-link to="/feeds">
                   <span class="d-block text-center">
                     <IconComponent
                       icon="ci:home-alt-minus"
@@ -58,6 +59,19 @@
                   </span>
                   <div>
                     <span style="font-size: 14px">Home</span>
+                  </div>
+                </router-link>
+              </li>
+              <li>
+                <router-link to="/referrals">
+                  <span class="d-block text-center">
+                    <IconComponent
+                      icon="bi:share-fill"
+                      style="font-size: 16px"
+                    />
+                  </span>
+                  <div>
+                    <span style="font-size: 14px">Refer Friends</span>
                   </div>
                 </router-link>
               </li>
@@ -92,11 +106,11 @@
             />
             <img v-else src="@/assets/img/no_user.png" alt="" />
           </div>
-          <div class="app-header-icon">
-            <IconComponent
-              icon="bi:camera-video"
-              style="color: #000; font-size: 20px"
-            />
+          <div class="app-header-icon video">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="0.7" style="width:35px; height:35px">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+            <div class="blinking--icon animate__animated animate__flash animate__infinite	infinite animate__slower"></div>
           </div>
 
           <div class="notifications--container">
@@ -155,16 +169,14 @@
             <div class="app-header-icon" slot="reference" role="button">
               <div class="notification-icon">
                 <el-badge is-dot class="item">
-                  <IconComponent
-                    icon="ion:notifications-outline"
-                    style="color: #000; font-size: 20px"
-                  />
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="0.7" style="width:30px; height:30px">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                  </svg>
                 </el-badge>
               </div>
             </div>
           </el-popover>
           </div>
-
           <!-- </div> -->
         </div>
       </div>
@@ -173,6 +185,7 @@
 </template>
 
 <script>
+import 'animate.css';
 import {
   timeRange,
   sliceContent,
@@ -193,21 +206,23 @@ export default {
       search__item: false,
       read: false,
       page: 1,
+      dialogTableVisible: false,
     };
   },
   methods: {
     goToNotification(notification){
-      // console.log(notification);
         this.$axios.get(`user/notifications/${notification.id}`)
         .then((res)=>{
-            console.log(res);
             this.goToPost(notification.data.post_id)
+            return res
         })
         .catch((err)=>{
-            console.log(err);
+            return err
         })
     },
-    
+    goToReferral(){
+      this.$emit("viewReferralModal")
+    },
     goToPost(val){
       this.$router.push({name: 'single-fidle', params:{id: val}})
     },
@@ -224,16 +239,14 @@ export default {
         let res = await this.$axios.get(
           `user/notifications?page=${this.page}`, 
         );
-        console.log(res.data);
         let newPosts = res.data.results
         for (let i = 0; i < newPosts.length; i++ ){
           let new_notifications = newPosts[i]
-          console.log(new_notifications);
           this.$store.dispatch('updateNotification', { new_notifications })
         }
         
       } catch (error) {
-        console.log(error);
+       return error
       }
       this.loading = false
     },
@@ -241,71 +254,28 @@ export default {
       this.$router.push("/profile");
     },
     goHome() {
-      this.$router.push("/all-posts");
+      this.$router.push("/feeds");
     },
     goToSearch() {
       let url = this.search_item;
       this.$router.push({ name: "search-results", query: { q: url } });
+      this.$store.dispatch("extras/searchUsers", url)
+      this.$store.dispatch("posts/searchPosts", url)
     },
-   
-    getNotificationsStatistics2() {
-      this.$axios
-        .get("/notification-statistics")
-        .then((res) => {
-          console.log(res);
-          let new_notificationsCount = res.data;
-          this.$store.dispatch("updateNotificationsCount", {
-            new_notificationsCount,
-          });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    getNotifications() {
-      this.$axios
-        .get("/user/notifications")
-        .then((res) => {
-          console.log(res);
-          let all_notifications = res.data.results;
-          this.$store.dispatch("getNotifications", { all_notifications });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    getNotificationsStatistics() {
-      this.$axios
-        .get("/notification-statistics")
-        .then((res) => {
-          console.log(res);
-          let all_notificationsCount = res.data;
-          this.$store.dispatch("setNotificationsCount", {
-            all_notificationsCount,
-          });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-  },
-
-  mounted() {
-    this.getUser();
   },
   beforeMount() {
-    this.getNotifications();
-    this.getNotificationsStatistics();
+    this.$store.dispatch("notifications/allNotifications")
+    this.$store.dispatch("notifications/getNotificationsStatistics")
   },
   computed: {
     notifications() {
-      return this.$store.getters.getNotifications;
+      return this.$store.getters["notifications/allNotifications"];
     },
     notifications_count() {
-      return this.$store.getters.getNotificationsCount;
+      return this.$store.getters["notifications/notificationsCount"];
     },
     user(){
-      return this.$store.getters.getUser
+      return this.$store.getters["auth/getUser"]
     }
   },
 };

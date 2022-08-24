@@ -4,7 +4,7 @@
         <div class="side-pane">
             <ul>
                 <li>
-                    <router-link to="/all-posts">
+                    <router-link to="/feeds">
                         <span> <IconComponent icon="ci:home-alt-minus" /> </span>
                         <span>Home</span>
                     </router-link>
@@ -37,6 +37,12 @@
                     <router-link to="/wallet">
                         <span> <IconComponent icon="clarity:wallet-line" /> </span>
                         <span>Wallet</span>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to="/referrals">
+                        <span> <IconComponent  icon="bi:share-fill" /> </span>
+                        <span>Referrals</span>
                     </router-link>
                 </li>
                 <li>

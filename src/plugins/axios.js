@@ -1,12 +1,13 @@
 import Vue from 'vue'
 import "toastify-js/src/toastify.css"
 import Toastify from 'toastify-js'
-import store from '../store'
+// import store from '../store'
 // import router from '../router'
 Vue.use(Toastify)
 
 import axios from "axios";
-const BASE_URL = 'https://api.fidle.io/';
+const BASE_URL = 'https://dev.api.fidle.io/';
+let token = localStorage.getItem('token')
 
 const instance = axios.create({
     baseURL: BASE_URL,
@@ -17,7 +18,7 @@ const instance = axios.create({
         // "Access-Control-Allow-Origin": "*",
         // "Access-Control-Allow-Headers": "*",
         // "Access-Control-Allow-Methods": 'GET, HEAD, PUT, PATCH, POST, DELETE'
-        "Authorization": "Token" + " " + store.state.token
+        "Authorization": "Token" + " " + token
     }
 });
 
@@ -25,11 +26,11 @@ const instance = axios.create({
 instance.interceptors.request.use(function(config) {
     // Do something before request is sent
     // alert("requesting")
-    // console.log(`${store.state.token}`);
-    const token = `${store.state.token}`;
+    // console.log(`${token}`);
+    const token = `${token}`;
 
     if (token) {
-        config.headers['Authorization'] = `Token ${store.state.token}`;
+        config.headers['Authorization'] = `Token ${token}`;
     }
 
     return config;

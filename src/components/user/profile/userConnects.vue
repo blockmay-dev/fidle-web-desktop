@@ -25,9 +25,9 @@
                 </div>
               </div>
             </div>
-            <div>
+            <!-- <div>
                 <IconComponent icon="gg:more" style="font-size:25px" />
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -56,9 +56,9 @@
                 </div>
               </div>
             </div>
-            <div>
+            <!-- <div>
                 <IconComponent icon="gg:more" style="font-size:25px" />
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -71,37 +71,21 @@ export default {
   data() {
     return {
       activeName: "first",
-      followers: [],
-      followings: []
     };
   },
   methods: {
-    getFollowers() {
-            this.$axios.get("user/followers")
-                .then((res) => {
-                console.log(res);
-                this.followers = res.data.results;
-                console.log(this.followers);
-            })
-                .catch((err) => {
-                console.log(err);
-            });
-        },
-        getFollowing() {
-            this.$axios.get("user/following")
-                .then((res) => {
-                console.log(res);
-                this.followings = res.data.results;
-                console.log(this.followings);
-            })
-                .catch((err) => {
-                console.log(err);
-            });
-        }
   },
-  mounted(){
-    this.getFollowers()
-    this.getFollowing()
+  beforeMount(){
+    this.$store.dispatch("user/getFollowers")
+    this.$store.dispatch("user/getFollowing")
+  },
+  computed:{
+    followers(){
+      return this.$store.getters["user/getFollowers"]
+    },
+    followings(){
+      return this.$store.getters["user/getFollowing"]
+    }
   }
 };
 </script>

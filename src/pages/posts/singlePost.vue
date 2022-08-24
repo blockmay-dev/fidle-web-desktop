@@ -719,7 +719,7 @@ export default {
           });
         })
         .catch((err) => {
-          console.log(err);
+          return err;
         })
         .finally(() => {
           this.getPosts();
@@ -732,7 +732,7 @@ export default {
       if (this.comments) {
         try {
           let res = await this.$axios.get(`/posts/${item.id}/comments/`);
-          console.log(res);
+           
           this.commentsList = res.data.results;
         } catch (error) {
           console.log(error);
@@ -745,11 +745,11 @@ export default {
       this.$axios
         .post(`posts/${item.id}/comments/${comment.id}/like/`)
         .then((res) => {
-          console.log(res);
+           console.log(res);
           this.getComments(item);
         })
         .catch((err) => {
-          console.log(err);
+          return err;
         });
     },
     async postComment(item) {
@@ -758,7 +758,7 @@ export default {
       };
       try {
         let res = await this.$axios.post(`posts/${item.id}/comments/`, payload);
-        console.log(res);
+         console.log(res);
         this.getPosts();
         this.getComments(item);
       } catch (error) {
@@ -789,8 +789,9 @@ export default {
           this.item = res.data;
         })
         .catch((err) => {
-          console.log(err);
           this.loading = true;
+
+          return err;
         })
         .finally(() => {
           this.loading = false;
@@ -829,7 +830,7 @@ export default {
           this.user = res.data;
         })
         .catch((err) => {
-          console.log(err);
+          return err;
         });
     },
     showVideoPreview($event) {
@@ -863,7 +864,7 @@ export default {
     async likePost(item) {
       try {
         let res = await this.$axios.post(`posts/${item.id}/likes/`);
-        console.log(res);
+         console.log(res);
       } catch (error) {
         console.log(error);
       }
@@ -887,19 +888,19 @@ export default {
       this.$axios
         .post(`posts/${item.id}/save/`)
         .then((res) => {
-          console.log(res);
+           console.log(res);
           this.$message({
             showClose: true,
             message: "Post Saved",
           });
         })
         .catch((err) => {
-          console.log(err);
           this.$message({
             showClose: true,
             message: "Something went wrong",
             type: "error",
           });
+          return err;
         })
         .finally(() => {
           this.getPosts();
@@ -909,19 +910,19 @@ export default {
       this.$axios
         .post(`posts/${item.id}/hide/`)
         .then((res) => {
-          console.log(res);
+           console.log(res);
           this.$message({
             showClose: true,
             message: "Post Hidden",
           });
         })
         .catch((err) => {
-          console.log(err);
           this.$message({
             showClose: true,
             message: "Something went wrong",
             type: "error",
           });
+          return err;
         })
         .finally(() => {
           this.getPosts();
@@ -932,11 +933,11 @@ export default {
       this.verify_loading = true
       this.$axios.get(`posts/${item.id}`)
       .then((res)=>{
-        console.log(res);
+         
         this.post = res.data
       })
       .catch((err)=>{
-        console.log(err);
+        return err;
       })
       .finally(()=>{
         this.verify_loading = false
@@ -950,19 +951,20 @@ export default {
       this.$axios
         .post(`posts/${this.val}/report-abuse/`, this.dataObj)
         .then((res) => {
-          console.log(res);
+           console.log(res);
           this.$message({
             showClose: true,
             message: "Post Flagged",
           });
         })
         .catch((err) => {
-          console.log(err);
           this.$message({
             showClose: true,
             message: "Something went wrong",
             type: "error",
           });
+
+          return err;
         })
         .finally(() => {
           this.getPosts();

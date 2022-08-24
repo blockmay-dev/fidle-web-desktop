@@ -55,35 +55,36 @@ export default {
   data() {
     return {
       pin: "",
-      err: '',
-      completeLoading: false,
-      verified: false
     };
   },
   methods:{
     close(){
         this.$emit('close')
     },
-    verify(){
-        let payload = {
+    async verify(){
+      let payload = {
         pin: this.pin
     }
-    this.$axios.post("user/verify-pin", payload)
-    .then((res)=>{
-        console.log(res);
-        this.verified = true
-    })
-    .catch((err)=>{
-        console.log(err);
-        this.err = err.response.data.error
-        this.pin = ''
-    })
+    this.$store.dispatch("user/verifyPin", payload)
+      
   },
   complete(){
     this.$emit('complete', this.pin);
-    this.verified = false
+    this.$store.dispatch("user/removePinVerification")
     this.pin = ''
+  },
+  },
+  computed:{
+    verified(){
+      return this.$store.getters["user/isPinVerified"]
+    },
+    completeLoading(){
+      return this.$store.getters["user/isLoading"]
+    },
+    err(){
+      return this.$store.getters["user/getError"]
+    }
   }
-  }
+  
 };
 </script>

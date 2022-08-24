@@ -43,69 +43,65 @@
         <el-form :model="payload">
           <el-form-item label="Enter Text">
             <el-input
-                type="textarea"
-                :autosize="{ minRows: 2, maxRows: 4}"
-                placeholder="Please input"
-                v-model="payload.content">
-              </el-input>
+              type="textarea"
+              :autosize="{ minRows: 2, maxRows: 4 }"
+              placeholder="Please input"
+              v-model="payload.content"
+            >
+            </el-input>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">Cancel</el-button>
-          <el-button type="primary" @click="addStory"
-            >Add Story</el-button
-          >
+          <el-button type="primary" @click="addStory">Add Story</el-button>
         </span>
       </el-dialog>
 
-       <!-- Modal For Photo Story  -->
+      <!-- Modal For Photo Story  -->
       <el-dialog title="Photo Story" :visible.sync="dialogFormVisible2">
-            <div class="story--photo_preview mb-3" v-show="imgPreview">
-            <div
-              class="close--media_preview text-right"
-              role="button"
-              @click="closePreview"
-            >
-              <IconComponent
-                icon="ep:circle-close-filled"
-                class="file--icons"
-                style="font-size: 40px"
-              />
-            </div>
-            <img :src="imgSrc" alt="" />
+        <div class="story--photo_preview mb-3" v-show="imgPreview">
+          <div
+            class="close--media_preview text-right"
+            role="button"
+            @click="closePreview"
+          >
+            <IconComponent
+              icon="ep:circle-close-filled"
+              class="file--icons"
+              style="font-size: 40px"
+            />
           </div>
+          <img :src="imgSrc" alt="" />
+        </div>
 
-
-            <div class="d-flex justify-content-center" v-if="isActive">
-              <input
-                @change="onFileChange"
-                type="file"
-                accept="image/*"
-                id="choose-file"
-                name="choose-file"
-              />
-              <label class="choose--image" for="choose-file"
-                ><IconComponent
-                  icon="ic:outline-plus"
-                  class="file--icons"
-                  style="font-size:50px"
-                />
-              </label>
-            </div>
-            <el-input
-                type="textarea"
-                :autosize="{ minRows: 2, maxRows: 4}"
-                placeholder="Please enter text (Optional)"
-                v-model="dataObj.content">
-              </el-input>
+        <div class="d-flex justify-content-center" v-if="isActive">
+          <input
+            @change="onFileChange"
+            type="file"
+            accept="image/*"
+            id="choose-file"
+            name="choose-file"
+          />
+          <label class="choose--image" for="choose-file"
+            ><IconComponent
+              icon="ic:outline-plus"
+              class="file--icons"
+              style="font-size: 50px"
+            />
+          </label>
+        </div>
+        <el-input
+          type="textarea"
+          :autosize="{ minRows: 2, maxRows: 4 }"
+          placeholder="Please enter text (Optional)"
+          v-model="dataObj.content"
+        >
+        </el-input>
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible2 = false">Cancel</el-button>
-          <el-button type="primary" @click="addPhotoStory"
-            >Add Story</el-button
-          >
+          <el-button type="primary" @click="addPhotoStory">Add Story</el-button>
         </span>
       </el-dialog>
-
     </div>
   </div>
 </template>
@@ -117,89 +113,39 @@ export default {
     return {
       dialogFormVisible: false,
       dialogFormVisible2: false,
-      payload:{
-        content: '',
+      payload: {
+        content: "",
       },
       imgPreview: false,
-      imgSrc: '',
-      dataObj:{
+      imgSrc: "",
+      dataObj: {
         media: null,
-        content: ''
+        content: "",
       },
-      isActive: true
+      isActive: true,
     };
   },
   methods: {
     goToTextPreview() {
-       this.dialogFormVisible = true
+      this.dialogFormVisible = true;
     },
-    goToPreview(){
-      this.dialogFormVisible2 = true
+    goToPreview() {
+      this.dialogFormVisible2 = true;
     },
-    addStory(){
+    addStory() {
       let payload = {
-        content: this.payload.content
-      }
-      this.$axios.post('/user/stories/', payload)
-      .then((res)=>{
-        console.log(res)
-        this.$notify({
-          title: 'Done!',
-          message: 'Story Added',
-          type: 'success'
-        })
-
-         // Update Store 
-      this.$axios
-        .get("user/stories")
-        .then((res) => {
-          console.log(res);
-          let updateStories = res.data.results
-          this.$store.dispatch('updateMyStories', {updateStories})
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-      })
-      .catch((err)=>{
-        console.log(err);
-      })
-      .finally(()=>{
-        this.dialogFormVisible = false
-      })
+        content: this.payload.content,
+      };
+      this.$store.dispatch("stories/createStory", payload);
+      this.dialogFormVisible = false;
     },
-    addPhotoStory(){
+    addPhotoStory() {
       let formData = new FormData();
       formData.append("content", this.dataObj.content);
       formData.append("media", this.dataObj.media);
       formData.append("_method", "POST");
-      this.$axios.post('/user/stories/', formData)
-      .then((res)=>{
-        console.log(res)
-        this.$notify({
-          title: 'Done!',
-          message: 'Story Added',
-          type: 'success'
-        })
-        // Update Store 
-      this.$axios
-        .get("user/stories")
-        .then((res) => {
-          console.log(res);
-          let updateStories = res.data.results
-          this.$store.dispatch('updateMyStories', {updateStories})
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-      })
-      
-      .catch((err)=>{
-        console.log(err);
-      })
-      .finally(()=>{
-        this.dialogFormVisible2 = false
-      })
+      this.$store.dispatch("stories/createStory", formData);
+      this.dialogFormVisible2 = false;
     },
     onFileChange(e) {
       this.imgPreview = true;
@@ -214,11 +160,9 @@ export default {
     },
     closePreview() {
       this.imgPreview = false;
-      this.isActive = true
+      this.isActive = true;
     },
   },
-  mounted() {
-    
-  },
+  mounted() {},
 };
 </script>

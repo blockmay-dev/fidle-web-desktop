@@ -38,11 +38,11 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: #fff;
+    background-color: var(--main-color);
     /* color of the scroll thumb */
-    border-radius: 30px;
+    border-radius: 50px;
     /* roundness of the scroll thumb */
-    border: 1px solid #fff;
+    border: 1px solid var(--main-color);
     /* creates padding around scroll thumb */
 }
 
@@ -101,4 +101,8 @@ label,
 .row {
     margin: 0 !important;
     padding: 0 !important;
+}
+
+.text-inactive {
+    color: #8c8c8c;
 }

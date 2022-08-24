@@ -85,7 +85,7 @@ export default {
             this.$router.push('/stories/create')
         },
         goBack(){
-            this.$router.push({name: "all-posts"})
+            this.$router.push({name: "feeds"})
         },
        getUser(){
       this.$axios.get('auth/users/me')
@@ -93,7 +93,7 @@ export default {
         this.user = res.data
       })
       .catch((err)=>{
-        console.log(err);
+        return err;
       })
     }
   },

@@ -6,7 +6,7 @@
           <div class="logo mb-4 text-center">
             <img src="@/assets/img/logo.svg" width="50" alt="" />
           </div>
-          <div v-if="!loading">
+          <div>
             <h4 class="font-weight-bold text-center">Are you Sure?</h4>
             <p class="text-center small text-secondary">You can always log back in at any time.</p>
             <div class="mt-4">
@@ -20,8 +20,8 @@
               </button>
             </div>
           </div>
-          <div v-else>
-            <p>Logging out ...</p>
+          <div v-show="loading"  class="logging--out">
+            <i class="el-icon-loading" style="font-size:50px; color: #fff"></i>
           </div>
         </div>
       </div>
@@ -35,26 +35,20 @@ export default {
   },
   data() {
     return {
-      loading: false,
     };
   },
   methods: {
     async logout() {
-      
-    this.loading = true;
-      try {
-        let res = await this.$axios.post("/auth/token/logout/");
-        console.log(res);
-        this.$store.dispatch("logout");
-      } catch (error) {
-        console.log(error.response);
-      }
-      this.loading = false;
-      this.$router.push("/");
+        this.$store.dispatch("auth/logout");
     },
     close() {
       this.$emit("close");
     },
   },
+  computed:{
+    loading(){
+      return this.$store.getters["auth/isLoading"]
+    }
+  }
 };
 </script>

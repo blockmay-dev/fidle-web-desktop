@@ -27,6 +27,7 @@
           <input type="text" v-model="payload.username" class="input--text" />
           <small class="text-danger" v-show="errMessages.username" v-for="err in errMessages.username" :key="err"> *{{ err }} </small>
         </div>
+         
         <div class="mb-3">
           <label for="" class="d-block small"
             >Email<sup class="text-danger">*</sup>
@@ -34,8 +35,9 @@
           <input type="text" v-model="payload.email" class="input--text" />
           <small class="text-danger" v-show="errMessages.email" v-for="err in errMessages.email" :key="err"> *{{ err }} </small>
         </div>
-        <div class="mb-3">
-          <label class="d-block small" for=""
+        <div class="mb-4 d-flex" style="gap:20px">
+        <div>
+            <label class="d-block small" for=""
             >Password<sup class="text-danger">*</sup>
           </label>
           <div class="input--field">
@@ -51,7 +53,7 @@
           <span class="text-secondary small">Min. 8 Characters</span>
           <small class="text-danger" v-show="errMessages.password" v-for="err in errMessages.password" :key="err"> *{{ err }} </small>
         </div>
-        <div class="mb-4">
+        <div>
           <label class="d-block small" for=""
             >Confirm Password<sup class="text-danger">*</sup>
           </label>
@@ -66,6 +68,14 @@
             </div>
           </div>
           <small class="text-danger" v-show="errMessages.re_password" v-for="err in errMessages.re_password" :key="err"> *{{ err }} </small>
+        </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="" class="d-block small"
+            >Referrral Code
+          </label>
+          <input type="text" v-model="payload.referral_code" class="input--text" />
         </div>
        
         <div class="mt-3">
@@ -90,6 +100,7 @@ export default {
           password: '',
           re_password: '',
           email: '',
+          referral_code: ""
         },
         errMessages: {}
       }
@@ -107,16 +118,14 @@ export default {
     goToNext() {
       this.$http.post('/auth/users/', this.payload)
       .then((res)=>{
-        console.log(res);
         this.backgroundLogin();
         this.$router.push('/sign-up/complete-profile')
+        this.payload = {}
+        return res
       })
       .catch((err)=>{
         console.log(err.response.data);
         this.errMessages = err.response.data
-      })
-      .finally(()=>{
-        this.payload = {}
       })
     },
     backgroundLogin(){
@@ -124,19 +133,12 @@ export default {
         username: this.payload.username,
         password: this.payload.password
       }
-      this.$http.post('/auth/token/login', credentials)
-      .then((res)=>{
-        console.log(res);
-        let token = res.data.auth_token
-        let user = res.data.user
-        let loggedIn = true
-          this.$store.dispatch("login", { token, user, loggedIn });
-        console.log(token, user);
-      })
-      .catch((err)=>{
-        console.log(err);
-      })
+      this.$store.dispatch("auth/userLogin", credentials)
     }
   },
+  mounted(){
+    let code = this.$route.query.referral_code;
+    this.payload.referral_code = code;
+  }
 };
 </script>

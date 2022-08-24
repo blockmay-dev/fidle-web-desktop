@@ -48,11 +48,7 @@
                     {{ suggestion.followers_count }} others
                   </span>
                   <div>
-                    <!-- <img src="https://st2.depositphotos.com/1734074/11386/v/950/depositphotos_113862774-stock-illustration-vector-businessman-profile-icon-man.jpg" alt="">
-                                        <img src="https://st2.depositphotos.com/1734074/11386/v/950/depositphotos_113862774-stock-illustration-vector-businessman-profile-icon-man.jpg" alt="">
-                                        <img src="https://st2.depositphotos.com/1734074/11386/v/950/depositphotos_113862774-stock-illustration-vector-businessman-profile-icon-man.jpg" alt="">
-                                        <img src="https://st2.depositphotos.com/1734074/11386/v/950/depositphotos_113862774-stock-illustration-vector-businessman-profile-icon-man.jpg" alt=""> -->
-                  </div>
+                   </div>
                 </div>
               </div>
             </div>
@@ -69,14 +65,14 @@
                 class="primary--btn"
                 @click.once="followUser(suggestion)"
               >
-                <span v-if="loading">Follow</span>
-                <span v-else>Loading</span>
+                <span v-if="loading">Loading</span>
+                <span v-else>Follow</span>
               </button>
             </div>
           </div>
 
           <div class="mt-4">
-            <button class="primary--btn" @click="goToFeeds()">Continue</button>
+            <button class="primary--btn" @click="goToFeeds()" v-if="checkNumberofFollows.length === 5">Continue</button>
           </div>
         </div>
       </div>
@@ -85,10 +81,10 @@
 </template>
 
 <script>
+import request from '@/config/axios.js'
 export default {
   data() {
     return {
-      suggestions: [],
       true_follows: [],
       loading: false,
       counter: 0,
@@ -96,45 +92,37 @@ export default {
   },
   methods: {
       goToFeeds(){
-          this.$router.push({name: "all-posts"})
+          this.$router.push({name: "feeds"})
       },
-    getSuggestions() {
-      this.$axios
-        .get("users-suggestion/")
-        .then((res) => {
-          console.log(res.data);
-          this.suggestions = res.data.results;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
     followUser(suggestion) {
         this.loading = true
-        this.$axios.post(`users/${suggestion.id}/follow/`)
+        request().post(`users/${suggestion.id}/follow/`)
         .then((res)=>{
-            console.log(res);
             this.counter++
+            console.log(res);
         })
         .catch((err)=>{
-            console.log(err);
+            return err;
         })
         .finally(()=>{
-            this.getSuggestions()
+            this.$store.dispatch("extras/listUsers")
         })
         this.loading = false
     },
   },
-  mounted() {
-    this.getSuggestions();
-  },
-  created() {
+  beforeMount(){
+    this.$store.dispatch("extras/listUsers")
   },
   computed: {
     getFiveSuggestions() {
-      let dataSug = this.suggestions;
+      let dataSug = this.$store.getters["extras/getAllUsers"].results;
       return dataSug.slice(1, 6);
     },
+    checkNumberofFollows(){
+      const value = this.getFiveSuggestions.filter((elem) => elem.following);
+        console.log(value);
+        return value
+    }
     
   },
 };

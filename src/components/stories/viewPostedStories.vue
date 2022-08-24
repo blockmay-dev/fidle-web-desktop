@@ -159,7 +159,7 @@ export default {
             // document.getElementById("countdown"). = timeleft;
             
             
-              this.images= this.$store.getters.getMyStories
+              this.images= this.$store.getters['stories/getStories'].results
               this.currentImage = this.images[this.activeImage];
               this.nextImageView = this.images[this.nextViewItem ];
               this.previousImage = this.images[this.prevItem ];

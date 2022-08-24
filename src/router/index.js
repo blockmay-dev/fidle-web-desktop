@@ -2,12 +2,24 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../layouts/feedsLayout.vue'
 import UserView from '../layouts/userLayout.vue'
+import store from '../store/modules/auth'
 
 Vue.use(VueRouter)
 
 const routes = [{
         path: '/',
         name: 'sign-in',
+        beforeEnter(to, from, next) {
+            var loggedIn;
+            loggedIn = store.getters.isLoggedIn
+            if (loggedIn) {
+                next({
+                    name: "feeds",
+                });
+            } else {
+                next();
+            }
+        },
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
@@ -17,6 +29,17 @@ const routes = [{
     {
         path: '/sign-up',
         name: 'sign-up',
+        beforeEnter(to, from, next) {
+            var loggedIn;
+            loggedIn = store.getters.isLoggedIn
+            if (loggedIn) {
+                next({
+                    name: "feeds",
+                });
+            } else {
+                next();
+            }
+        },
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
@@ -41,16 +64,64 @@ const routes = [{
         ]
     },
     {
-        path: '/',
+        path: '/feeds',
         component: HomeView,
+        async beforeEnter(to, from, next) {
+            // try {
+            var loggedIn;
+            loggedIn = store.getters.isLoggedIn
+            if (loggedIn) {
+                next();
+
+            } else {
+
+                next({
+                    name: "sign-in",
+                    query: { redirectFrom: to.fullPath },
+                });
+            }
+            // } catch (e) {
+            //     next({
+            //         name: "sign-in",
+            //         query: { redirectFrom: to.fullPath },
+            //     });
+            // }
+        },
         children: [{
-                path: '/all-posts',
-                name: 'all-posts',
+                path: '/feeds',
+                name: 'feeds',
                 // route level code-splitting
                 // this generates a separate chunk (about.[hash].js) for this route
                 // which is lazy-loaded when the route is visited.
                 component: () =>
                     import ( /* webpackChunkName: "about" */ '../pages/posts/indexPage.vue')
+            },
+            {
+                path: '/r',
+                name: 'referral-redirect',
+                // route level code-splitting
+                // this generates a separate chunk (about.[hash].js) for this route
+                // which is lazy-loaded when the route is visited.
+                component: () =>
+                    import ( /* webpackChunkName: "about" */ '../pages/referrals/redirectionPage.vue')
+            },
+            {
+                path: '/referrals',
+                name: 'referrals',
+                // route level code-splitting
+                // this generates a separate chunk (about.[hash].js) for this route
+                // which is lazy-loaded when the route is visited.
+                component: () =>
+                    import ( /* webpackChunkName: "about" */ '../pages/referrals/indexPage.vue')
+            },
+            {
+                path: '/suggestions',
+                name: 'suggestions',
+                // route level code-splitting
+                // this generates a separate chunk (about.[hash].js) for this route
+                // which is lazy-loaded when the route is visited.
+                component: () =>
+                    import ( /* webpackChunkName: "about" */ '../pages/suggestions/indexPage.vue')
             },
             {
                 path: '/stories/create',
@@ -80,8 +151,22 @@ const routes = [{
     },
 
     {
-        path: '/',
+        path: '/profile',
         component: UserView,
+        async beforeEnter(to, from, next) {
+            var loggedIn;
+            loggedIn = store.getters.isLoggedIn
+            if (loggedIn) {
+                next();
+
+            } else {
+
+                next({
+                    name: "sign-in",
+                    query: { redirectFrom: to.fullPath },
+                });
+            }
+        },
         children: [{
                 path: '/profile',
                 name: 'user-profile',
@@ -89,8 +174,124 @@ const routes = [{
                 // this generates a separate chunk (about.[hash].js) for this route
                 // which is lazy-loaded when the route is visited.
                 component: () =>
-                    import ( /* webpackChunkName: "about" */ '../pages/user/profile/indexPage.vue')
+                    import ( /* webpackChunkName: "about" */ '../pages/user/profile/indexPage.vue'),
+                children: [{
+                    path: '/profile',
+                    // route level code-splitting
+                    // this generates a separate chunk (about.[hash].js) for this route
+                    // which is lazy-loaded when the route is visited.
+                    component: () =>
+                        import ( /* webpackChunkName: "about" */ '../pages/user/profile/mainProfile.vue'),
+                    children: [{
+                            path: '/profile',
+                            // route level code-splitting
+                            // this generates a separate chunk (about.[hash].js) for this route
+                            // which is lazy-loaded when the route is visited.
+                            component: () =>
+                                import ( /* webpackChunkName: "about" */ '@/components/user/profile/postView.vue'),
+                        },
+                        {
+                            path: '/profile/media',
+                            // route level code-splitting
+                            // this generates a separate chunk (about.[hash].js) for this route
+                            // which is lazy-loaded when the route is visited.
+                            component: () =>
+                                import ( /* webpackChunkName: "about" */ '@/components/user/profile/mediaView.vue'),
+                        },
+                        {
+                            path: '/profile/saved-posts',
+                            // route level code-splitting
+                            // this generates a separate chunk (about.[hash].js) for this route
+                            // which is lazy-loaded when the route is visited.
+                            component: () =>
+                                import ( /* webpackChunkName: "about" */ '@/components/user/profile/savedPosts.vue'),
+                        },
+                        {
+                            path: '/profile/connections',
+                            // route level code-splitting
+                            // this generates a separate chunk (about.[hash].js) for this route
+                            // which is lazy-loaded when the route is visited.
+                            component: () =>
+                                import ( /* webpackChunkName: "about" */ '@/components/user/profile/userConnects.vue'),
+                        },
+                        {
+                            path: '/profile/nft-collections',
+                            meta: {
+                                breadcrumb: 'HomePage',
+                            },
+                            // route level code-splitting
+                            // this generates a separate chunk (about.[hash].js) for this route
+                            // which is lazy-loaded when the route is visited.
+                            component: () =>
+                                import ( /* webpackChunkName: "about" */ '@/components/user/nft/indexPage.vue'),
+
+                            children: [{
+                                    path: '/profile/nft-collections',
+                                    meta: {
+                                        breadcrumb: 'Home Page'
+                                    },
+                                    // route level code-splitting
+                                    // this generates a separate chunk (about.[hash].js) for this route
+                                    // which is lazy-loaded when the route is visited.
+                                    component: () =>
+                                        import ( /* webpackChunkName: "about" */ '@/components/user/nft/nftCollections.vue'),
+                                },
+                                {
+                                    path: '/profile/nft-collections/:id',
+                                    meta: {
+                                        breadcrumb: 'Id Page'
+                                    },
+                                    // route level code-splitting
+                                    // this generates a separate chunk (about.[hash].js) for this route
+                                    // which is lazy-loaded when the route is visited.
+                                    component: () =>
+                                        import ( /* webpackChunkName: "about" */ '@/components/user/nft/nftCollectionId.vue'),
+                                },
+                                {
+                                    path: '/profile/nfts/id',
+                                    meta: {
+                                        breadcrumb: 'Nft Page'
+                                    },
+                                    // route level code-splitting
+                                    // this generates a separate chunk (about.[hash].js) for this route
+                                    // which is lazy-loaded when the route is visited.
+                                    component: () =>
+                                        import ( /* webpackChunkName: "about" */ '@/components/user/nft/nftId.vue'),
+                                },
+
+                            ]
+                        },
+                        {
+                            path: '/profile/boosted-posts',
+                            // route level code-splitting
+                            // this generates a separate chunk (about.[hash].js) for this route
+                            // which is lazy-loaded when the route is visited.
+                            component: () =>
+                                import ( /* webpackChunkName: "about" */ '@/components/user/profile/boostedPosts.vue'),
+                        }
+                    ]
+                }, ]
             },
+
+            {
+                path: '/create-nft-collection',
+                name: 'create-nft-collection',
+                // route level code-splitting
+                // this generates a separate chunk (about.[hash].js) for this route
+                // which is lazy-loaded when the route is visited.
+                component: () =>
+                    import ( /* webpackChunkName: "about" */ '../components/user/nft/indexView.vue')
+            },
+            {
+                path: '/convert-post-to-nft',
+                name: 'convert-to-nft',
+                // route level code-splitting
+                // this generates a separate chunk (about.[hash].js) for this route
+                // which is lazy-loaded when the route is visited.
+                component: () =>
+                    import ( /* webpackChunkName: "about" */ '../components/user/nft/convertToNFT.vue')
+            },
+
             {
                 path: '/messenger',
                 name: 'messenger',
@@ -98,7 +299,25 @@ const routes = [{
                 // this generates a separate chunk (about.[hash].js) for this route
                 // which is lazy-loaded when the route is visited.
                 component: () =>
-                    import ( /* webpackChunkName: "about" */ '../pages/messenger/indexView.vue')
+                    import ( /* webpackChunkName: "about" */ '../pages/messenger/indexView.vue'),
+                children: [{
+                        path: '/messenger',
+                        // route level code-splitting
+                        // this generates a separate chunk (about.[hash].js) for this route
+                        // which is lazy-loaded when the route is visited.
+                        component: () =>
+                            import ( /* webpackChunkName: "about" */ '../pages/messenger/noChat.vue')
+                    },
+                    {
+                        path: '/messenger/:id',
+                        name: 'single-message',
+                        // route level code-splitting
+                        // this generates a separate chunk (about.[hash].js) for this route
+                        // which is lazy-loaded when the route is visited.
+                        component: () =>
+                            import ( /* webpackChunkName: "about" */ '../pages/messenger/chatArea.vue')
+                    },
+                ]
             },
             {
                 path: '/fidler/:id',

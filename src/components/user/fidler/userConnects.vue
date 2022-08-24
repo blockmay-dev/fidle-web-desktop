@@ -25,9 +25,9 @@
                 </div>
               </div>
             </div>
-            <div>
+            <!-- <div>
                 <IconComponent icon="gg:more" style="font-size:25px" />
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -56,9 +56,9 @@
                 </div>
               </div>
             </div>
-            <div>
+            <!-- <div>
                 <IconComponent icon="gg:more" style="font-size:25px" />
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -71,43 +71,38 @@ export default {
   data() {
     return {
       activeName: "first",
-      followers: [],
-      followings: []
     };
   },
   methods: {
-    getFollowers() {
-            this.$axios.get(`users/${this.id}/followers/`)
-                .then((res) => {
-                console.log(res);
-                this.followers = res.data.results;
-                console.log(this.followers);
-            })
-                .catch((err) => {
-                console.log(err);
-            });
-        },
         goToFollower(follower){
         this.$router.push({name: 'fidler-profile', params:{id: follower.id}})
       },
       goToUser(following){
         this.$router.push({name: 'fidler-profile', params:{id: following.id}})
       },
-        getFollowing() {
-            this.$axios.get(`users/${this.id}/following/`)
-                .then((res) => {
-                console.log(res);
-                this.followings = res.data.results;
-                console.log(this.followings);
-            })
-                .catch((err) => {
-                console.log(err);
-            });
-        }
   },
-  mounted(){
-    this.getFollowers()
-    this.getFollowing()
+  beforeMount(){
+    // this.$store.dispatch("user/getFollowers", this.id)
+    // this.$store.dispatch("user/getFollowing", this.id)
+    var query = this.$route.query.fidler 
+      if (query !== '' ) {
+        // this.$store.dispatch('fidler/getFidler', query)
+        this.$store.dispatch("user/getFollowers", query)
+    this.$store.dispatch("user/getFollowing", query)
+      }
+      else{
+        // this.$store.dispatch('fidler/getFidler', this.id)
+        this.$store.dispatch("user/getFollowers", this.id)
+    this.$store.dispatch("user/getFollowing", this.id)
+      }
+  },
+  computed:{
+    followers(){
+      return this.$store.getters["user/getFollowers"]
+    },
+    followings(){
+      return this.$store.getters["user/getFollowing"]
+    }
   }
 };
 </script>

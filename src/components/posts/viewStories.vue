@@ -69,7 +69,6 @@
 export default {
   data() {
     return {
-      user:{}
     };
   },
   methods: {
@@ -79,42 +78,22 @@ export default {
     goToStory(){
       this.$router.push('/stories/view')
     },
-
-    getMyStories() {
-      this.$axios
-        .get("user/stories")
-        .then((res) => {
-          // console.log(res);
-          let myStories = res.data.results
-          this.$store.dispatch('setMyStories', {myStories})
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    getUser(){
-      this.$axios.get('auth/users/me')
-      .then((res)=>{
-        this.user = res.data
-      })
-      .catch((err)=>{
-        console.log(err);
-      })
-    }
+    
   },
   mounted() {
-    this.getUser()
   },
   beforeMount(){
-    this.getStories
-    this.getMyStories();
+    this.$store.dispatch('stories/getStories')
   },
   computed:{
     myStories(){
-      return this.$store.getters.getMyStories
+      return this.$store.getters['stories/getStories'].results
     },
     stories(){
       return this.$store.getters.getStories
+    },
+    user(){
+      return this.$store.getters["auth/getUser"]
     }
   }
 };

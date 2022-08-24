@@ -3,15 +3,20 @@
     <div>
       <div class="receive--fidle_container">
         <div class="receive--fidle_content">
-            <div @click="close" class="text-right mb-3" role="button">
-                <IconComponent icon="ant-design:close-circle-outlined" style="font-size:20px"/>
-            </div>
+          <div @click="close" class="text-right mb-3" role="button">
+            <IconComponent
+              icon="ant-design:close-circle-outlined"
+              style="font-size: 20px"
+            />
+          </div>
           <div class="text-center mb-3">
             <h4 class="">Receive Fidle</h4>
-            <small class="text-secondary">Copy your fidle address or scan code to receive Fidle</small>
+            <small class="text-secondary"
+              >Copy your fidle address or scan code to receive Fidle</small
+            >
           </div>
           <div class="input--field">
-            <input type="text" v-model="qrtext" readonly/>
+            <input type="text" v-model="qrtext" readonly />
             <span @click="copyAddress" role="button"> {{ action }} </span>
           </div>
           <div class="text-center mt-3">
@@ -27,43 +32,34 @@
 </template>
 
 <script>
-import VueQr from 'vue-qr'
+import VueQr from "vue-qr";
 export default {
-    components:{
-        VueQr
-    },
+  components: {
+    VueQr,
+  },
   data() {
     return {
-      qrtext: "",
-      action: "copy"
+      action: "copy",
     };
   },
-    methods:{
-        getWallet(){
-            this.$axios.get('user/wallet')
-            .then((res)=>{
-                console.log(res);
-                this.qrtext = res.data.address
-            })
-            .catch((err)=>{
-                console.log(err);
-            })
+  methods: {
+    close() {
+      this.$emit("close");
+    },
+    copyAddress() {
+      navigator.clipboard.writeText(this.qrtext).then(
+        (success) => {
+          (this.action = "copied!"), console.log(success);
         },
-        close(){
-        this.$emit('close')
+        (err) => console.log("error", err)
+      );
     },
-    copyAddress(){
-        navigator.clipboard.writeText(this.qrtext)
-        .then ( 
-            success => {this.action = 'copied!', console.log(success)},
-            err => console.log("error", err)
-        )
-    }
+  },
+
+  computed: {
+    qrtext() {
+      return this.$store.getters["user/walletAddress"];
     },
-    
-    beforeMount(){
-        this.getWallet()
-    }
-  
+  },
 };
 </script>

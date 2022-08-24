@@ -1,10 +1,14 @@
 <template>
   <div>
     <div>
+      <div class="rounded--card p-3 mt-3" v-show="posts.length === 0">
+        No results found
+      </div>
+
       <!-- Main Post Content  -->
       <div class="">
         <div class="">
-          <el-skeleton style="" :loading="loading" animated :count="20">
+          <el-skeleton style="" :loading="loading" animated :count="1">
             <template slot="template">
               <div class="rounded--card p-3 mt-3">
                 <div>
@@ -78,6 +82,7 @@
                 :key="item.id"
                 class="rounded--card p-3 mt-3"
                 data-aos="fade-up"
+                :class="{ shared: item.is_shared }"
               >
                 <div>
                   <div
@@ -87,7 +92,11 @@
                       class="d-flex align-items-center mb-3"
                       style="gap: 15px"
                     >
-                      <div class="start-post-photo" role="button" @click="goToUser(item)">
+                      <div
+                        class="start-post-photo"
+                        role="button"
+                        @click="goToUser(item)"
+                      >
                         <div v-if="item.user.current_profile_image">
                           <img
                             :src="item.user.current_profile_image.media.file"
@@ -112,8 +121,14 @@
                         >
                           <div class="popper">
                             <div class="p-2 text-left">
-                              <div class="top-side d-flex align-items-center" style="gap:10px">
-                                <div class="start-post-photo" @click="goToUser(item.user)">
+                              <div
+                                class="top-side d-flex align-items-center"
+                                style="gap: 10px"
+                              >
+                                <div
+                                  class="start-post-photo"
+                                  @click="goToUser(item.user)"
+                                >
                                   <div v-if="item.user.current_profile_image">
                                     <img
                                       :src="
@@ -132,30 +147,28 @@
                                   </div>
                                 </div>
                                 <div>
-                                  <h6 @click="goToUser(item)">{{ item.user.name }}</h6>
+                                  <h6 @click="goToUser(item)">
+                                    {{ item.user.name }}
+                                  </h6>
                                   <small class="text-secondary">
-                                    @{{item.user.username}}</small>
+                                    @{{ item.user.username }}</small
+                                  >
                                 </div>
                               </div>
                               <div>
-                                <small> {{ item.user.followers_count }} Follower<span v-show="item.user.followers_count > 1">s</span> </small>
+                                <small>
+                                  {{ item.user.followers_count }} Follower<span
+                                    v-show="item.user.followers_count > 1"
+                                    >s</span
+                                  >
+                                </small>
                               </div>
                               <div class="pop--action">
-                                <button v-if="item.user.following" >
+                                <button v-if="item.user.following">
                                   Message
                                 </button>
-                                <button v-else @click="followUser(item)">
-                                <div v-if="followLoading" class="d-flex justify-content-center">
-                                      <div class="spinner-border" role="status">
-                                        <span class="sr-only">Loading...</span>
-                                      </div>
-                                    </div>
-                                  <span v-else>
-                                    Follow
-                                  </span>
-                                  
+                                <button v-else @click="followUser(item)"> Follow 
                                 </button>
-                                
                               </div>
                             </div>
                           </div>
@@ -166,7 +179,7 @@
                             class="
                               poster--name
                               font-weight-bold
-                               text-capitalize
+                              text-capitalize
                             "
                             @click="goToUser(item)"
                           >
@@ -178,71 +191,147 @@
                         </p>
                       </div>
                     </div>
+                    <div class="d-flex align-center" style="gap:20px">
+                      <div v-if="item.is_nft">
+                        <span class="is--nft"> NFT </span>
+                      </div>
                     <div class="dropleft">
-                      <span role="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false" >
+                      <span
+                        role="button"
+                        id="dropdownMenuButton"
+                        data-toggle="dropdown"
+                        aria-expanded="false"
+                      >
                         <IconComponent
-                        icon="akar-icons:more-horizontal"
-                        style="font-size: 20px"
-                      />
+                          icon="akar-icons:more-horizontal"
+                          style="font-size: 20px"
+                        />
                       </span>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                          <div class="dropdown-item d-flex" style="gap:12px"  role="button" @click="savePost(item)">
-                            <span class="text-dark drop--main_text">
-                              <IconComponent icon="bi:bookmark-fill" v-if="item.saved" />
-                              <IconComponent icon="bi:bookmark" v-else />
-                            </span> 
-                            <span v-if="item.saved">
-                              Post Saved <br> <small class="text-secondary">Post has been saved</small>
-                            </span>  
-                            <span v-else>
-                              Save Post <br> <small class="text-secondary">Saved Posts for later</small>
-                            </span>  
-                          </div>
-                          <div class="dropdown-item d-flex" style="gap:12px"  role="button" @click="getPost(item)"> 
-                            <span class="text-dark drop--main_text"><IconComponent icon="akar-icons:text-align-right" /></span> 
-                            <span>
-                              Verify <br> <small class="text-secondary">Details of Post</small>
-                            </span>  
-                          </div>
-                          <div class="dropdown-item d-flex" style="gap:12px"  role="button" @click="hidePost(item)"> 
-                            <span class="text-dark drop--main_text"><IconComponent icon="ant-design:minus-circle-outlined" /></span> 
-                            <span>
-                              Hide Post <br> <small class="text-secondary">Dont see this post again</small>
-                            </span>  
-                          </div>
-                          <div class="dropdown-item d-flex" style="gap:12px"  role="button" @click="openFlag(item)"> 
-                            <span class="text-dark drop--main_text"><IconComponent icon="gis:flag-o" /></span> 
-                            <span>
-                              Flag Post <br> <small class="text-secondary">I have some concerns</small>
-                            </span>  
-                          </div>
-                          <div class="dropdown-item d-flex" style="gap:12px"  role="button"
-                          v-clipboard:copy="'https://fidle-desktop/fidle?post_url='+item.id"
+                      <div
+                        class="dropdown-menu"
+                        aria-labelledby="dropdownMenuButton"
+                      >
+                        <div
+                          class="dropdown-item d-flex"
+                          style="gap: 12px"
+                          role="button"
+                          @click="savePost(item)"
+                        >
+                          <span class="text-dark drop--main_text">
+                            <IconComponent
+                              icon="bi:bookmark-fill"
+                              v-if="item.saved"
+                            />
+                            <IconComponent icon="bi:bookmark" v-else />
+                          </span>
+                          <span v-if="item.saved">
+                            Post Saved <br />
+                            <small class="text-secondary"
+                              >Post has been saved</small
+                            >
+                          </span>
+                          <span v-else>
+                            Save Post <br />
+                            <small class="text-secondary"
+                              >Saved Posts for later</small
+                            >
+                          </span>
+                        </div>
+                        <div
+                          class="dropdown-item d-flex"
+                          style="gap: 12px"
+                          role="button"
+                          @click="getPost(item)"
+                        >
+                          <span class="text-dark drop--main_text"
+                            ><IconComponent icon="akar-icons:text-align-right"
+                          /></span>
+                          <span>
+                            Verify <br />
+                            <small class="text-secondary"
+                              >Details of Post</small
+                            >
+                          </span>
+                        </div>
+                        <div
+                          class="dropdown-item d-flex"
+                          style="gap: 12px"
+                          role="button"
+                          @click="hidePost(item)"
+                        >
+                          <span class="text-dark drop--main_text"
+                            ><IconComponent
+                              icon="ant-design:minus-circle-outlined"
+                          /></span>
+                          <span>
+                            Hide Post <br />
+                            <small class="text-secondary"
+                              >Dont see this post again</small
+                            >
+                          </span>
+                        </div>
+                        <div
+                          class="dropdown-item d-flex"
+                          style="gap: 12px"
+                          role="button"
+                          @click="openFlag(item)"
+                        >
+                          <span class="text-dark drop--main_text"
+                            ><IconComponent icon="gis:flag-o"
+                          /></span>
+                          <span>
+                            Flag Post <br />
+                            <small class="text-secondary"
+                              >I have some concerns</small
+                            >
+                          </span>
+                        </div>
+                        <div
+                          class="dropdown-item d-flex"
+                          style="gap: 12px"
+                          role="button"
+                          v-clipboard:copy="
+                            'https://fidle-desktop/fidle?post_url=' + item.id
+                          "
                           v-clipboard:success="onCopy"
                           v-clipboard:error="onError"
-                          > 
-                            <span class="text-dark drop--main_text"><IconComponent icon="entypo:link" /></span> 
-                            <span>
-                              Copy Link <br> <small class="text-secondary">Copy Link</small>
-                            </span>  
-                          </div>
+                        >
+                          <span class="text-dark drop--main_text"
+                            ><IconComponent icon="entypo:link"
+                          /></span>
+                          <span>
+                            Copy Link <br />
+                            <small class="text-secondary">Copy Link</small>
+                          </span>
                         </div>
+                      </div>
                       <!-- </div> -->
+                    </div>
                     </div>
                   </div>
 
                   <div v-for="media in item.media" :key="media.id">
                     <img
-                      v-if="media.extension == 'jpg' || media.extension == 'jpeg' || media.extension == 'png' "
+                      v-if="
+                        media.extension == 'jpg' ||
+                        media.extension == 'jpeg' ||
+                        media.extension == 'png' ||
+                        media.extension == 'webp' ||
+                        media.extension == 'svg'
+                      "
                       :src="media.file"
                       alt=""
                       width="100%"
                       height="auto"
                       style="object-fit: cover; object-position: top"
                     />
-                    <video v-else :src="media.file" playsinline loop
-                    style="width:100%"
-                     ></video>
+                    <video
+                      v-else
+                      :src="media.file"
+                      playsinline
+                      loop
+                      style="width: 100%"
+                    ></video>
                   </div>
 
                   <!-- Post Content -->
@@ -258,7 +347,7 @@
                     <div v-html="item.content"></div>
                   </div>
                   <!-- Number of Comments and Reactions  -->
-                  <div class="mb-3 d-flex justify-content-between">
+                  <div class="mb-3 d-flex justify-content-between mt-3">
                     <div class="d-flex align-items-center" style="gap: 10px">
                       <div>
                         <span class="amount">{{
@@ -266,7 +355,12 @@
                         }}</span>
                       </div>
                       <div>
-                        <span class="">{{ item.likes_count }}Likes </span>
+                        <span class=""
+                          >{{ item.likes_count }} Like<span
+                            v-show="item.likes_count > 1"
+                            >s</span
+                          >
+                        </span>
                       </div>
                     </div>
                     <div>
@@ -288,10 +382,13 @@
                       style="gap: 10px"
                       @click="likePost(item)"
                     >
+                      <span v-if="item.reaction === ''" style="font-size: 25px">
+                        {{ item.reaction }}
+                      </span>
                       <IconComponent
                         icon="flat-color-icons:like"
                         style="font-size: 24px !important"
-                        v-if="item.liked"
+                        v-else-if="item.liked"
                       />
                       <IconComponent
                         v-else
@@ -299,6 +396,7 @@
                         style="color: red; font-size: 24px !important"
                         role="button"
                       />
+
                       <span>Like</span>
                     </div>
                     <div
@@ -313,24 +411,46 @@
                       />
                       <span>Comment</span>
                     </div>
-                    <div
-                      role="button"
-                      class="d-flex align-items-center reactions--container"
-                      style="gap: 10px"
-                    >
-                      <IconComponent icon="bx:share" style="font-size: 24px" />
-                      <span>Share</span>
-                    </div>
+
+                    <el-popover placement="bottom" width="200" trigger="click">
+                      <div>
+                        <ul class="m-0">
+                          <li
+                            role="button"
+                            class="mb-2"
+                            @click="shareToFeed(item)"
+                          >
+                            <span>Share to Feed</span>
+                          </li>
+                          <li role="button" @click="shareWithContent(item)">
+                            <span>Share with a thought</span>
+                          </li>
+                        </ul>
+                      </div>
+                      <!-- <el-button slot="reference" style="background-color: none; border:none"> -->
+                      <div
+                        slot="reference"
+                        role="button"
+                        class="d-flex align-items-center reactions--container"
+                        style="gap: 10px"
+                      >
+                        <IconComponent
+                          icon="bx:share"
+                          style="font-size: 24px"
+                        />
+                        <span>Share</span>
+                      </div>
+                      <!-- </el-button> -->
+                    </el-popover>
                   </div>
                   <hr class="m-0" />
 
-                  <div class="comments mt-3">
+                  <div class="comments mt-3"  v-if="comments === item.id">
                     <div
                       class="comment--box d-flex align-items-end"
-                      v-show="comments === item.id"
+                     
                       v-for="comment in commentsList"
                       :key="comment.id"
-                      style="gap: 3px"
                     >
                       <div class="commenter-photo">
                         <img
@@ -338,11 +458,7 @@
                           :src="comment.user.current_profile_image.media.file"
                           alt=""
                         />
-                        <img
-                          v-else
-                          src="@/assets/img/no_user.png"
-                          alt=""
-                        />
+                        <img v-else src="@/assets/img/no_user.png" alt="" />
                       </div>
                       <div class="main-comment">
                         <p>{{ comment.content }}</p>
@@ -371,6 +487,7 @@
                         align-items-center
                         mt-3
                       "
+                      style="gap: 10px"
                     >
                       <div class="commenter-photo">
                         <img
@@ -378,11 +495,7 @@
                           :src="user.current_profile_image.media.file"
                           alt=""
                         />
-                        <img
-                          v-else
-                          src="@/assets/img/no_user.png"
-                          alt=""
-                        />
+                        <img v-else src="@/assets/img/no_user.png" alt="" />
                       </div>
                       <div class="w-100">
                         <form action="" class="form">
@@ -439,32 +552,39 @@
           </el-skeleton>
         </div>
 
-        <div class="view--more_posts">
+        <!-- <div class="view--more_posts">
           <button @click="viewMore">View More</button>
-        </div>
+        </div> -->
       </div>
 
       <!-- Verify Post -->
       <div class="verify--details" v-show="verify">
         <div class="verify--content">
           <div class="mb-4 text-right" role="button" @click="verify = false">
-            <IconComponent icon="ant-design:close-circle-outlined" style="font-size:30px"/>
+            <IconComponent
+              icon="ant-design:close-circle-outlined"
+              style="font-size: 30px"
+            />
           </div>
-          <div class="row mb-3">
-            <span class="col-4 font-weight-bold">Creators Name:</span>
-            <span v-if="post.user" class="col-6"> {{ post.user.name }} </span>
-          </div>
-          <div class="row mb-3">
-            <span class="col-4 font-weight-bold">Date Created:</span>
-            <span class="col-6"> {{ timeStamp(new Date(post.date_created * 1000.0)) }} </span>
-          </div>
-          <div class="row mb-3">
-            <span class="col-4 font-weight-bold">Post Hash</span>
-            <span class="col-6"> {{ post.cid }} </span>
-          </div>
-          <div class="row">
-            <span class="col-4 font-weight-bold">Verify on Chain</span>
-            <span class="col-6"> {{ post.verify_hash }} </span>
+          <div>
+            <div class="row mb-3">
+              <span class="col-4 font-weight-bold">Creators Name:</span>
+              <span v-if="post.user" class="col-6 text-capitalize"> {{ post.user.name }} </span>
+            </div>
+            <div class="row mb-3">
+              <span class="col-4 font-weight-bold">Date Created:</span>
+              <span class="col-6">
+                {{ timeStamp(new Date(post.date_created * 1000.0)) }}
+              </span>
+            </div>
+            <div class="row mb-3">
+              <span class="col-4 font-weight-bold">Post Hash</span>
+              <span class="col-6"> {{ post.cid }} </span>
+            </div>
+            <div class="row">
+              <span class="col-4 font-weight-bold">Verify on Chain</span>
+              <span class="col-6"> {{ post.verify_hash }} </span>
+            </div>
           </div>
         </div>
       </div>
@@ -473,7 +593,10 @@
       <div class="verify--details" v-show="flags">
         <div class="verify--content">
           <div class="mb-4 text-right" role="button" @click="flags = false">
-            <IconComponent icon="ant-design:close-circle-outlined" style="font-size:30px"/>
+            <IconComponent
+              icon="ant-design:close-circle-outlined"
+              style="font-size: 30px"
+            />
           </div>
           <div class="mb-2">
             <h3>Flag Post</h3>
@@ -481,35 +604,83 @@
           </div>
           <div>
             <div>
-              <input type="radio" name="" value="Violence" id="" v-model="dataObj.reason">
+              <input
+                type="radio"
+                name=""
+                value="Violence"
+                id=""
+                v-model="dataObj.reason"
+              />
               <label class="ml-2" for="">Violence</label>
             </div>
             <div>
-              <input type="radio" name="" id="" value="Harassment" v-model="dataObj.reason">
+              <input
+                type="radio"
+                name=""
+                id=""
+                value="Harassment"
+                v-model="dataObj.reason"
+              />
               <label class="ml-2" for="">Harassment</label>
             </div>
             <div>
-              <input type="radio" name="" id="" value="Suicide or Self Injury" v-model="dataObj.reason">
+              <input
+                type="radio"
+                name=""
+                id=""
+                value="Suicide or Self Injury"
+                v-model="dataObj.reason"
+              />
               <label class="ml-2" for="">Suicide or Self-Injury</label>
             </div>
             <div>
-              <input type="radio" name="" id="" value="Misleading Information" v-model="dataObj.reason">
+              <input
+                type="radio"
+                name=""
+                id=""
+                value="Misleading Information"
+                v-model="dataObj.reason"
+              />
               <label class="ml-2" for="">Misleading Information</label>
             </div>
             <div>
-              <input type="radio" name="" id="" value="Hate Speech" v-model="dataObj.reason">
+              <input
+                type="radio"
+                name=""
+                id=""
+                value="Hate Speech"
+                v-model="dataObj.reason"
+              />
               <label class="ml-2" for="">Hate Speech</label>
             </div>
             <div>
-              <input type="radio" name="" id="" value="Spam" v-model="dataObj.reason">
+              <input
+                type="radio"
+                name=""
+                id=""
+                value="Spam"
+                v-model="dataObj.reason"
+              />
               <label class="ml-2" for="">Spam</label>
             </div>
             <div>
-              <input type="radio" name="" id="" value="Terrorism" v-model="dataObj.reason">
+              <input
+                type="radio"
+                name=""
+                id=""
+                value="Terrorism"
+                v-model="dataObj.reason"
+              />
               <label class="ml-2" for="">Terrorism</label>
             </div>
             <div>
-              <input type="radio" name="" id="" value="Unathorized Sales" v-model="dataObj.reason">
+              <input
+                type="radio"
+                name=""
+                id=""
+                value="Unathorized Sales"
+                v-model="dataObj.reason"
+              />
               <label class="ml-2" for="">Unathorized Sales</label>
             </div>
           </div>
@@ -520,7 +691,7 @@
       </div>
 
       <!-- App Loader -->
-      <AppLoader :loader="loader" />
+      <!-- <AppLoader :loader="loader" /> -->
     </div>
   </div>
 </template>
@@ -528,7 +699,7 @@
 <script src="vue-clipboard2-master/dist/vue-clipboard.min.js"></script>
 <script>
 import { VEmojiPicker } from "v-emoji-picker";
-import AppLoader from "@/components/static/appLoader.vue";
+// import AppLoader from "@/components/static/appLoader.vue";
 import packEmoji from "@/api/emojis.js";
 import {
   timeRange,
@@ -539,12 +710,11 @@ import {
 } from "@/plugins/filter";
 export default {
   components: {
-    AppLoader,
     VEmojiPicker,
   },
   data() {
     return {
-        posts_count: '',
+      shared: false,
       flags: false,
       verify: false,
       comments: false,
@@ -554,10 +724,6 @@ export default {
       sliceContent,
       dollarFilter,
       colorSplit,
-      loading: false,
-      posts: [],
-      user: {},
-      connection: null,
       content: "",
       isActive: false,
       imgPreview: false,
@@ -565,91 +731,85 @@ export default {
         media: {},
         content: "",
       },
-      post: {},
-      imgSrc: "",
+      imgSrc3: "",
       disabled: true,
       videoPreview: false,
-      loader: false,
       valueInput: "",
-      commentsList: [],
-      followLoading: false,
       page: 1,
-      dataObj:{
-        reason: ''
+      dataObj: {
+        reason: "",
       },
-      val: '',
+      val: "",
+      userInput: "hello https://google.com https://facebook.com",
+      redd: [],
+      one: "",
     };
   },
   methods: {
-    onCopy: function (e) {
-       console.log(e);
-       this.$message({
-          showClose: true,
-          message: 'Copied',
-          type: 'info'
+    shareToFeed(item) {
+      let payload = {
+        parent_id: item.id,
+      };
+      this.$axios
+        .post("posts/", payload)
+        .then((res) => {
+          return res;
+        })
+        .catch((err) => {
+          return err;
         });
     },
+    shareWithContent(item) {
+      let payload = {
+        parent_id: item.id,
+      };
+      this.$axios
+        .post("posts/", payload)
+        .then((res) => {
+          return res;
+        })
+        .catch((err) => {
+          return err;
+        });
+    },
+    onCopy: function (e) {
+      console.log(e);
+      this.$message({
+        showClose: true,
+        message: "Copied",
+        type: "info",
+      });
+    },
     onError: function () {
-       console.log('Failed to copy texts')
+      console.log("Failed to copy texts");
     },
     followUser(item) {
       console.log(item.user.id);
-        this.followLoading = true
-        this.$axios.post(`users/${item.user.id}/follow/`)
-        .then((res)=>{
-            console.log(res.data.message);
-            this.$notify({
-              message: ` You are now following ${item.user.name}`,
-              position: 'bottom-right'
-            });
-        })
-        .catch((err)=>{
-            console.log(err);
-        })
-        .finally(()=>{
-            this.getPosts();
-            this.followLoading = false;
-        })
+      this.$store.dispatch("posts/followUser", item.user.id)
     },
     async getComments(item) {
-      console.log(this.item_id);
       this.comments = this.comments === item.id ? null : item.id;
+      console.log(this.comments)
       if (this.comments) {
-        try {
-          let res = await this.$axios.get(`/posts/${item.id}/comments/`);
-          console.log(res);
-          this.commentsList = res.data.results;
-        } catch (error) {
-          console.log(error);
+        this.$store.dispatch("posts/viewComments", item.id)
         }
-      } else {
-        this.commentsList = [];
-      }
     },
     likeComment(item, comment) {
-      this.$axios
-        .post(`posts/${item.id}/comments/${comment.id}/like/`)
-        .then((res) => {
-          console.log(res);
-          this.getComments(item);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      let payload = {
+        post_id: item.id,
+        comment_id: comment.id
+      }
+      this.$store.dispatch("posts/likeComment", payload)
     },
     async postComment(item) {
+      let formData = new FormData();
+      formData.append("content", this.valueInput);
       let payload = {
-        content: this.valueInput,
+        payload: formData,
+        id: item.id
       };
-      try {
-        let res = await this.$axios.post(`posts/${item.id}/comments/`, payload);
-        console.log(res);
-        this.getPosts();
-        this.getComments(item);
-      } catch (error) {
-        console.log(error);
-      }
-      this.valueInput = "";
+      this.$store.dispatch("posts/addComment", payload);
+      this.valueInput = ""
     },
     onSelectEmoji(dataEmoji) {
       let text = this.valueInput;
@@ -665,94 +825,69 @@ export default {
       this.showDialog = this.showDialog === item.id ? null : item.id;
     },
     createFidle() {
-      this.loader = true;
       let formData = new FormData();
       formData.append("content", this.payload.content);
       formData.append("media", this.payload.media);
       formData.append("_method", "POST");
-      this.$axios
-        .post("posts/", formData)
-        .then((res) => {
-          // this.$router.push("/");
-          console.log(res);
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-        .finally(() => {
-          this.payload = {};
-          this.closePreview();
-          this.closeVideoPreview();
-          this.getPosts();
-          this.loader = false;
-        });
+      this.$store.dispatch("posts/createPost", formData)
+      this.payload = {};
+      this.closePreview();
+      this.closeVideoPreview();
     },
-    getPosts() {
-      this.loading = true;
-      let searchItem =  this.$route.query.q
-      console.log(searchItem);
-      this.$axios
-        .get("user/feeds?search="+searchItem)
-        .then((res) => {
-          console.log(res.data);
-          this.posts_count = res.data.count
-          this.posts = res.data.results;
-        })
-        .catch((err) => {
-          console.log(err);
-          this.loading = true
-        })
-        .finally(() => {
-          this.loading = false;
-        });
+
+    async viewMore() {
+      window.onscroll = () => {
+        let page = this.page + 1;
+        let bottomOfWindow =  document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight - 2000;
+        if (bottomOfWindow) {
+          this.$store.dispatch("posts/viewMorePosts", page)
+        }
+      };
+    },
+    getPost(item) {
+      this.verify = true;
+      this.$store.dispatch("posts/singlePost", item.id)
+    },
+
+    goToUser(item) {
+      console.log(this.user);
+      if(item.user.id === this.user.id ) {
+        this.$router.push('/profile')
+      }
+      else{
+         this.$router.push({
+        name: "fidler-profile",
+        params: { id: item.user.id },
+      });
+      }
+    },
+    isUrlValid() {
+      var res = this.userInput.match(
+        /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g
+      );
+      if (res == null)
+        // console.log(res);
+        console.log("I am not a link");
+      // console.log(this.userInput);
+      // console.log('I am a link');
+      // console.log(res);
+      else this.redd = res;
+
+      // var header = document.getElementById("myDIV");
+      // var btns = header.getElementsByClassName("nav--item");
+      let red = "";
+      for (red of res) {
+        console.log(red);
+        this.one = red;
+        // this.redd = red
+
+        // btns[i].addEventListener("click", function () {
+        //   var current = document.getElementsByClassName("active");
+        // current[0].className = current[0].className.replace(" active", "");
+        // this.className += " active";
+      }
     },
     
-    async viewMore() {
-      this.page = this.page + 1
-      this.loading = true;
-      try {
-        let res = await this.$axios.get(
-          `/user/feeds?page=${this.page}`, 
-        );
-        console.log(res.data);
-        let newPosts = res.data.results
-        for (let i = 0; i<newPosts.length; i++ ){
-          console.log(newPosts[i]);
-          this.posts.push(newPosts[i])
-        }
-     console.log(this.posts);
-        
-      } catch (error) {
-        console.log(error);
-      }
-      this.loading = false
-    },
-    getPost(item){
-      this.verify = true
-      this.$axios.get(`posts/${item.id}`)
-      .then((res)=>{
-        console.log(res);
-        this.post = res.data
-      })
-      .catch((err)=>{
-        console.log(err);
-      })
-    },
-
-    goToUser(item){
-      this.$router.push({name: 'fidler-profile', params:{id: item.user.id}})
-    },
-
-    getUser() {
-      this.$axios
-        .get("auth/users/me")
-        .then((res) => {
-          this.user = res.data;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
     showVideoPreview($event) {
       var input = event.target;
       this.videoPreview = true;
@@ -775,20 +910,14 @@ export default {
       console.log(this.payload.media);
       if (e.target.files.length > 0) {
         var src = URL.createObjectURL(e.target.files[0]);
-        this.imgSrc = src;
+        this.imgSrc3 = src;
         this.isActive = false;
         // document.getElementById('message').style.backgroundImage = null;
         // this.payload.color = "";
       }
     },
     async likePost(item) {
-      try {
-        let res = await this.$axios.post(`posts/${item.id}/likes/`);
-        console.log(res);
-      } catch (error) {
-        console.log(error);
-      }
-      this.getPosts();
+     this.$store.dispatch("posts/likePost", item.id)
     },
     switchDisabled() {
       if (this.payload.content !== "") {
@@ -796,121 +925,98 @@ export default {
       }
     },
     closePreview() {
-      this.imgSrc = "";
       this.imgPreview = false;
     },
     closeVideoPreview() {
       this.videoPreview = false;
-      // var preview = document.getElementById("video_select_preview");
-      //   preview.src = "";
     },
-    savePost(item){
-      this.$axios.post(`posts/${item.id}/save/`)
-      .then((res)=>{
-        console.log(res);
-        this.$message({
-          showClose: true,
-          message: 'Post Saved'
-        });
-      })
-      .catch((err)=>{
-        console.log(err);
-        this.$message({
-          showClose: true,
-          message: 'Something went wrong',
-          type: 'error'
-        });
-      })
-      .finally(()=>{
-        this.getPosts()
-      })
+    savePost(item) {
+      this.$store.dispatch("posts/savePost", item.id)
     },
-    hidePost(item){
-      this.$axios.post(`posts/${item.id}/hide/`)
-      .then((res)=>{
-        console.log(res);
-        this.$message({
-          showClose: true,
-          message: 'Post Hidden'
-        });
-      })
-      .catch((err)=>{
-        console.log(err);
-        this.$message({
-          showClose: true,
-          message: 'Something went wrong',
-          type: 'error'
-        });
-      })
-      .finally(()=>{
-        this.getPosts()
-      })
+    hidePost(item) {
+      this.$store.dispatch("posts/hidePost", item.id)
     },
-    openFlag(item){
-      this.flags = !this.flags
-      this.val = item.id
+    openFlag(item) {
+      this.flags = !this.flags;
+      this.val = item.id;
     },
-    flagPost(){
-      this.$axios.post(`posts/${this.val}/report-abuse/`, this.dataObj)
-      .then((res)=>{
-        console.log(res);
-        this.$message({
-          showClose: true,
-          message: "Post Flagged"
-        });
-      })
-      .catch((err)=>{
-        console.log(err);
-        this.$message({
-          showClose: true,
-          message: 'Something went wrong',
-          type: 'error'
-        });
-      })
-      .finally(()=>{
-        this.getPosts()
-        this.flags = false
-      })
+    flagPost() {
+      let payload = {
+        payload: this.dataObj,
+        post_id: this.val
+      };
+      this.$store.dispatch("posts/flagPost", payload);
+      this.flags = false;
     },
-    viewSelection(){
-      console.log(this.dataObj);
-    }
+    async sharePost(item) {
+      navigator.share({
+        title:
+          "Fidle The worlds first decentralized social network for creators",
+        text: "",
+        url: "https://fidle-desktop/fidle" + item.id,
+      });
+    },
   },
   mounted() {
-    this.getPosts();
-    this.getUser();
+    this.viewMore()
 
-    window.addEventListener('load', videoScroll);
-window.addEventListener('scroll', videoScroll);
+    window.addEventListener("load", videoScroll);
+    window.addEventListener("scroll", videoScroll);
 
-function videoScroll() {
+    function videoScroll() {
+      if (document.querySelectorAll("video").length > 0) {
+        var windowHeight = window.innerHeight,
+          videoEl = document.querySelectorAll("video");
 
-  if ( document.querySelectorAll('video').length > 0) {
-    var windowHeight = window.innerHeight,
-        videoEl = document.querySelectorAll('video');
+        for (var i = 0; i < videoEl.length; i++) {
+          var thisVideoEl = videoEl[i],
+            videoHeight = thisVideoEl.clientHeight,
+            videoClientRect = thisVideoEl.getBoundingClientRect().top;
 
-    for (var i = 0; i < videoEl.length; i++) {
-
-      var thisVideoEl = videoEl[i],
-          videoHeight = thisVideoEl.clientHeight,
-          videoClientRect = thisVideoEl.getBoundingClientRect().top;
-
-      if ( videoClientRect <= ( (windowHeight) - (videoHeight*.5) ) && videoClientRect >= ( 0 - ( videoHeight*.5 ) ) ) {
-        thisVideoEl.play();
-      } else {
-        thisVideoEl.pause();
+          if (
+            videoClientRect <= windowHeight - videoHeight * 0.5 &&
+            videoClientRect >= 0 - videoHeight * 0.5
+          ) {
+            thisVideoEl.play();
+          } else {
+            thisVideoEl.pause();
+          }
+        }
       }
-
     }
-  }
-
-}
   },
-  created() {},
+  beforeMount() {
+    this.$store.dispatch("posts/allPosts");
+  },
+  created() {
+    this.isUrlValid();
+  },
   computed: {
     emojisNative() {
       return packEmoji;
     },
+    webShareApiSupported() {
+      return navigator.share;
+    },
+    posts() {
+      return this.$store.getters["posts/postsSearchResult"];
+    },
+    loading() {
+      return this.$store.getters["posts/isLoading"];
+    },
+    user(){
+      return this.$store.getters["auth/getUser"]
+    }, 
+    commentsList(){
+      return this.$store.getters["posts/allComments"]
+    },
+    post(){
+      return this.$store.getters["posts/getSinglePost"]
+    },
+    loading(){
+      return this.$store.getters["posts/isLoading"];
+    }
+    
   },
 };
 </script>

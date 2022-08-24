@@ -180,6 +180,10 @@
                         </p>
                       </div>
                     </div>
+                    <div class="d-flex align-items-center" style="gap:20px">
+                      <div v-if="item.is_nft">
+                        <span class="is--nft"> NFT </span>
+                      </div>
                     <div class="dropleft">
                       <span role="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false" >
                         <IconComponent
@@ -231,11 +235,16 @@
                         </div>
                       <!-- </div> -->
                     </div>
+                    </div>
                   </div>
 
                   <div v-for="media in item.media" :key="media.id">
                     <img
-                      v-if="media.extension == 'jpg' || media.extension == 'jpeg' || media.extension == 'png' "
+                      v-if="media.extension == 'jpg' ||
+                media.extension == 'png' ||
+                media.extension == 'jpeg' ||
+                media.extension == 'webp' ||
+                media.extension == 'svg'"
                       :src="media.file"
                       alt=""
                       width="100%"
@@ -290,10 +299,13 @@
                       style="gap: 10px"
                       @click="likePost(item)"
                     >
+                      <span v-if="item.reaction === ''" style="font-size: 25px">
+                        {{ item.reaction }}
+                      </span>
                       <IconComponent
                         icon="flat-color-icons:like"
                         style="font-size: 24px !important"
-                        v-if="item.liked"
+                        v-else-if="item.liked"
                       />
                       <IconComponent
                         v-else
@@ -326,10 +338,10 @@
                   </div>
                   <hr class="m-0" />
 
-                  <div class="comments mt-3">
+                  <div class="comments mt-3" v-if="comments === item.id">
                     <div
                       class="comment--box d-flex align-items-end"
-                      v-show="comments === item.id"
+                      
                       v-for="comment in commentsList"
                       :key="comment.id"
                       style="gap: 3px"
@@ -547,7 +559,6 @@ export default {
     return {
       comments: false,
       showDialog: false,
-      post: '',
       followLoading: false,
       timeStamp,
       timeRange,
@@ -555,7 +566,6 @@ export default {
       dollarFilter,
       colorSplit,
       loading: false,
-      posts: [],
       user: {},
       connection: null,
       content: "",
@@ -570,11 +580,10 @@ export default {
       videoPreview: false,
       loader: false,
       valueInput: "",
-      commentsList: [],
       id: this.$route.params.id,
       empty: false,
-  verify: false,
-  dataObj:{
+      verify: false,
+      dataObj:{
         reason: ''
       },
       val: '',
@@ -593,65 +602,34 @@ export default {
     onError: function () {
        console.log('Failed to copy texts')
     },
-    followUser(item) {
+     followUser(item) {
       console.log(item.user.id);
-        this.followLoading = true
-        this.$axios.post(`users/${item.user.id}/follow/`)
-        .then((res)=>{
-            console.log(res.data.message);
-            this.$notify({
-              message: ` You are now following ${item.user.name}`,
-              position: 'bottom-right'
-            });
-        })
-        .catch((err)=>{
-            console.log(err);
-        })
-        .finally(()=>{
-            this.getPosts();
-            this.followLoading = false;
-        })
+      this.$store.dispatch("posts/followUser", item.user.id)
     },
-    async getComments(item){
-      console.log(this.item_id);
-    this.comments = ( this.comments === item.id ) ? null : item.id;
-     if (this.comments) {
-        
-        try {
-            let res = await this.$axios.get(`/posts/${item.id}/comments/`)
-            console.log(res);
-          this.commentsList = res.data.results
-        } catch (error) {
-          console.log(error);
+      async getComments(item) {
+      this.comments = this.comments === item.id ? null : item.id;
+      console.log(this.comments)
+      if (this.comments) {
+        this.$store.dispatch("posts/viewComments", item.id)
         }
-     }
-     else {
-       this.commentsList = []
-     }
     },
-    likeComment(item, comment){
-      this.$axios.post(`posts/${item.id}/comments/${comment.id}/like/`)
-      .then((res)=>{
-        console.log(res);
-        this.getComments(item)
-      })
-      .catch((err)=>{
-        console.log(err);
-      })
-    },
-    async postComment(item){
+    likeComment(item, comment) {
       let payload = {
-        content: this.valueInput
+        post_id: item.id,
+        comment_id: comment.id
       }
-      try {
-        let res = await this.$axios.post(`posts/${item.id}/comments/`, payload)
-        console.log(res);
-        this.getPosts()
-        this.getComments(item)
-      } catch (error) {
-        console.log(error);
-      }
+      this.$store.dispatch("posts/likeComment", payload)
+    },
+    async postComment(item) {
+      let formData = new FormData();
+      formData.append("content", this.valueInput);
+      let payload = {
+        payload: formData,
+        id: item.id,
+      };
+      this.$store.dispatch("posts/addComment", payload);
       this.valueInput = ""
+      this.$store.dispatch("fidler/allPosts", this.id)
     },
     onSelectEmoji(dataEmoji) {
         let text = this.valueInput
@@ -664,24 +642,6 @@ export default {
     },
     toogleDialogEmoji(item){
       this.showDialog = ( this.showDialog === item.id ) ? null : item.id;
-    },
-    getPosts() {
-      this.loading = true;
-      this.$axios
-        .get(`users/${this.id}/posts`)
-        .then((res) => {
-          console.log(res.data);
-          this.posts = res.data.results;
-          if(this.posts.length === 0){
-            this.empty = true
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        })
-        .finally(() => {
-          this.loading = false;
-        });
     },
     async viewMore() {
       this.page = this.page + 1
@@ -703,28 +663,10 @@ export default {
       }
       this.loading = false
     },
-    getPost(item){
-      this.verify = true
-      this.$axios.get(`posts/${item.id}`)
-      .then((res)=>{
-        console.log(res);
-        this.post = res.data
-      })
-      .catch((err)=>{
-        console.log(err);
-      })
+     getPost(item) {
+      this.verify = true;
+      this.$store.dispatch("posts/singlePost", item.id)
     },
-
-    getUser() {
-            this.$axios.get("users/"+this.id+'/')
-                .then((res) => {
-                console.log(res);
-                this.user = res.data;
-            })
-                .catch((err) => {
-                console.log(err);
-            });
-        },
     showVideoPreview($event) {
       var input = event.target;
       this.videoPreview = true;
@@ -753,14 +695,8 @@ export default {
         // this.payload.color = "";
       }
     },
-     async likePost(item){
-      try {
-        let res = await this.$axios.post(`posts/${item.id}/likes/`)
-        console.log(res);
-      } catch (error) {
-        console.log(error);
-      }
-      this.getPosts()
+     async likePost(item) {
+     this.$store.dispatch("posts/likePost", item.id, this.id)
     },
     switchDisabled(){
       if (this.payload.content !== '' ) {
@@ -776,81 +712,30 @@ export default {
       // var preview = document.getElementById("video_select_preview");
       //   preview.src = "";
     },
-    savePost(item){
-      this.$axios.post(`posts/${item.id}/save/`)
-      .then((res)=>{
-        console.log(res);
-        this.$message({
-          showClose: true,
-          message: 'Post Saved'
-        });
-      })
-      .catch((err)=>{
-        console.log(err);
-        this.$message({
-          showClose: true,
-          message: 'Something went wrong',
-          type: 'error'
-        });
-      })
-      .finally(()=>{
-        this.getPosts()
-      })
-    },
+    
     goToUser(item){
       this.$router.push({name: 'fidler-profile', params:{id: item.user.id}})
     },
-    hidePost(item){
-      this.$axios.post(`posts/${item.id}/hide/`)
-      .then((res)=>{
-        console.log(res);
-        this.$message({
-          showClose: true,
-          message: 'Post Hidden'
-        });
-      })
-      .catch((err)=>{
-        console.log(err);
-        this.$message({
-          showClose: true,
-          message: 'Something went wrong',
-          type: 'error'
-        });
-      })
-      .finally(()=>{
-        this.getPosts()
-      })
+    savePost(item) {
+      this.$store.dispatch("posts/savePost", item.id)
     },
-    openFlag(item){
-      this.flags = !this.flags
-      this.val = item.id
+    hidePost(item) {
+      this.$store.dispatch("posts/hidePost", item.id)
     },
-    flagPost(){
-      this.$axios.post(`posts/${this.val}/report-abuse/`, this.dataObj)
-      .then((res)=>{
-        console.log(res);
-        this.$message({
-          showClose: true,
-          message: "Post Flagged"
-        });
-      })
-      .catch((err)=>{
-        console.log(err);
-        this.$message({
-          showClose: true,
-          message: 'Something went wrong',
-          type: 'error'
-        });
-      })
-      .finally(()=>{
-        this.getPosts()
-        this.flags = false
-      })
+    openFlag(item) {
+      this.flags = !this.flags;
+      this.val = item.id;
+    },
+    flagPost() {
+      let payload = {
+        payload: this.dataObj,
+        post_id: this.val
+      };
+      this.$store.dispatch("posts/flagPost", payload);
+      this.flags = false;
     },
   },
   mounted() {
-    this.getPosts();
-    this.getUser();
     window.addEventListener('load', videoScroll);
 window.addEventListener('scroll', videoScroll);
 
@@ -875,10 +760,27 @@ function videoScroll() {
   }
 }
   },
-  created() {},
+  beforeMount(){
+    var query = this.$route.query.fidler 
+      if (query !== '' ) {
+        this.$store.dispatch('fidler/allPosts', query)
+      }
+      else{
+        this.$store.dispatch('fidler/allPosts', this.id)
+      }
+  },
   computed: {
     emojisNative() {
       return packEmoji;
+    },
+    posts(){
+      return this.$store.getters['fidler/allPosts'].results
+    },
+    post(){
+      return this.$store.getters["posts/getSinglePost"]
+    },
+     commentsList(){
+      return this.$store.getters["posts/allComments"]
     },
   },
 };

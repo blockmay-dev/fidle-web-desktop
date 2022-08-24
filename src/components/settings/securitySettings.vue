@@ -169,6 +169,7 @@
 </template>
 
 <script>
+import request from "@/config/axios"
 import PincodeInput from 'vue-pincode-input';
 // The name can be different depending on your desire
 export default {
@@ -233,18 +234,19 @@ export default {
     },
     createPin(){
         this.completeLoading = true
-        this.$axios.post('user/set-pin', this.set_pin)
+        request().post('user/set-pin', this.set_pin)
         .then((res)=>{
-            console.log(res);
+             console.log(res);
             this.$message({
                 message: 'Pin set succesfully.',
                 type: 'success'
                 });
         })
         .catch((err)=>{
-            console.log(err);
+            
             console.log(err.response.data.error);
             this.err = err.response.data.error
+            return err;
         })
         .finally(()=>{
             this.completeLoading = false;
@@ -253,18 +255,20 @@ export default {
     },
     changePin(){
         this.loading2 = true
-        this.$axios.post('user/change-pin', this.change_pin)
+        request().post('user/change-pin', this.change_pin)
         .then((res)=>{
-            console.log(res);
+             
             this.$message({
                 message: 'Pin Changed succesfully.',
                 type: 'success'
                 });
+                console.log(res);
         })
         .catch((err)=>{
-            console.log(err);
+            
             console.log(err.response.data.error);
             this.err2 = err.response.data.error
+            return err;
         })
         .finally(()=>{
             this.loading2 = false;

@@ -116,8 +116,7 @@
           </div>
         </div>
 
-        <EnterPin @complete="getPin" @close="closeModal" v-show="enterPin"/>
-
+        <EnterPin @complete="getPin" @close="closeModal" v-show="enterPin" />
       </div>
     </div>
   </div>
@@ -129,7 +128,7 @@ export default {
   components: { EnterPin },
   data() {
     return {
-        enterPin: false,
+      enterPin: false,
       fidle: true,
       fpw: false,
       amount: "",
@@ -152,12 +151,22 @@ export default {
     },
     close() {
       this.$emit("close");
+      this.$store.dispatch("user/removePinVerification");
     },
     getAmount() {
       if (this.fidle) {
         this.payload.amount = this.amount * 1000;
         if (this.amount > this.walletBalances.FIDLE) {
-          alert("You can't swap above your current wallet balance");
+          this.$toastify({
+            text: `You can't swap above your current wallet balance`,
+            className: "info",
+            style: {
+              background: "#333",
+              fontSize: "13px",
+              borderRadius: "5px",
+              padding: "10px 20px",
+            },
+          }).showToast();
           this.amount = "";
           this.payload.amount = "";
         } else if (this.amount < 0) {
@@ -168,7 +177,16 @@ export default {
       } else {
         this.payload.amount = this.amount / 1000;
         if (this.amount > this.walletBalances.FPW) {
-          alert("You can't swap above your current wallet balance");
+          this.$toastify({
+            text: `You can't swap above your current wallet balance`,
+            className: "info",
+            style: {
+              background: "#333",
+              fontSize: "13px",
+              borderRadius: "5px",
+              padding: "10px 20px",
+            },
+          }).showToast();
           this.amount = "";
           this.payload.amount = "";
         } else if (this.amount < 0) {
@@ -178,37 +196,8 @@ export default {
         }
       }
     },
-    setTransactions() {
-      this.$axios
-        .get("user/wallet/transactions/")
-        .then((res) => {
-          console.log(res);
-          let new_transactions = res.data.results;
-          this.$store.dispatch("updateTransaction", { new_transactions });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-     setWalletBalances() {
-      this.$axios
-        .get("user/wallet-balances")
-        .then((res) => {
-          console.log(res);
-          if (this.getUser.level.rank === 1) {
-            this.wallet = res.data.balances.demo;
-          } else {
-            this.wallet = res.data.balances.main;
-          }
-          let new_wallet = this.wallet;
-          this.$store.dispatch("updateWallet", { new_wallet });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    closeModal(){
-        this.enterPin = false
+    closeModal() {
+      this.enterPin = false;
     },
     swap() {
       if (this.fidle) {
@@ -219,18 +208,9 @@ export default {
           to_currency_symbol: "FPW",
         };
         console.log(payload);
-        this.$axios.post('user/wallet/swap/', payload)
-        .then((res)=>{
-            console.log(res);
-        })
-        .catch((err)=>{
-            console.log(err);
-        })
-        .finally(()=>{
-            this.$emit("close");
-            this.setWalletBalances();
-            this.setTransactions()
-        })
+        this.$store.dispatch("user/swapFidle", payload);
+        this.$emit("close");
+        this.$store.dispatch("user/removePinVerification");
       } else {
         let payload = {
           amount: this.amount,
@@ -239,34 +219,29 @@ export default {
           to_currency_symbol: "FIDLE",
         };
         console.log(payload);
-        this.$axios.post('user/wallet/swap/', payload)
-        .then((res)=>{
-            console.log(res);
-        })
-        .catch((err)=>{
-            console.log(err);
-        })
-         .finally(()=>{
-            this.$emit("close");
-            this.setWalletBalances();
-            this.setTransactions()
-        })
+        this.$store.dispatch("user/swapFidle", payload);
+        this.$store.dispatch("user/removePinVerification");
+        this.$emit("close");
       }
+      this.payload = {};
+      this.amount = ""
     },
-    getPin(value){
-        this.enterPin = false
-        console.log(value);
-        this.payload.pin = value;
-        this.swap()
-    }
+    getPin(value) {
+      this.enterPin = false;
+      console.log(value);
+      this.payload.pin = value;
+      this.swap();
+    },
   },
 
   computed: {
     getUser() {
-      return this.$store.getters.getUser;
+      return this.$store.getters["auth/getUser"];
     },
     walletBalances() {
-      return this.$store.getters.getWallet;
+      var wallet;
+      wallet = this.$store.getters["user/walletBalance"].main;
+      return wallet;
     },
   },
 

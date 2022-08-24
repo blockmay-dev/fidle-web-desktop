@@ -138,6 +138,7 @@ import {
   timeStamp,
   dollarFilter2
 } from "@/plugins/filter";
+import request from "@/config/axios";
 export default {
   data() {
     return {
@@ -150,7 +151,6 @@ export default {
       levels: [],
       user: {},
       loading: false,
-      currentLevel: "",
     };
   },
   methods: {
@@ -160,68 +160,66 @@ export default {
       let payload = {
         level_id: level.id,
       };
-      this.$axios
+      request()
         .post("user/upgrade-level/", payload)
         .then((res) => {
-          console.log(res);
+           console.log(res);
           this.$toastify({
-            text: `res.data.message`,
+            text: `${res.data.message}`,
             className: "info",
             style: {
               background: "green",
+              fontSize: "13px",
+              borderRadius: "5px",
             },
           }).showToast();
         })
         .catch((err) => {
-          console.log(err);
+          
           this.$toastify({
-            text: `Something went wrong`,
+            text: `${err.response.data.error}`,
             className: "info",
             style: {
               background: "red",
+              fontSize: "13px",
+              borderRadius: "5px",
             },
           }).showToast();
+          console.log(err.response.data.error)
         })
         .finally(() => {
           this.loading = false;
           this.close();
+          this.$store.dispatch("auth/setUser")
+          this.$store.dispatch("user/walletBalance");
+          this.$store.dispatch("user/getTransactions", "")
         });
     },
     getLevels() {
-      this.$axios
+      request()
         .get("levels/")
         .then((res) => {
-          console.log(res);
           let levelsList = res.data;
           let editedList = levelsList.slice(Number(this.currentLevel), 5);
           this.levels = editedList;
           console.log(this.levels);
         })
         .catch((err) => {
-          console.log(err);
+          console.log(err)
         });
     },
     close() {
       this.$emit("close");
     },
-    getUser() {
-      this.$axios
-        .get("auth/users/me")
-        .then((res) => {
-          this.user = res.data;
-          this.currentLevel = res.data.level.rank;
-        })
-        .catch((err) => {
-          return err
-        })
-        .finally(() => {
-          this.getLevels();
-        });
-    },
   },
   mounted() {
-    this.getUser();
+    this.getLevels()
   },
   beforeMount() {},
+  computed:{
+    currentLevel(){
+      return this.$store.getters['auth/getUser'].level.rank
+    }
+  }
 };
 </script>

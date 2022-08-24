@@ -1,8 +1,12 @@
 <template>
   <div>
-    <div class="search--results p-3 rounded-lg">
+    
+    <div class="search--results p-3 mb-4 rounded-lg">
+      <div class="" v-show="users.count === 0">
+        No results found
+      </div>
       <div class="row">
-        <div class="col-md-6" v-for="user in users" :key="user.id">
+        <div class="col-md-6" v-for="user in users.results" :key="user.id">
           <div class="d-flex justify-content-between align-items-center mt-3">
             <div class="">
               <div class="d-flex align-items-center" style="gap: 10px">
@@ -37,25 +41,17 @@
 export default {
   data() {
     return {
-      users: [],
     };
   },
   methods: {
-    getUsers() {
-      let searchItem = this.$route.query.q;
-      console.log(searchItem);
-      this.$axios.get("users?search=" + searchItem).then((res) => {
-        console.log(res.data);
-        this.users = res.data.results;
-        console.log(this.users);
-      });
-    },
     goToUser(user){
       this.$router.push({name: 'fidler-profile', params:{id: user.id}})
     },
   },
-  mounted() {
-    this.getUsers();
-  },
+  computed:{
+    users(){
+      return this.$store.getters["extras/getUserResult"]
+    }
+  }
 };
 </script>

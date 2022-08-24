@@ -114,3 +114,22 @@
     color: #fff;
     border-radius: 20px;
 }
+
+.my-hash-class,
+.my-username-class,
+.my-url-class {
+    color: red;
+}
+
+.logging--out {
+    background-color: rgba(0, 0, 0, 0.7);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999999;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

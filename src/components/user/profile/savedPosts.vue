@@ -1,11 +1,120 @@
 <template>
   <div>
     <div>
+      <!-- Create  A Post  -->
+      <div class="rounded--card p-3">
+        <div>
+          <div class="d-flex" style="gap: 20px">
+            <div class="start-post-photo">
+              <img
+                v-if="user.current_profile_image"
+                :src="user.current_profile_image.media.file"
+                alt=""
+              />
+              <img
+                v-else
+                src="@/assets/img/no_user.png"
+                alt=""
+              />
+            </div>
+            <div class="start--post">
+              <el-input
+                type="textarea"
+                :autosize="{ minRows: 2, maxRows: 5 }"
+                placeholder="Start a Post"
+                v-model="payload.content"
+              >
+              </el-input>
+            </div>
+          </div>
+          <div class="media--preview mt-3" v-show="imgPreview">
+            <img :src="imgSrc" alt="" />
+            <div class="close-media-preview" role="button" @click="closePreview">
+              <IconComponent icon="ep:circle-close-filled" class="file--icons" style="font-size:40px"/>
+            </div>
+          </div>
+           <div class="preview" v-show="videoPreview">
+              <video
+                class="uploaded__video"
+                controls
+                id="video_select_preview"
+              />
+              <div class="close-video-preview" role="button" @click="closeVideoPreview">
+                <IconComponent icon="ep:circle-close-filled" class="file--icons" style="font-size:40px"/>
+              </div>
+            </div>
+
+
+        </div>
+
+        <hr />
+        <!-- Options of Posts  -->
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="d-flex align-items-center" style="gap:10px">
+            <div
+              class=" actions--container"
+              role="button"
+              style="gap: 5px"
+            >
+              <input
+                @change="onFileChange"
+                type="file"
+                accept="image/*"
+                id="choose-file"
+                name="choose-file"
+              />
+              <label class="m-0" for="choose-file"
+                ><IconComponent
+                  icon="ic:outline-photo-size-select-actual"
+                  class="file--icons"
+                />
+               </label
+              >
+            </div>
+            <div
+              class=" actions--container"
+              style="gap: 5px"
+              role="button"
+            >
+            <label for="video_select" role="button"><IconComponent
+                  icon="akar-icons:video"
+                  
+                  class="file--icons"
+              /></label>
+            <input
+              type="file"
+              id="video_select"
+              hidden
+              accept="video/*"
+              @change="showVideoPreview($event)"
+            />
+              <span
+                ></span>
+            </div>
+            <div
+              class=" actions--container"
+              style="gap: 5px"
+            >
+              <span
+                ><IconComponent
+                  icon="bytesize:location"
+                  
+                  class="file--icons"
+              /></span>
+            </div>
+          </div>
+
+          <div>
+            <button class="main--button" @click="createFidle">post</button>
+          </div>
+        </div>
+      </div>
+
       <!-- Main Post Content  -->
-      <div class="">
+      <div class="mb-4">
 
         <div class="">
-          <el-skeleton style="" :loading="loading" animated :count="20">
+          <el-skeleton style="" :loading="loading" animated :count="1">
             <template slot="template">
               <div class="rounded--card p-3 mt-3">
                 <div>
@@ -73,7 +182,7 @@
                 </div>
               </div>
             </template>
-            <div class="mb-4">
+            <div>
               <div
                 v-for="item in posts.results"
                 :key="item.id"
@@ -104,30 +213,27 @@
                         </div>
                       </div>
                       <div>
-                        <h5 class="font-weight-bold text-capitalize">
+                        <h6 class="font-weight-bold  text-capitalize">
                           {{ item.user.name }}
-                        </h5>
-                        <p class="text-secondary small">
+                        </h6>
+                        <p class="text-secondary small" style="font-size:10px">
                           {{ timeStamp(new Date(item.date_created * 1000.0)) }}
                         </p>
                       </div>
                     </div>
-                    <div>
-                      <IconComponent
-                        icon="akar-icons:more-horizontal"
-                        style="font-size: 30px"
-                      />
-                    </div>
                   </div>
 
-                  <div v-for="media in item.media" :key="media.id">
+                   <div v-for="media in item.media" :key="media.id">
                     <img
+                    v-if="media.extension == 'jpg' || media.extension == 'png' || media.extension == 'jpeg' || media.extension == 'webp' || media.extension == 'svg' "
                       :src="media.file"
                       alt=""
                       width="100%"
-                      height="500px"
+                      height="100%"
                       style="object-fit: cover; object-position: top"
                     />
+                    <video v-else :src="media.file" playsinline loop 
+                     ></video>
                   </div>
 
                   <!-- Post Content -->
@@ -151,11 +257,11 @@
                         }}</span>
                       </div>
                       <div>
-                        <span class="">{{ item.likes_count }}Likes </span>
+                        <span class="">{{ item.likes_count }} Likes </span>
                       </div>
                     </div>
                     <div>
-                      <span class="">
+                      <span class="" role="button" @click="getComments(item)">
                         {{ item.comments_count }} comment<span
                           v-show="item.comments_count > 1"
                           >s</span
@@ -197,8 +303,8 @@
                   </div>
                   <hr class="m-0" />
 
-                  <div class="comments mt-3" >
-                    <div class="comment--box  d-flex align-items-end" v-show="comments === item.id" v-for="comment in commentsList" :key="comment.id" style="gap:3px">
+                  <div class="comments mt-3" v-if="comments === item.id">
+                    <div class="comment--box  d-flex align-items-end"  v-for="comment in commentsList" :key="comment.id" style="gap:3px">
                       <div class="commenter-photo">
                         <img
                           v-if="comment.user.current_profile_image"
@@ -218,7 +324,7 @@
                       </div>
                       
                     </div>
-                    <div class="start--post add-comment d-flex  align-items-center mt-3" >
+                    <div class="start--post add-comment d-flex  align-items-center mt-3" style="gap:20px">
                       <div class="commenter-photo">
                         <img
                           v-if="user.current_profile_image"
@@ -270,20 +376,12 @@
           </el-skeleton>
         </div>
       </div>
-
-      <div v-show="empty">
-        You don't have any saved posts yet
-      </div>
-
-        <!-- App Loader -->
-       <AppLoader :loader="loader" />
     </div>
   </div>
 </template>
 
 <script>
 import { VEmojiPicker } from "v-emoji-picker";
-import AppLoader from '@/components/static/appLoader.vue'
 import packEmoji from "@/api/emojis.js";
 import {
   timeRange,
@@ -294,10 +392,12 @@ import {
 } from "@/plugins/filter";
 export default {
   components: {
-    AppLoader, VEmojiPicker
-  },
+    VEmojiPicker,
+},
   data() {
     return {
+      promote_post: false,
+      postStatistics: null,
       comments: false,
       showDialog: false,
       timeStamp,
@@ -306,8 +406,6 @@ export default {
       dollarFilter,
       colorSplit,
       loading: false,
-      posts: [],
-      user: {},
       connection: null,
       content: "",
       isActive: false,
@@ -321,93 +419,123 @@ export default {
       videoPreview: false,
       loader: false,
       valueInput: "",
-      commentsList: [],
-      empty: false
+      singlePost:{}
     };
   },
   methods: {
-    async getComments(item){
-      console.log(this.item_id);
-    this.comments = ( this.comments === item.id ) ? null : item.id;
-     if (this.comments) {
-        
-        try {
-            let res = await this.$axios.get(`/posts/${item.id}/comments/`)
-            console.log(res);
-          this.commentsList = res.data.results
-        } catch (error) {
-          console.log(error);
-        }
-     }
-     else {
-       this.commentsList = []
-     }
-    },
-    likeComment(item, comment){
-      this.$axios.post(`posts/${item.id}/comments/${comment.id}/like/`)
-      .then((res)=>{
-        console.log(res);
-        this.getComments(item)
-      })
-      .catch((err)=>{
-        console.log(err);
-      })
-    },
-    async postComment(item){
+    shareToFeed(item) {
       let payload = {
-        content: this.valueInput
+        parent_id: item.id,
+      };
+      this.$axios
+        .post("user/", payload)
+        .then((res) => {
+          return res;
+        })
+        .catch((err) => {
+          return err;
+        });
+    },
+    shareWithContent(item) {
+      let payload = {
+        parent_id: item.id,
+      };
+      this.$axios
+        .post("user/", payload)
+        .then((res) => {
+          return res;
+        })
+        .catch((err) => {
+          return err;
+        });
+    },
+    onCopy: function (e) {
+      console.log(e);
+      this.$message({
+        showClose: true,
+        message: "Copied",
+        type: "info",
+      });
+    },
+    onError: function () {
+      console.log("Failed to copy texts");
+    },
+    async getComments(item) {
+      this.comments = this.comments === item.id ? null : item.id;
+      console.log(this.comments)
+      if (this.comments) {
+        this.$store.dispatch("user/viewComments", item.id)
+        }
+    },
+    
+    likeComment(item, comment) {
+      let payload = {
+        post_id: item.id,
+        comment_id: comment.id
       }
-      try {
-        let res = await this.$axios.post(`posts/${item.id}/comments/`, payload)
-        console.log(res);
-        this.getPosts()
-        this.getComments(item)
-      } catch (error) {
-        console.log(error);
-      }
+      this.$store.dispatch("user/likeComment", payload)
+    },
+    async postComment(item) {
+      let formData = new FormData();
+      formData.append("content", this.valueInput);
+      let payload = {
+        payload: formData,
+        id: item.id
+      };
+      this.$store.dispatch("user/addComment", payload);
       this.valueInput = ""
     },
     onSelectEmoji(dataEmoji) {
-        let text = this.valueInput
+      let text = this.valueInput;
       var curPos = document.getElementById("textarea2").selectionStart;
       console.log(curPos);
       let text_to_insert = dataEmoji.data;
-        this.valueInput = text.slice(0, curPos) + text_to_insert + text.slice(curPos)
+      this.valueInput =
+        text.slice(0, curPos) + text_to_insert + text.slice(curPos);
       // Optional
-        this.toogleDialogEmoji();
+      this.toogleDialogEmoji();
     },
-    toogleDialogEmoji(item){
-      this.showDialog = ( this.showDialog === item.id ) ? null : item.id;
+    toogleDialogEmoji(item) {
+      this.showDialog = this.showDialog === item.id ? null : item.id;
     },
-    getPosts() {
-      this.loading = true;
-      this.$axios
-        .get("user/saved-posts")
-        .then((res) => {
-          console.log(res.data);
-          this.posts = res.data;
-           if (this.posts.results.length === 0 ) {
-            this.empty = true
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        })
-        .finally(() => {
-          this.loading = false;
-        });
+    createFidle() {
+      let formData = new FormData();
+      formData.append("content", this.payload.content);
+      formData.append("media", this.payload.media);
+      formData.append("_method", "POST");
+      this.$store.dispatch("user/createPost", formData)
+      this.payload = {};
+      this.closePreview();
+      this.closeVideoPreview();
     },
 
-    getUser() {
-      this.$axios
-        .get("auth/users/me")
-        .then((res) => {
-          this.user = res.data;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+    async viewMore() {
+      this.page = this.page + 1;
+      // this.loading = true;
+      try {
+        let res = await this.$axios.get(`/user/feeds?page=${this.page}`);
+        console.log(res.data);
+        let newPosts = res.data.results;
+        for (let i = 0; i < newPosts.length; i++) {
+          this.posts.push(newPosts[i]);
+        }
+      } catch (error) {
+        return error;
+      }
+      // this.loading = false
     },
+    getPost(item) {
+      this.verify = true;
+      this.$store.dispatch("user/singlePost", item.id)
+    },
+
+    goToUser(item) {
+      this.$router.push({
+        name: "fidler-profile",
+        params: { id: item.user.id },
+      });
+    },
+    
     showVideoPreview($event) {
       var input = event.target;
       this.videoPreview = true;
@@ -430,45 +558,80 @@ export default {
       console.log(this.payload.media);
       if (e.target.files.length > 0) {
         var src = URL.createObjectURL(e.target.files[0]);
-        this.imgSrc = src;
+        this.imgSrc3 = src;
         this.isActive = false;
         // document.getElementById('message').style.backgroundImage = null;
         // this.payload.color = "";
       }
     },
-     async likePost(item){
-      try {
-        let res = await this.$axios.post(`posts/${item.id}/likes/`)
-        console.log(res);
-      } catch (error) {
-        console.log(error);
-      }
-      this.getPosts()
+    async likePost(item) {
+     this.$store.dispatch("user/likePost", item.id)
     },
-    switchDisabled(){
-      if (this.payload.content !== '' ) {
-        this.disabled = false
+    switchDisabled() {
+      if (this.payload.content !== "") {
+        this.disabled = false;
       }
     },
-    closePreview(){
-      this.imgSrc = "";
+    closePreview() {
       this.imgPreview = false;
     },
-    closeVideoPreview(){
+    closeVideoPreview() {
       this.videoPreview = false;
-      // var preview = document.getElementById("video_select_preview");
-      //   preview.src = "";
-    }
+    },
+    async sharePost(item) {
+      navigator.share({
+        title:
+          "Fidle The worlds first decentralized social network for creators",
+        text: "",
+        url: "https://fidle-desktop/fidle" + item.id,
+      });
+    },
   },
   mounted() {
-    this.getPosts();
-    this.getUser();
+    window.addEventListener('load', videoScroll);
+window.addEventListener('scroll', videoScroll);
+
+function videoScroll() {
+
+  if ( document.querySelectorAll('video[autoplay]').length > 0) {
+    var windowHeight = window.innerHeight,
+        videoEl = document.querySelectorAll('video[autoplay]');
+
+    for (var i = 0; i < videoEl.length; i++) {
+
+      var thisVideoEl = videoEl[i],
+          videoHeight = thisVideoEl.clientHeight,
+          videoClientRect = thisVideoEl.getBoundingClientRect().top;
+
+      if ( videoClientRect <= ( (windowHeight) - (videoHeight*.5) ) && videoClientRect >= ( 0 - ( videoHeight*.5 ) ) ) {
+        thisVideoEl.play();
+      } else {
+        thisVideoEl.pause();
+      }
+    }
+  }
+}
   },
   created() {},
+  beforeMount(){
+    this.$store.dispatch("user/savedPosts")
+  },
   computed: {
     emojisNative() {
       return packEmoji;
     },
+     user(){
+        return this.$store.getters["auth/getUser"]
+      },
+      posts(){
+        return this.$store.getters['user/savedPosts']
+      },
+       commentsList(){
+      return this.$store.getters["user/allComments"]
+    },
+    post(){
+      return this.$store.getters["user/getSinglePost"]
+    }
   },
 };
 </script>

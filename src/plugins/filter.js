@@ -9,6 +9,18 @@ const timeStamp = (value) => {
     }
 }
 
+const timeStamp2 = (value) => {
+    if (value) {
+        return moment(String(value)).format('hh:mm | MMM, DD YYYY')
+    }
+}
+
+const formatTime = (value) => {
+    if (value) {
+        return moment(String(value)).format('DD MMMM YYYY')
+    }
+}
+
 const colorSplit = (value) => {
     // if (value) {
     //     return (String(value)).split(" ").join();
@@ -38,7 +50,15 @@ const dollarFilter2 = (value) => {
         return '$ 0'
     }
 
-    return numeral(value).format('($ 0.00a)')
+    return numeral(value).format('($ 0.000)')
+}
+
+const dollarFilter3 = (value) => {
+    if (!value) {
+        return '0'
+    }
+
+    return numeral(value).format('(0.00) ')
 }
 
 const percentFilter = (value) => {
@@ -59,4 +79,4 @@ const percentageFilter = (value) => {
     return !value ? '0%' : `${Number(value).toFixed(2) * 100}%`
 }
 
-export { dollarFilter, percentFilter, percentageFilter, timeStamp, timeRange, dollarFilter2, sliceHash, sliceHash2, sliceContent, colorSplit }
+export { dollarFilter, percentFilter, percentageFilter, timeStamp, timeRange, dollarFilter2, dollarFilter3, sliceHash, sliceHash2, sliceContent, colorSplit, formatTime, timeStamp2 }

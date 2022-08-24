@@ -4,7 +4,11 @@
       <div class="media--files profile--section p-3">
         <div class="media" v-for="media in mediaData" :key="media.id" @click="goToPost(media)" role="button">
           <div v-for="file in media.media" :key="file.id">
-            <img v-if="file.extension == 'jpg' || file.extension == 'png' || file.extension == 'jpeg' " :src="file.file" alt="" width="100%" />
+            <img v-if="file.extension == 'jpg' ||
+                file.extension == 'png' ||
+                file.extension == 'jpeg' ||
+                file.extension == 'webp' ||
+                file.extension == 'svg' " :src="file.file" alt="" width="100%" />
             <video v-else :src="file.file"  playsinline loop 
                      ></video>
           </div>
@@ -34,55 +38,17 @@ export default {
   data() {
     return {
       mediaFiles: [],
-      mediaData: {},
       id: this.$route.params.id,
       empty: false,
       user: ''
     };
   },
   methods: {
-    getPosts() {
-      this.loading = true;
-      this.$axios
-        .get(`users/${this.id}/posts`)
-        .then((res) => {
-          console.log(res.data);
-          this.posts = res.data;
-          let posts = res.data.results;
-          if(posts.length === 0){
-            this.empty = true
-          }
-          const value = posts.filter((elem) => elem.media.length !== 0);
-          console.log(value);
-          this.mediaData = value
-          
-        })
-        .catch((err) => {
-          console.log(err);
-        })
-        .finally(() => {
-          this.loading = false;
-        });
-    },
     goToPost(media){
       this.$router.push({name: 'single-fidle', params:{id: media.id}})
-
     },
-     getUser() {
-            this.$axios.get("users/"+this.id+'/')
-                .then((res) => {
-                console.log(res);
-                this.user = res.data;
-            })
-                .catch((err) => {
-                console.log(err);
-            });
-        },
   },
   mounted() {
-    this.getPosts();
-    this.getUser();
-
     window.addEventListener('load', videoScroll);
 window.addEventListener('scroll', videoScroll);
 
@@ -106,6 +72,11 @@ function videoScroll() {
     }
   }
 }
+  },
+  computed: {
+    mediaData() {
+      return this.$store.getters["fidler/allMediaFiles"];
+    },
   }
 };
 </script>

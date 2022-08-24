@@ -74,15 +74,19 @@ export default {
   methods: {
     
     viewMore(transaction){
-      this.$emit('open', transaction.id)
+      this.$emit('open')
+      this.$store.dispatch('user/getTransactionById', transaction.id)
     },
     closeModal(){
       this.modal = false
     }
   },
+  beforeMount(){
+    this.$store.dispatch("user/getTransactions", "")
+  },
   computed:{
     transactions(){
-      return this.$store.getters.getTransactions
+      return this.$store.getters["user/getTransactions"]
     }
   },
   

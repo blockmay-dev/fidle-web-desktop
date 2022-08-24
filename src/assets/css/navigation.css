@@ -65,3 +65,23 @@
     object-fit: cover;
     object-position: top;
 }
+
+.app-header-icon img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+}
+
+.app-header-icon.video {
+    position: relative;
+}
+
+.blinking--icon {
+    width: 10px;
+    height: 10px;
+    background-color: #D72624;
+    border-radius: 50%;
+    position: absolute;
+    top: 37%;
+    left: 30%;
+}

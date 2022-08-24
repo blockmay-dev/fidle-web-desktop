@@ -37,13 +37,13 @@
         <div class="mt-4">
           <h2> {{ user.name }} </h2>
           <p>
-            <span class="small" @click="editProfile" v-show="user.bio == '' " style="color:var(--main-color); text-decoration: underline !important" role="button">Update Bio</span>
+            <span class="small" @click="editProfile" v-show="user.bio == '' " style="color:var(--main-color); text-decoration: underline !important"  role="button">Update Bio</span>
             <span>
               {{ user.bio }}
             </span>
           </p>
-          <p >
-             <span class="small" v-show="user.country !== '' "><IconComponent icon="akar-icons:location" /> <span> {{ user.city }}, {{ user.country }} </span></span>
+          <p>
+             <span class="small" v-show="user.country "><IconComponent icon="akar-icons:location" /> <span> {{ user.city }}, {{ user.country }} </span></span>
           </p>
           <div class="row align-items-center mt-3">
             <div class="col-md-6">
@@ -86,103 +86,82 @@
       <hr class="mb-1" />
       <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
-          <a
-            class="nav-link active"
+          <router-link to="/profile"
+            class="nav-link"
             id="home-tab"
             data-toggle="tab"
-            href="#home"
+            href="javascript:void(0)"
             role="tab"
             aria-controls="home"
             aria-selected="true"
-            >Post</a
+            >Post</router-link
           >
         </li>
         <li class="nav-item" role="presentation">
-          <a
+          <router-link to="/profile/media"
             class="nav-link"
             id="profile-tab"
             data-toggle="tab"
-            href="#profile"
+            href="javacript:void(0)"
             role="tab"
             aria-controls="profile"
             aria-selected="false"
-            >Media</a
+            >Media</router-link
           >
         </li>
         <li class="nav-item" role="presentation">
-          <a
+          <router-link to="/profile/saved-posts"
             class="nav-link"
             id="contact-tab"
             data-toggle="tab"
-            href="#contact"
+            href="javascript:void(0)"
             role="tab"
             aria-controls="contact"
             aria-selected="false"
-            >Saved</a
+            >Saved</router-link
           >
         </li>
         <li class="nav-item" role="presentation">
-          <a
+          <router-link to="/profile/connections"
             class="nav-link"
             id="contact-tab"
             data-toggle="tab"
-            href="#connect"
+            href="javascript:void(0)"
             role="tab"
             aria-controls="connect"
             aria-selected="false"
-            >Connects</a
+            >Connects</router-link
           >
         </li>
          <li class="nav-item" role="presentation">
-          <a
+          <router-link to="/profile/nft-collections"
             class="nav-link"
             id="contact-tab"
             data-toggle="tab"
-            href="#connect"
+            href="javascript:void(0)"
             role="tab"
-            aria-controls="connect"
+            aria-controls="nft"
             aria-selected="false"
-            >NFTs</a
+            >NFT Collections</router-link
+          >
+        </li>
+        <li class="nav-item" role="presentation">
+          <router-link to="/profile/boosted-posts"
+            class="nav-link"
+            id="contact-tab"
+            data-toggle="tab"
+            href="javascript:void(0)"
+            role="tab"
+            aria-controls="boosted-posts"
+            aria-selected="false"
+            >Boosted Posts</router-link
           >
         </li>
       </ul>
     </div>
 
     <div class="mt-3">
-      <div class="tab-content" id="myTabContent">
-        <div
-          class="tab-pane fade show active"
-          id="home"
-          role="tabpanel"
-          aria-labelledby="home-tab"
-        >
-          <PostViewVue/>
-        </div>
-        <div
-          class="tab-pane fade"
-          id="profile"
-          role="tabpanel"
-          aria-labelledby="profile-tab"
-        >
-          <MediaViewVue/>
-        </div>
-        <div
-          class="tab-pane fade"
-          id="contact"
-          role="tabpanel"
-          aria-labelledby="contact-tab"
-        >
-          <SavedPosts/>
-        </div>
-        <div
-          class="tab-pane fade"
-          id="connect"
-          role="tabpanel"
-          aria-labelledby="connect-tab"
-        >
-          <UserConnectsVue/>
-        </div>
-      </div>
+      <router-view/>
     </div>
 
 
@@ -192,16 +171,10 @@
 </template>
 
 <script>
-import UserConnectsVue from '@/components/user/profile/userConnects.vue';
-import PostViewVue from '@/components/user/profile/postView.vue';
-import MediaViewVue from '../../../components/user/profile/mediaView.vue';
-import SavedPosts from '../../../components/user/profile/savedPosts.vue';
 import EditProfile from '../../../components/user/profile/editProfile.vue';
 export default {
     data() {
         return {
-            // user: {},
-            followers: [],
             profile: false,
         };
     },
@@ -209,41 +182,21 @@ export default {
       editProfile(){
         this.profile = !this.profile
       },
-        // getUser() {
-        //     this.$axios.get("auth/users/me")
-        //         .then((res) => {
-        //         console.log(res);
-        //         this.user = res.data;
-        //     })
-        //         .catch((err) => {
-        //         console.log(err);
-        //     });
-        // },
-        getFollowers() {
-            this.$axios.get("user/followers")
-                .then((res) => {
-                console.log(res);
-                let followers = res.data.results;
-                console.log(followers);
-                this.followers = followers.slice(0, 5);
-            })
-                .catch((err) => {
-                console.log(err);
-            });
-        },
         close(){
           this.profile = false
         }
     },
-    mounted() {
-        // this.getUser();
-        this.getFollowers();
+    beforeMount(){
+      this.$store.dispatch("user/getFollowers")
     },
     computed:{
       user(){
-        return this.$store.getters.getUser
+        return this.$store.getters["auth/getUser"]
+      },
+      followers(){
+        return this.$store.getters['user/getFiveFollowers']
       }
     },
-    components: { UserConnectsVue, PostViewVue, MediaViewVue, SavedPosts, EditProfile }
+    components: { EditProfile }
 };
 </script>

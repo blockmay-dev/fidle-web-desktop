@@ -52,25 +52,20 @@
 export default {
   data(){
     return{
-      user: {}
+      // user: {}
     }
   },
   methods:{
-    getUser(){
-      this.$axios.get('auth/users/me')
-      .then((res)=>{
-        this.user = res.data
-      })
-      .catch((err)=>{
-        console.log(err);
-      })
-    },
     goToUser(){
       this.$router.push('/profile')
     }
   },
   mounted(){
-    this.getUser()
+  },
+  computed:{
+    user(){
+      return this.$store.getters["auth/getUser"]
+    }
   }
 }
 </script>

@@ -14,13 +14,15 @@ import WalletsView from '@/components/user/wallet/walletsView.vue'
 export default {
     data() {
         return {
-            transactions: []
         };
     },
     components: { WalletsView },
     methods:{
         
     },
+    beforeMount() {
+    this.$store.dispatch("user/walletBalance");
+  },
     mounted(){
     }
 }

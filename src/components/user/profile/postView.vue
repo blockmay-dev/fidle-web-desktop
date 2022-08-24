@@ -11,11 +11,7 @@
                 :src="user.current_profile_image.media.file"
                 alt=""
               />
-              <img
-                v-else
-                src="@/assets/img/no_user.png"
-                alt=""
-              />
+              <img v-else src="@/assets/img/no_user.png" alt="" />
             </div>
             <div class="start--post">
               <el-input
@@ -29,33 +25,39 @@
           </div>
           <div class="media--preview mt-3" v-show="imgPreview">
             <img :src="imgSrc" alt="" />
-            <div class="close-media-preview" role="button" @click="closePreview">
-              <IconComponent icon="ep:circle-close-filled" class="file--icons" style="font-size:40px"/>
+            <div
+              class="close-media-preview"
+              role="button"
+              @click="closePreview"
+            >
+              <IconComponent
+                icon="ep:circle-close-filled"
+                class="file--icons"
+                style="font-size: 40px"
+              />
             </div>
           </div>
-           <div class="preview" v-show="videoPreview">
-              <video
-                class="uploaded__video"
-                controls
-                id="video_select_preview"
+          <div class="preview" v-show="videoPreview">
+            <video class="uploaded__video" controls id="video_select_preview" />
+            <div
+              class="close-video-preview"
+              role="button"
+              @click="closeVideoPreview"
+            >
+              <IconComponent
+                icon="ep:circle-close-filled"
+                class="file--icons"
+                style="font-size: 40px"
               />
-              <div class="close-video-preview" role="button" @click="closeVideoPreview">
-                <IconComponent icon="ep:circle-close-filled" class="file--icons" style="font-size:40px"/>
-              </div>
             </div>
-
-
+          </div>
         </div>
 
         <hr />
         <!-- Options of Posts  -->
         <div class="d-flex justify-content-between align-items-center">
-          <div class="d-flex align-items-center" style="gap:10px">
-            <div
-              class=" actions--container"
-              role="button"
-              style="gap: 5px"
-            >
+          <div class="d-flex align-items-center" style="gap: 10px">
+            <div class="actions--container" role="button" style="gap: 5px">
               <input
                 @change="onFileChange"
                 type="file"
@@ -68,38 +70,24 @@
                   icon="ic:outline-photo-size-select-actual"
                   class="file--icons"
                 />
-               </label
-              >
+              </label>
             </div>
-            <div
-              class=" actions--container"
-              style="gap: 5px"
-              role="button"
-            >
-            <label for="video_select" role="button"><IconComponent
-                  icon="akar-icons:video"
-                  
-                  class="file--icons"
+            <div class="actions--container" style="gap: 5px" role="button">
+              <label for="video_select" role="button"
+                ><IconComponent icon="akar-icons:video" class="file--icons"
               /></label>
-            <input
-              type="file"
-              id="video_select"
-              hidden
-              accept="video/*"
-              @change="showVideoPreview($event)"
-            />
-              <span
-                ></span>
+              <input
+                type="file"
+                id="video_select"
+                hidden
+                accept="video/*"
+                @change="showVideoPreview($event)"
+              />
+              <span></span>
             </div>
-            <div
-              class=" actions--container"
-              style="gap: 5px"
-            >
+            <div class="actions--container" style="gap: 5px">
               <span
-                ><IconComponent
-                  icon="bytesize:location"
-                  
-                  class="file--icons"
+                ><IconComponent icon="bytesize:location" class="file--icons"
               /></span>
             </div>
           </div>
@@ -112,7 +100,6 @@
 
       <!-- Main Post Content  -->
       <div class="mb-4">
-
         <div class="">
           <el-skeleton style="" :loading="loading" animated :count="1">
             <template slot="template">
@@ -213,62 +200,93 @@
                         </div>
                       </div>
                       <div>
-                        <h6 class="font-weight-bold  text-capitalize">
+                        <h6 class="font-weight-bold text-capitalize">
                           {{ item.user.name }}
                         </h6>
-                        <p class="text-secondary small" style="font-size:10px">
+                        <p class="text-secondary small" style="font-size: 10px">
                           {{ timeStamp(new Date(item.date_created * 1000.0)) }}
                         </p>
                       </div>
                     </div>
-                    <div class="dropleft">
-                      <span role="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false" >
-                        <IconComponent
-                        icon="akar-icons:more-horizontal"
-                        style="font-size: 20px"
-                      />
-                      </span>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                          <div class="dropdown-item d-flex" style="gap:12px"  role="button" >
+                    <div class="d-flex align-items-center" style="gap:20px">
+                      <div v-if="item.is_nft">
+                        <span class="is--nft"> NFT </span>
+                      </div>
+                      <div class="dropleft">
+                        <span
+                          role="button"
+                          id="dropdownMenuButton"
+                          data-toggle="dropdown"
+                          aria-expanded="false"
+                        >
+                          <IconComponent
+                            icon="akar-icons:more-horizontal"
+                            style="font-size: 20px"
+                          />
+                        </span>
+                        <div
+                          class="dropdown-menu"
+                          aria-labelledby="dropdownMenuButton"
+                        >
+                          <div
+                            class="dropdown-item d-flex"
+                            style="gap: 12px"
+                            role="button"
+                            @click="convertToNFT(item)"
+                          >
                             <span>
-                              <IconComponent icon="icon-park-outline:weixin-market" />
+                              <IconComponent
+                                icon="icon-park-outline:weixin-market"
+                              />
                             </span>
-                            <span>
-                              Convert to NFT
-                            </span>
+                            <span> Convert to NFT </span>
                           </div>
-                          <div class="dropdown-item d-flex" style="gap:12px"  role="button" @click="promotePost(item)">
+                          <div
+                            class="dropdown-item d-flex"
+                            style="gap: 12px"
+                            role="button"
+                            @click="promotePost(item)"
+                          >
                             <span>
                               <IconComponent icon="carbon:analytics" />
                             </span>
-                            <span>
-                              Promote Post
-                            </span>
+                            <span> Promote Post </span>
                           </div>
-                          <div class="dropdown-item d-flex" style="gap:12px"  role="button" @click="goToPost(item)">
+                          <div
+                            class="dropdown-item d-flex"
+                            style="gap: 12px"
+                            role="button"
+                            @click="goToPost(item)"
+                          >
                             <span>
-                              <IconComponent icon="icon-park-outline:blockchain" />
+                              <IconComponent
+                                icon="icon-park-outline:blockchain"
+                              />
                             </span>
-                            <span>
-                              Verify on the Blockchain
-                            </span>
+                            <span> Verify on the Blockchain </span>
                           </div>
                         </div>
-                      <!-- </div> -->
+                        <!-- </div> -->
+                      </div>
                     </div>
                   </div>
 
-                   <div v-for="media in item.media" :key="media.id">
+                  <div v-for="media in item.media" :key="media.id">
                     <img
-                    v-if="media.extension == 'jpg' || media.extension == 'png' || media.extension == 'jpeg' "
+                      v-if="
+                        media.extension == 'jpg' ||
+                        media.extension == 'png' ||
+                        media.extension == 'jpeg' ||
+                        media.extension == 'webp' ||
+                        media.extension == 'svg'
+                      "
                       :src="media.file"
                       alt=""
                       width="100%"
                       height="100%"
                       style="object-fit: cover; object-position: top"
                     />
-                    <video v-else :src="media.file" playsinline loop 
-                     ></video>
+                    <video v-else :src="media.file" playsinline loop></video>
                   </div>
 
                   <!-- Post Content -->
@@ -287,7 +305,7 @@
                   <div class="my-3 d-flex justify-content-between">
                     <div class="d-flex align-items-center" style="gap: 10px">
                       <div>
-                        <span class="amount ">{{
+                        <span class="amount">{{
                           dollarFilter(item.worth)
                         }}</span>
                       </div>
@@ -314,8 +332,17 @@
                       style="gap: 10px"
                       @click="likePost(item)"
                     >
-                      <IconComponent icon="flat-color-icons:like" style=" font-size: 24px !important;" v-if="item.liked"/>
-                      <IconComponent v-else icon="icon-park-outline:like" style="color: red;  font-size: 24px !important;" role="button" />
+                      <IconComponent
+                        icon="flat-color-icons:like"
+                        style="font-size: 24px !important"
+                        v-if="item.liked"
+                      />
+                      <IconComponent
+                        v-else
+                        icon="icon-park-outline:like"
+                        style="color: red; font-size: 24px !important"
+                        role="button"
+                      />
                       <span>Like</span>
                     </div>
                     <div
@@ -324,7 +351,10 @@
                       style="gap: 10px"
                       @click="getComments(item)"
                     >
-                      <IconComponent icon="bx:comment" style=" font-size: 24px" />
+                      <IconComponent
+                        icon="bx:comment"
+                        style="font-size: 24px"
+                      />
                       <span>Comment</span>
                     </div>
                     <div
@@ -338,42 +368,60 @@
                   </div>
                   <hr class="m-0" />
 
-                  <div class="comments mt-3" >
-                    <div class="comment--box  d-flex align-items-end" v-show="comments === item.id" v-for="comment in commentsList" :key="comment.id" style="gap:3px">
+                  <div class="comments mt-3" v-if="comments === item.id">
+                    <div
+                      class="comment--box d-flex align-items-end"
+                      v-for="comment in commentsList"
+                      :key="comment.id"
+                      style="gap: 3px"
+                    >
                       <div class="commenter-photo">
                         <img
                           v-if="comment.user.current_profile_image"
                           :src="comment.user.current_profile_image.media.file"
                           alt=""
                         />
-                        <img
-                          v-else
-                          src="@/assets/img/no_user.png"
-                          alt=""
-                        />
+                        <img v-else src="@/assets/img/no_user.png" alt="" />
                       </div>
                       <div class="main-comment">
-                       <p> {{ comment.content }}</p>
-                       <span class="like--comment" v-if="comment.has_liked"><IconComponent icon="flat-color-icons:like" style=" font-size: 24px !important;" /></span>
-                      <span class="like--comment" @click="likeComment(item, comment)" role="button" v-else><IconComponent icon="icon-park-outline:like" style="color: red;  font-size: 24px !important;" role="button" /></span>
+                        <p>{{ comment.content }}</p>
+                        <span class="like--comment" v-if="comment.has_liked"
+                          ><IconComponent
+                            icon="flat-color-icons:like"
+                            style="font-size: 24px !important"
+                        /></span>
+                        <span
+                          class="like--comment"
+                          @click="likeComment(item, comment)"
+                          role="button"
+                          v-else
+                          ><IconComponent
+                            icon="icon-park-outline:like"
+                            style="color: red; font-size: 24px !important"
+                            role="button"
+                        /></span>
                       </div>
-                      
                     </div>
-                    <div class="start--post add-comment d-flex  align-items-center mt-3" style="gap:20px">
+                    <div
+                      class="
+                        start--post
+                        add-comment
+                        d-flex
+                        align-items-center
+                        mt-3
+                      "
+                      style="gap: 20px"
+                    >
                       <div class="commenter-photo">
                         <img
                           v-if="user.current_profile_image"
                           :src="user.current_profile_image.media.file"
                           alt=""
                         />
-                        <img
-                          v-else
-                          src="@/assets/img/no_user.png"
-                          alt=""
-                        />
+                        <img v-else src="@/assets/img/no_user.png" alt="" />
                       </div>
-                        <div class="w-100">
-                        <form action="" class="form" >
+                      <div class="w-100">
+                        <form action="" class="form">
                           <el-input
                             width="100%"
                             type="textarea"
@@ -383,47 +431,56 @@
                             v-model="valueInput"
                           >
                           </el-input>
-                          <div class="your-input-box" @click="toogleDialogEmoji(item)" role="button">
-                              <IconComponent icon="fluent:emoji-32-regular" style="font-size: 20px"  color="var(--main-color)"/>
+                          <div
+                            class="your-input-box"
+                            @click="toogleDialogEmoji(item)"
+                            role="button"
+                          >
+                            <IconComponent
+                              icon="fluent:emoji-32-regular"
+                              style="font-size: 20px"
+                              color="var(--main-color)"
+                            />
                           </div>
-                          <div class="your-input-box" @click="postComment(item)" role="button">
-                              <IconComponent icon="akar-icons:send" style="font-size: 20px"  color="var(--main-color)"/>
+                          <div
+                            class="your-input-box"
+                            @click="postComment(item)"
+                            role="button"
+                          >
+                            <IconComponent
+                              icon="akar-icons:send"
+                              style="font-size: 20px"
+                              color="var(--main-color)"
+                            />
                           </div>
                         </form>
-                        </div>
                       </div>
+                    </div>
                   </div>
                   <VEmojiPicker
-                            v-show="showDialog == item.id "
-                            :pack="emojisNative"
-                            labelSearch="Search"
-                            class="emojis"
-                            style="
-                              {
-                                width: 4px;
-                              }
-                            "
-                            @select="onSelectEmoji"
-                          />
+                    v-show="showDialog == item.id"
+                    :pack="emojisNative"
+                    labelSearch="Search"
+                    class="emojis"
+                    style="
+                       {
+                        width: 4px;
+                      }
+                    "
+                    @select="onSelectEmoji"
+                  />
                 </div>
               </div>
             </div>
           </el-skeleton>
         </div>
       </div>
-
-        <!-- App Loader -->
-       <AppLoader :loader="loader" />
-
-       <!-- Promote Post Modal  -->
-      <PromotePost v-show="promote_post" :post_statistics="postStatistics" :single_post="singlePost" @close="promote_post = false"/>
     </div>
   </div>
 </template>
 
 <script>
 import { VEmojiPicker } from "v-emoji-picker";
-import AppLoader from '@/components/static/appLoader.vue'
 import packEmoji from "@/api/emojis.js";
 import {
   timeRange,
@@ -432,13 +489,10 @@ import {
   colorSplit,
   timeStamp,
 } from "@/plugins/filter";
-import PromotePost from "../post/promotePost.vue";
 export default {
   components: {
-    AppLoader,
     VEmojiPicker,
-    PromotePost
-},
+  },
   data() {
     return {
       promote_post: false,
@@ -451,8 +505,6 @@ export default {
       dollarFilter,
       colorSplit,
       loading: false,
-      posts: [],
-      user: {},
       connection: null,
       content: "",
       isActive: false,
@@ -466,148 +518,129 @@ export default {
       videoPreview: false,
       loader: false,
       valueInput: "",
-      commentsList: [],
-      singlePost:{}
+      singlePost: {},
     };
   },
   methods: {
-    promotePost(item){
-      this.promote_post = true;
-      this.postId = item.id
-        this.getStatistics()
-        this.getPost()
+    convertToNFT(item) {
+      this.$router.push({
+        path: "/convert-post-to-nft",
+        query: { post_id: item.id },
+      });
     },
-     // Get Post By Id
-        getPost(){
-          this.$axios.get(`posts/${this.postId}`)
-          .then((res)=>{
-            console.log(res.data);
-            this.singlePost = res.data
-          
-          })
-          .catch((err)=>{
-            console.log(err);
-        })
-        },
-    getStatistics(){
-      this.$axios.get(`/user/posts/${this.postId}/statistic/`)
-        .then((res)=>{
-            console.log(res);
-            let data = []
-            data.push({x:"Views",
-            y: res.data.views}, {x: "Likes", y:res.data.likes}, {x: "Comments", y:res.data.comments});
-            let post_analytics = data
-            this.postStatistics = post_analytics
-            // this.$store.dispatch('setPostAnalytics', {post_analytics})
-            // console.log(data);
-        })
-        .catch((err)=>{
-            console.log(err);
-        })
-    },
-    async getComments(item){
-      console.log(this.item_id);
-    this.comments = ( this.comments === item.id ) ? null : item.id;
-     if (this.comments) {
-        
-        try {
-            let res = await this.$axios.get(`/posts/${item.id}/comments/`)
-            console.log(res);
-          this.commentsList = res.data.results
-        } catch (error) {
-          console.log(error);
-        }
-     }
-     else {
-       this.commentsList = []
-     }
-    },
-    likeComment(item, comment){
-      this.$axios.post(`posts/${item.id}/comments/${comment.id}/like/`)
-      .then((res)=>{
-        console.log(res);
-        this.getComments(item)
-      })
-      .catch((err)=>{
-        console.log(err);
-      })
-    },
-    async postComment(item){
+    shareToFeed(item) {
       let payload = {
-        content: this.valueInput
+        parent_id: item.id,
+      };
+      this.$axios
+        .post("user/", payload)
+        .then((res) => {
+          return res;
+        })
+        .catch((err) => {
+          return err;
+        });
+    },
+    shareWithContent(item) {
+      let payload = {
+        parent_id: item.id,
+      };
+      this.$axios
+        .post("user/", payload)
+        .then((res) => {
+          return res;
+        })
+        .catch((err) => {
+          return err;
+        });
+    },
+    onCopy: function (e) {
+      console.log(e);
+      this.$message({
+        showClose: true,
+        message: "Copied",
+        type: "info",
+      });
+    },
+    onError: function () {
+      console.log("Failed to copy texts");
+    },
+    async getComments(item) {
+      this.comments = this.comments === item.id ? null : item.id;
+      console.log(this.comments);
+      if (this.comments) {
+        this.$store.dispatch("user/viewComments", item.id);
       }
-      try {
-        let res = await this.$axios.post(`posts/${item.id}/comments/`, payload)
-        console.log(res);
-        this.getPosts()
-        this.getComments(item)
-      } catch (error) {
-        console.log(error);
-      }
-      this.valueInput = ""
+    },
+
+    likeComment(item, comment) {
+      let payload = {
+        post_id: item.id,
+        comment_id: comment.id,
+      };
+      this.$store.dispatch("user/likeComment", payload);
+    },
+    async postComment(item) {
+      let formData = new FormData();
+      formData.append("content", this.valueInput);
+      let payload = {
+        payload: formData,
+        id: item.id,
+      };
+      this.$store.dispatch("user/addComment", payload);
+      this.valueInput = "";
     },
     onSelectEmoji(dataEmoji) {
-        let text = this.valueInput
+      let text = this.valueInput;
       var curPos = document.getElementById("textarea2").selectionStart;
       console.log(curPos);
       let text_to_insert = dataEmoji.data;
-        this.valueInput = text.slice(0, curPos) + text_to_insert + text.slice(curPos)
+      this.valueInput =
+        text.slice(0, curPos) + text_to_insert + text.slice(curPos);
       // Optional
-        this.toogleDialogEmoji();
+      this.toogleDialogEmoji();
     },
-    toogleDialogEmoji(item){
-      this.showDialog = ( this.showDialog === item.id ) ? null : item.id;
+    toogleDialogEmoji(item) {
+      this.showDialog = this.showDialog === item.id ? null : item.id;
     },
     createFidle() {
-      this.loader = true
       let formData = new FormData();
       formData.append("content", this.payload.content);
       formData.append("media", this.payload.media);
       formData.append("_method", "POST");
-      this.$axios
-        .post("posts/", formData)
-        .then((res) => {
-          // this.$router.push("/");
-          console.log(res);
-          
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-        .finally(()=>{
-          this.payload = {}
-          this.closePreview()
-          this.closeVideoPreview()
-          this.getPosts()
-          this.loader = false
-        })
-    },
-    getPosts() {
-      this.loading = true;
-      this.$axios
-        .get("user/posts")
-        .then((res) => {
-          console.log(res.data);
-          this.posts = res.data;
-        })
-        .catch((err) => {
-          console.log(err);
-        })
-        .finally(() => {
-          this.loading = false;
-        });
+      this.$store.dispatch("user/createPost", formData);
+      this.payload = {};
+      this.closePreview();
+      this.closeVideoPreview();
     },
 
-    getUser() {
-      this.$axios
-        .get("auth/users/me")
-        .then((res) => {
-          this.user = res.data;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+    async viewMore() {
+      this.page = this.page + 1;
+      // this.loading = true;
+      try {
+        let res = await this.$axios.get(`/user/feeds?page=${this.page}`);
+        console.log(res.data);
+        let newPosts = res.data.results;
+        for (let i = 0; i < newPosts.length; i++) {
+          this.posts.push(newPosts[i]);
+        }
+      } catch (error) {
+        return error;
+      }
+      // this.loading = false
     },
+    getPost(item) {
+      this.verify = true;
+      this.$store.dispatch("user/singlePost", item.id);
+    },
+
+    goToUser(item) {
+      this.$router.push({
+        name: "fidler-profile",
+        params: { id: item.user.id },
+      });
+    },
+
     showVideoPreview($event) {
       var input = event.target;
       this.videoPreview = true;
@@ -630,69 +663,80 @@ export default {
       console.log(this.payload.media);
       if (e.target.files.length > 0) {
         var src = URL.createObjectURL(e.target.files[0]);
-        this.imgSrc = src;
+        this.imgSrc3 = src;
         this.isActive = false;
         // document.getElementById('message').style.backgroundImage = null;
         // this.payload.color = "";
       }
     },
-     async likePost(item){
-      try {
-        let res = await this.$axios.post(`posts/${item.id}/likes/`)
-        console.log(res);
-      } catch (error) {
-        console.log(error);
-      }
-      this.getPosts()
+    async likePost(item) {
+      this.$store.dispatch("user/likePost", item.id);
     },
-    switchDisabled(){
-      if (this.payload.content !== '' ) {
-        this.disabled = false
+    switchDisabled() {
+      if (this.payload.content !== "") {
+        this.disabled = false;
       }
     },
-    closePreview(){
-      this.imgSrc = "";
+    closePreview() {
       this.imgPreview = false;
     },
-    closeVideoPreview(){
+    closeVideoPreview() {
       this.videoPreview = false;
     },
-    goToPost(item){
-      this.$router.push({name: 'single-fidle', params:{id: item.id}})
-
+    async sharePost(item) {
+      navigator.share({
+        title:
+          "Fidle The worlds first decentralized social network for creators",
+        text: "",
+        url: "https://fidle-desktop/fidle" + item.id,
+      });
     },
   },
   mounted() {
-    this.getPosts();
-    this.getUser();
-    window.addEventListener('load', videoScroll);
-window.addEventListener('scroll', videoScroll);
+    window.addEventListener("load", videoScroll);
+    window.addEventListener("scroll", videoScroll);
 
-function videoScroll() {
+    function videoScroll() {
+      if (document.querySelectorAll("video[autoplay]").length > 0) {
+        var windowHeight = window.innerHeight,
+          videoEl = document.querySelectorAll("video[autoplay]");
 
-  if ( document.querySelectorAll('video[autoplay]').length > 0) {
-    var windowHeight = window.innerHeight,
-        videoEl = document.querySelectorAll('video[autoplay]');
+        for (var i = 0; i < videoEl.length; i++) {
+          var thisVideoEl = videoEl[i],
+            videoHeight = thisVideoEl.clientHeight,
+            videoClientRect = thisVideoEl.getBoundingClientRect().top;
 
-    for (var i = 0; i < videoEl.length; i++) {
-
-      var thisVideoEl = videoEl[i],
-          videoHeight = thisVideoEl.clientHeight,
-          videoClientRect = thisVideoEl.getBoundingClientRect().top;
-
-      if ( videoClientRect <= ( (windowHeight) - (videoHeight*.5) ) && videoClientRect >= ( 0 - ( videoHeight*.5 ) ) ) {
-        thisVideoEl.play();
-      } else {
-        thisVideoEl.pause();
+          if (
+            videoClientRect <= windowHeight - videoHeight * 0.5 &&
+            videoClientRect >= 0 - videoHeight * 0.5
+          ) {
+            thisVideoEl.play();
+          } else {
+            thisVideoEl.pause();
+          }
+        }
       }
     }
-  }
-}
   },
   created() {},
+  beforeMount() {
+    this.$store.dispatch("user/allPosts");
+  },
   computed: {
     emojisNative() {
       return packEmoji;
+    },
+    user() {
+      return this.$store.getters["auth/getUser"];
+    },
+    posts() {
+      return this.$store.getters["user/allPosts"];
+    },
+    commentsList() {
+      return this.$store.getters["user/allComments"];
+    },
+    post() {
+      return this.$store.getters["user/getSinglePost"];
     },
   },
 };

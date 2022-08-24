@@ -42,7 +42,7 @@ export default {
         
     },
     beforeMount() {
-      this.$store.dispatch('auth/getCountries')
+      this.$store.dispatch('extras/listCountries')
     }
     
 }

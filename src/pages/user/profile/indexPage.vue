@@ -3,7 +3,7 @@
         <div class="profile">
             <div class="row">
                 <div class="col-md-9">
-                <MainProfile/>
+                <router-view/>
             </div>
             <div class="col-md-3">
                 <RightSide/>
@@ -15,8 +15,8 @@
 
 <script>
 import RightSide from './rightSide.vue';
-import MainProfile from './mainProfile.vue';
+// import MainProfile from './mainProfile.vue';
 export default {
-    components: { RightSide, MainProfile }
+    components: { RightSide }
 }
 </script>

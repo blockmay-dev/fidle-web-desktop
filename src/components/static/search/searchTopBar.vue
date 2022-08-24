@@ -59,37 +59,25 @@ export default {
     },
     data(){
         return {
-            posts_count: '',
-            users_count: ''
+            // posts_count: '',
         }
     },
     methods: {
-        getPosts() {
+    },
+    beforeMount(){
       let searchItem =  this.$route.query.q
       console.log(searchItem);
-      this.$axios
-        .get("user/feeds?search="+searchItem)
-        .then((res) => {
-          console.log(res.data);
-          this.posts_count = res.data.count
-          console.log(this.posts_count);
-        })
+      this.$store.dispatch("extras/searchUsers", searchItem)
+      this.$store.dispatch("posts/searchPosts", searchItem)
+
     },
-     getUsers() {
-      let searchItem =  this.$route.query.q
-      console.log(searchItem);
-      this.$axios
-        .get("users?search="+searchItem)
-        .then((res) => {
-          console.log(res.data);
-          this.users_count = res.data.count
-          console.log(this.users_count);
-        })
-    },
-    },
-    mounted(){
-        this.getPosts();
-        this.getUsers();
+    computed: {
+      users_count(){
+        return this.$store.getters["extras/getUserResult"].count
+      },
+      posts_count(){
+        return this.$store.getters["posts/postsSearchResult"].length
+      }
     }
 }
 </script>
