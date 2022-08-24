@@ -28,7 +28,7 @@
           </div>
         </div>
         <div
-          v-if="user.current_profile_image"
+          v-if="user.current_profile_image.media"
           :style="{
             backgroundImage: `url(${user.current_profile_image.media.file})`,
           }"

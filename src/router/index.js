@@ -9,17 +9,17 @@ Vue.use(VueRouter)
 const routes = [{
         path: '/',
         name: 'sign-in',
-        beforeEnter(to, from, next) {
-            var loggedIn;
-            loggedIn = store.getters.isLoggedIn
-            if (loggedIn) {
-                next({
-                    name: "feeds",
-                });
-            } else {
-                next();
-            }
-        },
+        // beforeEnter(to, from, next) {
+        //     var loggedIn;
+        //     loggedIn = store.getters.isLoggedIn
+        //     if (loggedIn) {
+        //         next({
+        //             name: "feeds",
+        //         });
+        //     } else {
+        //         next();
+        //     }
+        // },
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
@@ -29,17 +29,17 @@ const routes = [{
     {
         path: '/sign-up',
         name: 'sign-up',
-        beforeEnter(to, from, next) {
-            var loggedIn;
-            loggedIn = store.getters.isLoggedIn
-            if (loggedIn) {
-                next({
-                    name: "feeds",
-                });
-            } else {
-                next();
-            }
-        },
+        // beforeEnter(to, from, next) {
+        //     var loggedIn;
+        //     loggedIn = store.getters.isLoggedIn
+        //     if (loggedIn) {
+        //         next({
+        //             name: "feeds",
+        //         });
+        //     } else {
+        //         next();
+        //     }
+        // },
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
@@ -72,7 +72,6 @@ const routes = [{
             loggedIn = store.getters.isLoggedIn
             if (loggedIn) {
                 next();
-
             } else {
 
                 next({
@@ -158,9 +157,7 @@ const routes = [{
             loggedIn = store.getters.isLoggedIn
             if (loggedIn) {
                 next();
-
             } else {
-
                 next({
                     name: "sign-in",
                     query: { redirectFrom: to.fullPath },
