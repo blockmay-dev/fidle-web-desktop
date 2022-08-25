@@ -209,9 +209,9 @@
                       </div>
                     </div>
                     <div class="d-flex align-items-center" style="gap:20px">
-                      <div v-if="item.is_nft">
+                      <!-- <div v-if="item.is_nft">
                         <span class="is--nft"> NFT </span>
-                      </div>
+                      </div> -->
                       <div class="dropleft">
                         <span
                           role="button"

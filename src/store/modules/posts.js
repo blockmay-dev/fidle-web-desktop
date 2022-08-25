@@ -76,6 +76,23 @@ export default {
     actions: {
         // Get All Posts 
         allPosts({ commit }) {
+            commit('SET_LOADING')
+            request().get('/user/feeds')
+                .then((res) => {
+                    console.log(res);
+                    commit('SET_POSTS', res.data.results);
+                })
+                .catch((err) => {
+                    commit('SET_ERRORS', err.response.data);
+                })
+                .finally(() => {
+                    commit('END_LOADING')
+
+                })
+        },
+
+        // Get All Posts 
+        updatePosts({ commit }) {
             // commit('SET_LOADING')
             request().get('/user/feeds')
                 .then((res) => {
@@ -163,7 +180,7 @@ export default {
                             y: 10 // vertical axis - can be a number or a string indicating unity. eg: '2em'
                         },
                     }).showToast();
-                    dispatch("allPosts")
+                    dispatch("updatePosts")
                 })
                 .catch((err) => {
                     console.log(err);
@@ -193,7 +210,7 @@ export default {
                             y: 10 // vertical axis - can be a number or a string indicating unity. eg: '2em'
                         },
                     }).showToast();
-                    dispatch('allPosts')
+                    dispatch('updatePosts')
                 })
                 .catch((err) => {
                     console.log(err);
@@ -221,7 +238,7 @@ export default {
                             y: 10 // vertical axis - can be a number or a string indicating unity. eg: '2em'
                         },
                     }).showToast();
-                    dispatch("allPosts")
+                    dispatch("updatePosts")
                 })
                 .catch((err) => {
                     console.log(err);
@@ -253,7 +270,7 @@ export default {
                             y: 10 // vertical axis - can be a number or a string indicating unity. eg: '2em'
                         },
                     }).showToast();
-                    dispatch("allPosts")
+                    dispatch("updatePosts")
                 })
                 .catch((err) => {
                     console.log(err);
@@ -285,7 +302,7 @@ export default {
                             y: 10 // vertical axis - can be a number or a string indicating unity. eg: '2em'
                         },
                     }).showToast();
-                    dispatch("allPosts")
+                    dispatch("updatePosts")
                 })
                 .catch((err) => {
                     console.log(err);
@@ -332,7 +349,7 @@ export default {
                             y: 10 // vertical axis - can be a number or a string indicating unity. eg: '2em'
                         },
                     }).showToast();
-                    dispatch('allPosts')
+                    dispatch('updatePosts')
                     dispatch("viewComments", id)
                 })
                 .catch((err) => {
@@ -391,7 +408,7 @@ export default {
                             y: 10 // vertical axis - can be a number or a string indicating unity. eg: '2em'
                         },
                     }).showToast();
-                    dispatch("allPosts")
+                    dispatch("updatePosts")
                 })
                 .catch((err) => {
                     commit('SET_ERRORS', err.response.data);
