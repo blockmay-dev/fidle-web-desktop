@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="messenger">
+    <div class="messenger pb-4">
       <div>
         <div class="d-flex" style="gap: 18px">
           <!-- Chat Listing area  -->

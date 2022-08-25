@@ -86,7 +86,6 @@ export default {
       showDialog: false,
       activeName: "first",
       unread: {},
-      messages: [],
       sender: "",
       chat_box: false,
       message: [],
@@ -115,49 +114,25 @@ export default {
       // Optional
       this.toogleDialogEmoji();
     },
-    sendMessage() {
-      let payload = {
-        text: this.valueInput,
-      };
-      this.$axios
-        .post(`/chat/${this.sender_username}/send/`, payload)
-        .then((res) => {
-          this.text = "";
-           return res
-        })
-        .catch((err) => {
-          return err;
-        })
-        .finally(() => {
-          this.valueInput = "";
-        });
-    },
+    
     closeChat() {
       this.chat_box = false;
     },
-    getMessages() {
-      this.$axios
-        .get("chat")
-        .then((res) => {
-          console.log(res.data.results);
-          this.messages = res.data.results;
-        })
-        .catch((err) => {
-          return err;
-        });
-    },
     goToMessage(item) {
-        this.$router.push(`/messenger/${item.participants[1].id}`)
+        this.$router.push(`/message/m/${item.participants[1].id}`)
+        this.$store.dispatch("messages/getSingleMessage", item.participants[1].username);
     },
   },
-  mounted() {
-    this.getMessages();
+  beforeMount(){
+     this.$store.dispatch("messages/allMessages");
   },
   created() {
     // Create WebSocket connection.
+    let token;
+    token = localStorage.getItem("token");
     const socket = new WebSocket(
       "wss://api.fidle.io/websocket/?token=" +
-        this.$store.getters.isAuthenticated
+        token
     );
     console.log(socket);
     // Listen for messages
@@ -167,10 +142,12 @@ export default {
       console.log(event.data);
     });
   },
-  updated() {
-    this.goToMessage();
-    this.getMessages()
+
+  computed:{
+    messages() {
+      return this.$store.getters["messages/allMessages"];
   },
+  }
   
 };
 </script>

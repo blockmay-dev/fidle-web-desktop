@@ -210,12 +210,13 @@ export default {
     },
 
     sendMessage() {
-      let formData = new FormData();
-      formData.append("text", this.payload.valueInput);
+      // let formData = new FormData();
+      // formData.append("text", this.payload.valueInput);
       let payload = {
-        payload: formData,
+        data: this.payload.valueInput,
         sender_username: this.$store.getters["fidler/getFidler"].username,
       };
+      console.log(payload);
       this.$store.dispatch("messages/sendMessage", payload);
     },
     closeChat() {

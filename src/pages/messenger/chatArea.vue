@@ -13,14 +13,14 @@
             <img v-else src="@/assets/img/no_user.png" alt="" />
           </div>
         </div>
-        <div class="name" v-if="user.name"> {{ user.name }} </div>
+        <div class="name text-capitalize" v-if="user.name"> {{ user.name }} </div>
         <div class="name" v-else>Fidle User</div>
         <small class="text-secondary"> @{{ user.username }} </small>
         <div class="seen"></div>
       </div>
       <div class="messages" id="chat">
          <div class="userData text-center">
-          <h5> {{ user.name }} <small class="text-secondary"> @{{ user.username }} </small> </h5> 
+          <h5 class="text-capitalize"> {{ user.name }} <small class="text-secondary"> @{{ user.username }} </small> </h5> 
           <p class="small"> {{ user.bio }} </p>
       </div>
       <hr>
@@ -111,16 +111,12 @@ export default {
       showDialog: false,
       activeName: "first",
       unread: {},
-      messages: [],
       sender: "",
       chat_box: false,
-      message: [],
-      sender_username: "",
       valueInput: "",
       on_chat: false,
       isActive: false,
       id: this.$route.params.id,
-      user: {},
     };
   },
   methods: {
@@ -145,70 +141,53 @@ export default {
       console.log(tab, event);
     },
     sendMessage() {
+      // let formData = new FormData();
+      // formData.append("text", this.payload.valueInput);
       let payload = {
-        text: this.valueInput,
+        data: this.valueInput,
+        sender_username: this.$store.getters["fidler/getFidler"].username,
       };
-      this.$axios
-        .post(`/chat/${this.user.username}/send/`, payload)
-        .then((res) => {
-          this.text = "";
-          return res;
-        })
-        .catch((err) => {
-          return err;
-        })
-        .finally(() => {
-          this.valueInput = "";
-        });
+      console.log(payload);
+      this.$store.dispatch("messages/sendMessage", payload);
+      this.valueInput = ""
+      // let payload = {
+      //   text: this.valueInput,
+      // };
+      // this.$axios
+      //   .post(`/chat/${this.user.username}/send/`, payload)
+      //   .then((res) => {
+      //     this.text = "";
+      //     return res;
+      //   })
+      //   .catch((err) => {
+      //     return err;
+      //   })
+      //   .finally(() => {
+      //     this.valueInput = "";
+      //   });
     },
     closeChat() {
       this.chat_box = false;
     },
-    getMessages() {
-      this.$axios
-        .get("chat")
-        .then((res) => {
-          this.messages = res.data.results;
-        })
-        .catch((err) => {
-          return err;
-        });
-    },
-    getMessageSender() {
-      this.$axios
-        .get("users/" + this.id + "/")
-        .then((res) => {
-          this.user = res.data;
-        })
-        .catch((err) => {
-          return err;
-        });
-    },
+    
     getMyMessage() {
-      this.$axios
-        .get(`/chat/${this.user.username}/`)
-        .then((res) => {
-          // console.log(res.data.results);
-          let messages = res.data.results;
-          this.message = messages.sort(
-            (a, b) => a.date_created - b.date_created
-          );
-        })
-        .catch((err) => {
-          return err;
-        });
+      // let sender_username = sender_username
+      // this.$store.dispatch("messages/getSingleMessage", this.sender_username);
     },
   },
   mounted() {
-    this.getMessages();
-    this.getMyMessage();
-    this.getMessageSender();
+    // this.getMyMessage()
+  },
+  beforeMount(){
+    this.$store.dispatch("fidler/getFidler", this.id);
   },
   created() {
     // Create WebSocket connection.
+    let token;
+    token = localStorage.getItem("token");
     const socket = new WebSocket(
       "wss://api.fidle.io/websocket/?token=" +
-        this.$store.getters.isAuthenticated
+        token
     );
     console.log(socket);
     // Listen for messages
@@ -218,15 +197,22 @@ export default {
       console.log(event.data);
     });
   },
-  updated() {
-    this.getMyMessage();
-  },
   computed: {
     emojisNative() {
       return packEmoji;
     },
     getUser() {
-      return this.$store.getters.getUser;
+      return this.$store.getters['auth/getUser'];
+    },
+    user(){
+      return this.$store.getters['fidler/getFidler']
+    },
+    message() {
+      let message = this.$store.getters["messages/singleMessage"];
+      return message;
+    },
+    sender_username() {
+      return this.$store.getters["fidler/getFidler"].username;
     },
   },
 };

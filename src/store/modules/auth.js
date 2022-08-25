@@ -152,6 +152,43 @@ export default {
                     commit('END_LOADING')
                 })
         },
+
+        // Underground Login in registration
+        userRegistrationLogin({ commit, dispatch }, payload) {
+            request().post('/auth/token/login', payload)
+                .then((res) => {
+                    console.log(res);
+                    commit('SET_TOKEN', res.data.auth_token);
+                    commit('SET_USER', res.data.user);
+                    let token = res.data.auth_token;
+                    localStorage.setItem('token', token)
+                    localStorage.setItem('loggedIn', true)
+                    let loggedIn = true
+                    commit('SET_LOGGED_IN', loggedIn)
+                    console.log(res);
+                    Toastify({
+                        text: `Hello, ${res.data.user.username}`,
+                        className: "info",
+                        style: {
+                            background: "#333",
+                            fontSize: "15px",
+                            borderRadius: "5px",
+                            padding: "10px 20px"
+                        },
+                        offset: {
+                            x: 50, // horizontal axis - can be a number or a string indicating unity. eg: '2em'
+                            y: 10 // vertical axis - can be a number or a string indicating unity. eg: '2em'
+                        },
+                    }).showToast();
+                })
+                .catch((err) => {
+                    commit('SET_ERRORS', err.response.data);
+                })
+                .finally(() => {
+                    dispatch('setUser')
+                })
+        },
+
         userRegister({ commit }, payload) {
             commit('SET_LOADING')
             request().post('/auth/signup', payload)

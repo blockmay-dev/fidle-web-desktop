@@ -55,6 +55,18 @@ const routes = [{
             },
             {
                 path: '/sign-up/complete-profile',
+                async beforeEnter(to, from, next) {
+                    var loggedIn
+                    loggedIn = localStorage.getItem("loggedIn")
+                    if (!loggedIn) {
+                        next({
+                            path: "/sign-up",
+                            query: { redirectFrom: to.fullPath },
+                        });
+                    } else {
+                        next();
+                    }
+                },
                 // route level code-splitting
                 // this generates a separate chunk (about.[hash].js) for this route
                 // which is lazy-loaded when the route is visited.
@@ -273,7 +285,7 @@ const routes = [{
             },
 
             {
-                path: '/messenger',
+                path: '/message/m/',
                 name: 'messenger',
                 // route level code-splitting
                 // this generates a separate chunk (about.[hash].js) for this route
@@ -281,7 +293,7 @@ const routes = [{
                 component: () =>
                     import ( /* webpackChunkName: "about" */ '../pages/messenger/indexView.vue'),
                 children: [{
-                        path: '/messenger',
+                        path: '/message/m/',
                         // route level code-splitting
                         // this generates a separate chunk (about.[hash].js) for this route
                         // which is lazy-loaded when the route is visited.
@@ -289,7 +301,7 @@ const routes = [{
                             import ( /* webpackChunkName: "about" */ '../pages/messenger/noChat.vue')
                     },
                     {
-                        path: '/messenger/:id',
+                        path: '/message/m/:id',
                         name: 'single-message',
                         // route level code-splitting
                         // this generates a separate chunk (about.[hash].js) for this route

@@ -125,7 +125,6 @@ export default {
       this.signupLoader = true
       this.$http.post('/auth/users/', this.payload)
       .then((res)=>{
-        this.backgroundLogin();
         return res
       })
       .catch((err)=>{
@@ -134,6 +133,7 @@ export default {
       })
       .finally(()=>{
         this.signupLoader = false
+        this.backgroundLogin();
         this.$router.push('/sign-up/complete-profile')
       })
     },
@@ -142,7 +142,7 @@ export default {
         username: this.payload.username,
         password: this.payload.password
       }
-      this.$store.dispatch("auth/userLogin", credentials)
+      this.$store.dispatch("auth/userRegistrationLogin", credentials)
     }
   },
   mounted(){
