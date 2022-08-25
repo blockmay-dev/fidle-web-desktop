@@ -309,7 +309,7 @@ const routes = [{
                 ]
             },
             {
-                path: '/fidler/:id',
+                path: '/fidler',
                 name: 'fidler-profile',
                 // route level code-splitting
                 // this generates a separate chunk (about.[hash].js) for this route
