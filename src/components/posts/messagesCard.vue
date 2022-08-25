@@ -90,7 +90,7 @@ export default {
     },
 
     goToMessages() {
-      this.$router.push("/messenger");
+      this.$router.push("/message/m");
     },
   },
   beforeMount() {

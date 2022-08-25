@@ -117,6 +117,7 @@ export default {
       on_chat: false,
       isActive: false,
       id: this.$route.params.id,
+      // message: []
     };
   },
   methods: {
@@ -171,12 +172,11 @@ export default {
     },
     
     getMyMessage() {
-      // let sender_username = sender_username
-      // this.$store.dispatch("messages/getSingleMessage", this.sender_username);
+      this.$store.dispatch("messages/getSingleMessage", this.sender_username);
     },
   },
   mounted() {
-    // this.getMyMessage()
+    
   },
   beforeMount(){
     this.$store.dispatch("fidler/getFidler", this.id);
@@ -196,6 +196,10 @@ export default {
       this.unread = event.data.data;
       console.log(event.data);
     });
+  },
+  updated(){
+      // this.message = this.$store.getters["messages/singleMessage"];
+      // this.getMyMessage()
   },
   computed: {
     emojisNative() {

@@ -16,7 +16,7 @@
                     </router-link>
                 </li>
                 <li>
-                    <router-link to="/message">
+                    <router-link to="/message/m">
                         <span> <IconComponent icon="mdi:android-messages" /> </span>
                         <span>Messages</span>
                     </router-link>

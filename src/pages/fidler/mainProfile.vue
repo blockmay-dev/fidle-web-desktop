@@ -76,6 +76,7 @@
                 class="user-profile-action d-flex align-items-center"
                 style="gap: 3px"
                 role="button"
+                @click="sendMessage"
               >
                 <span>
                   <i
@@ -194,6 +195,12 @@ export default {
     closeDialogModal(){
       this.dialogTableVisible = false
     },
+    sendMessage(){
+      var query = this.$route.query.fidler_id;
+      this.$router.push(`/message/m/${query}`)
+      var user = this.$route.query.fidler_username;
+      this.$store.dispatch("messages/getSingleMessage", user);
+    }
   },
   beforeMount() {
       var query = this.$route.query.fidler_id

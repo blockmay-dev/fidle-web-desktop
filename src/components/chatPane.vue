@@ -218,6 +218,7 @@ export default {
       };
       console.log(payload);
       this.$store.dispatch("messages/sendMessage", payload);
+      this.payload.valueInput = ""
     },
     closeChat() {
       this.$emit("close");
