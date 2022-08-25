@@ -169,30 +169,20 @@ import MediaViewVue from "../../components/user/fidler/mediaView.vue";
 export default {
   data() {
     return {
-      id: this.$route.params.id,
       followLoading: false,
     };
   },
   methods: {
     followUser() {
-      var query = this.$route.query.fidler;
-      if (query !== "") {
+      var query = this.$route.query.fidler_id;
         this.$store.dispatch("fidler/followUser", query);
         this.$store.dispatch("suggestions/allSuggestions");
-      } else {
-        this.$store.dispatch("fidler/followUser", this.id);
-      }
     },
   },
   beforeMount() {
-    var query = this.$route.query.fidler;
-    if (query !== "") {
+      var query = this.$route.query.fidler_id
       this.$store.dispatch("fidler/getFidler", query);
       this.$store.dispatch("fidler/getFollowers", query);
-    } else {
-      this.$store.dispatch("fidler/getFidler", this.id);
-      this.$store.dispatch("fidler/getFollowers", this.id);
-    }
   },
   components: { UserConnectsVue, PostViewVue, MediaViewVue },
   computed: {

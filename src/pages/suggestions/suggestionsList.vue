@@ -80,7 +80,7 @@ export default {
     goToUser(suggestion) {
       this.$router.push({
         name: "suggestions",
-        query: { fidler: suggestion.id },
+        query: { fidler_username: suggestion.username, fidler_id: suggestion.id},
       });
     },
 

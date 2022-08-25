@@ -53,7 +53,10 @@ export default {
       this.$router.push('/suggestions')
     },
     goToUser(suggestion){
-        this.$router.push({name: 'fidler-profile', params:{id: suggestion.id}})
+        this.$router.push({
+        name: "fidler-profile",
+        query: { fidler_username: suggestion.username, fidler_id: suggestion.id}
+      });
       },
     followUser(suggestion) {
         this.$store.dispatch("suggestions/followUser", suggestion.id)

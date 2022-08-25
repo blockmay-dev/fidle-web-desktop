@@ -75,26 +75,23 @@ export default {
   },
   methods: {
         goToFollower(follower){
-        this.$router.push({name: 'fidler-profile', params:{id: follower.id}})
+        this.$router.push({
+        name: "fidler-profile",
+        query: { fidler_username: follower.username, fidler_id: follower.id}
+      });
       },
       goToUser(following){
-        this.$router.push({name: 'fidler-profile', params:{id: following.id}})
+       this.$router.push({
+        name: "fidler-profile",
+        query: { fidler_username: following.username, fidler_id: following.id}
+      });
+        this.$store.dispatch('fidler/allPosts', following.id)
       },
   },
   beforeMount(){
-    // this.$store.dispatch("user/getFollowers", this.id)
-    // this.$store.dispatch("user/getFollowing", this.id)
-    var query = this.$route.query.fidler 
-      if (query !== '' ) {
-        // this.$store.dispatch('fidler/getFidler', query)
+        var query = this.$route.query.fidler 
         this.$store.dispatch("user/getFollowers", query)
-    this.$store.dispatch("user/getFollowing", query)
-      }
-      else{
-        // this.$store.dispatch('fidler/getFidler', this.id)
-        this.$store.dispatch("user/getFollowers", this.id)
-    this.$store.dispatch("user/getFollowing", this.id)
-      }
+        this.$store.dispatch("user/getFollowing", query)
   },
   computed:{
     followers(){

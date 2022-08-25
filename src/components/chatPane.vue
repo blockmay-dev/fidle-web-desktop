@@ -115,7 +115,7 @@
               type="textarea"
               :autosize="{ minRows: 2, maxRows: 4 }"
               placeholder="Write your Message"
-              v-model="valueInput"
+              v-model="payload.valueInput"
             >
             </el-input>
             <div class="d-flex justify-content-between" style="gap: 5px">
@@ -175,7 +175,6 @@ export default {
   components: {
     VEmojiPicker,
   },
-  props: ["sender_username"],
   data() {
     return {
       timeRange,
@@ -184,7 +183,9 @@ export default {
       colorSplit,
       timeStamp,
       formatTime,
-      valueInput: "",
+      payload:{
+        valueInput: "",
+      },
       showDialog: false,
       message_sender: {},
       sender_name: "",
@@ -194,24 +195,23 @@ export default {
   },
   methods: {
     selectEmoji(emoji) {
-      this.valueInput += emoji.data;
+      this.payload.valueInput += emoji.data;
     },
     toogleDialogEmoji() {
       this.showDialog = !this.showDialog;
     },
     onSelectEmoji(dataEmoji) {
-      let text = this.valueInput;
+      let text = this.payload.valueInput;
       var curPos = document.getElementById("textarea").selectionStart;
       let text_to_insert = dataEmoji.data;
-      this.valueInput =
-        text.slice(0, curPos) + text_to_insert + text.slice(curPos);
+      this.payload.valueInput = text.slice(0, curPos) + text_to_insert + text.slice(curPos);
       // Optional
       this.toogleDialogEmoji();
     },
 
     sendMessage() {
       let formData = new FormData();
-      formData.append("text", this.valueInput);
+      formData.append("text", this.payload.valueInput);
       let payload = {
         payload: formData,
         sender_username: this.$store.getters["fidler/getFidler"].username,
@@ -250,6 +250,9 @@ export default {
     },
     fidler() {
       return this.$store.getters["fidler/getFidler"];
+    },
+    sender_username() {
+      return this.$store.getters["fidler/getFidler"].username;
     },
   },
 };

@@ -45,7 +45,12 @@ export default {
   },
   methods: {
     goToUser(user){
-      this.$router.push({name: 'fidler-profile', params:{id: user.id}})
+      this.$router.push({
+        name: "fidler-profile",
+        query: { fidler_username: user.username, fidler_id: user.id}
+      });
+      this.$store.dispatch('fidler/allPosts', user.id)
+      this.$store.dispatch("fidler/getFidler", user.id);
     },
   },
   computed:{

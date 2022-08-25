@@ -714,7 +714,10 @@ export default {
     },
     
     goToUser(item){
-      this.$router.push({name: 'fidler-profile', params:{id: item.user.id}})
+      this.$router.push({
+        name: "fidler-profile",
+        query: { fidler_username: item.user.username, fidler_id: item.user.id}
+      });
     },
     savePost(item) {
       this.$store.dispatch("posts/savePost", item.id)
@@ -761,13 +764,8 @@ function videoScroll() {
 }
   },
   beforeMount(){
-    var query = this.$route.query.fidler 
-      if (query !== '' ) {
+    var query = this.$route.query.fidler_id
         this.$store.dispatch('fidler/allPosts', query)
-      }
-      else{
-        this.$store.dispatch('fidler/allPosts', this.id)
-      }
   },
   computed: {
     emojisNative() {

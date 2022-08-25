@@ -743,7 +743,7 @@ export default {
     goToUser() {
       this.$router.push({
         name: "fidler-profile",
-        params: { id: this.item.user.id },
+        query: { fidler_username: this.item.user.username, fidler_id: this.item.user.id}
       });
     },
 
