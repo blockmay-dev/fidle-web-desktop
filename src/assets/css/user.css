@@ -1160,3 +1160,21 @@
     font-size: 12px;
     width: max-content;
 }
+
+.view--user_photo .el-dialog {
+    background: transparent;
+    box-shadow: unset;
+    text-align: center;
+    height: 500px;
+    overflow-y: auto;
+}
+
+.view--user_photo .el-dialog__headerbtn .el-dialog__close {
+    color: #fff;
+    font-weight: bold;
+    font-size: 30px;
+}
+
+.view--profile_image img {
+    width: 100%;
+}

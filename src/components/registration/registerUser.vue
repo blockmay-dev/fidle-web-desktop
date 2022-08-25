@@ -79,7 +79,12 @@
         </div>
        
         <div class="mt-3">
-          <button>Next</button>
+           <div class="d-flex justify-content-center" v-if="signupLoader">
+            <div class="spinner-border" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </div>
+          <button v-else>Next</button>
         </div>
       </form>
     </div>
@@ -102,7 +107,8 @@ export default {
           email: '',
           referral_code: ""
         },
-        errMessages: {}
+        errMessages: {},
+        signupLoader: false
       }
   },
   methods: {
@@ -116,16 +122,19 @@ export default {
       }
     },
     goToNext() {
+      this.signupLoader = true
       this.$http.post('/auth/users/', this.payload)
       .then((res)=>{
         this.backgroundLogin();
-        this.$router.push('/sign-up/complete-profile')
-        this.payload = {}
         return res
       })
       .catch((err)=>{
         console.log(err.response.data);
         this.errMessages = err.response.data
+      })
+      .finally(()=>{
+        this.signupLoader = false
+        this.$router.push('/sign-up/complete-profile')
       })
     },
     backgroundLogin(){
@@ -139,6 +148,9 @@ export default {
   mounted(){
     let code = this.$route.query.referral_code;
     this.payload.referral_code = code;
+  },
+  computed:{
+
   }
 };
 </script>

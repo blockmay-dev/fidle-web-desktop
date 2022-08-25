@@ -18,7 +18,7 @@
         </div>
       </div>
       <div class="user-content d-flex" style="gap: 30px">
-        <div class="profile--photo">
+        <div class="profile--photo" role="button" @click="dialogTableVisible = true">
           <img
             v-if="user.current_profile_image"
             :src="user.current_profile_image.media.file"
@@ -159,6 +159,17 @@
         </div>
       </div>
     </div>
+
+    <!-- View Profile Photo -->
+  <div class="view--user_photo">
+      <el-dialog
+            title=""
+              :visible.sync="dialogTableVisible"
+              width="40%"
+            >
+            <ViewProfilePhoto @closeModal = closeDialogModal />
+      </el-dialog>
+  </div>
   </div>
 </template>
 
@@ -166,10 +177,12 @@
 import UserConnectsVue from "@/components/user/fidler/userConnects.vue";
 import PostViewVue from "@/components/user/fidler/postView.vue";
 import MediaViewVue from "../../components/user/fidler/mediaView.vue";
+import ViewProfilePhoto from "./viewProfilePhoto.vue";
 export default {
   data() {
     return {
       followLoading: false,
+      dialogTableVisible: false
     };
   },
   methods: {
@@ -178,13 +191,16 @@ export default {
         this.$store.dispatch("fidler/followUser", query);
         this.$store.dispatch("suggestions/allSuggestions");
     },
+    closeDialogModal(){
+      this.dialogTableVisible = false
+    },
   },
   beforeMount() {
       var query = this.$route.query.fidler_id
       this.$store.dispatch("fidler/getFidler", query);
       this.$store.dispatch("fidler/getFollowers", query);
   },
-  components: { UserConnectsVue, PostViewVue, MediaViewVue },
+  components: { UserConnectsVue, PostViewVue, MediaViewVue, ViewProfilePhoto },
   computed: {
     user() {
       return this.$store.getters["fidler/getFidler"];

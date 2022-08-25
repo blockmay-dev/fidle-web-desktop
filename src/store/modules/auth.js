@@ -15,7 +15,8 @@ const getDefaultState = () => {
         user: {},
         loggedIn: false,
         loading: false,
-        errors: []
+        errors: [],
+        update_loading: false
     };
 };
 
@@ -39,6 +40,9 @@ export default {
         },
         isError: state => {
             return state.errors
+        },
+        isUpdateLoading: state => {
+            return state.update_loading
         }
     },
     mutations: {
@@ -53,6 +57,12 @@ export default {
         },
         SET_LOADING: (state) => {
             state.loading = true
+        },
+        SET_UPDATE_LOADING: (state) => {
+            state.update_loading = true
+        },
+        END_UPDATE_LOADING: (state) => {
+            state.update_loading = false
         },
         END_LOADING: (state) => {
             state.loading = false
@@ -177,7 +187,7 @@ export default {
         },
 
         updateUser({ dispatch, commit }, payload) {
-            commit('SET_LOADING')
+            commit('SET_UPDATE_LOADING')
             request().put('auth/users/me/', payload)
                 .then((res) => {
                     Toastify({
@@ -209,7 +219,7 @@ export default {
                     }).showToast();
                 })
                 .finally(() => {
-                    commit('END_LOADING')
+                    commit('END_UPDATE_LOADING')
                     dispatch('setUser')
                 })
 

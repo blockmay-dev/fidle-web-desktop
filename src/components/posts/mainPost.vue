@@ -943,7 +943,6 @@ export default {
     },
 
     goToUser(item) {
-      console.log(this.user);
       if(item.user.id === this.user.id ) {
         this.$router.push('/profile')
       }
@@ -1051,8 +1050,6 @@ export default {
     },
   },
   mounted() {
-    this.viewMore()
-
     window.addEventListener("load", videoScroll);
     window.addEventListener("scroll", videoScroll);
 

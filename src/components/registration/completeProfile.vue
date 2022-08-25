@@ -158,7 +158,7 @@ export default {
       return this.$store.getters["extras/lgasList"]
     },
     loading(){
-      return this.$store.getters['auth/isLoading']
+      return this.$store.getters['auth/isUpdateLoading']
     },
     errMessages(){
       return this.$store.getters["auth/isError"]

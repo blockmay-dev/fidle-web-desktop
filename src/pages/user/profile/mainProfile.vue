@@ -22,7 +22,7 @@
         </div>
       </div>
       <div class="user-content d-flex" v-if="user" style="gap: 30px">
-        <div class="profile--photo">
+        <div class="profile--photo" role="button" @click = 'dialogTableVisible = true' >
           <img
             v-if="user.current_profile_image"
             :src="user.current_profile_image.media.file"
@@ -167,15 +167,30 @@
 
   <!-- Edit Profile  -->
   <EditProfile @close="close" v-show="profile"/>
+
+  <!-- View Profile Photo -->
+  <div class="view--user_photo">
+      <el-dialog
+            title=""
+              :visible.sync="dialogTableVisible"
+              width="40%"
+            >
+            <ViewProfilePhoto @closeModal = closeDialogModal />
+      </el-dialog>
+  </div>
+  
+
   </div>
 </template>
 
 <script>
 import EditProfile from '../../../components/user/profile/editProfile.vue';
+import ViewProfilePhoto from './viewProfilePhoto.vue';
 export default {
     data() {
         return {
             profile: false,
+            dialogTableVisible: false
         };
     },
     methods: {
@@ -184,7 +199,10 @@ export default {
       },
         close(){
           this.profile = false
-        }
+        },
+        closeDialogModal(){
+      this.dialogTableVisible = false
+    },
     },
     beforeMount(){
       this.$store.dispatch("user/getFollowers")
@@ -197,6 +215,6 @@ export default {
         return this.$store.getters['user/getFiveFollowers']
       }
     },
-    components: { EditProfile }
+    components: { EditProfile, ViewProfilePhoto }
 };
 </script>

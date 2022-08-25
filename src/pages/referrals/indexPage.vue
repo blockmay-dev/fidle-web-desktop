@@ -184,7 +184,7 @@
         width="40%"
         :before-close="handleClose"
       >
-    <ReferralModal @closeModal = closeDialogModal />
+      <ReferralModal @closeModal = closeDialogModal />
       </el-dialog>
   </div>
 </template>
