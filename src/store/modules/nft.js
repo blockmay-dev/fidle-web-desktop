@@ -62,7 +62,6 @@ export default {
         getCollections({ commit }, id) {
             request().get(`/collections?owner=${id}`, )
                 .then((res) => {
-                    console.log(res);
                     commit('SET_COLLECTIONS', res.data)
                 })
                 .catch((err) => {
@@ -74,7 +73,6 @@ export default {
         getCollectionById({ commit }, id) {
             request().get(`/collections/${id}/nfts`, )
                 .then((res) => {
-                    console.log(res);
                     commit('SET_COLLECTION', res.data)
                 })
                 .catch((err) => {
@@ -102,7 +100,7 @@ export default {
                         },
                     }).showToast();
                     dispatch("getCollections");
-                    console.log(res);
+                    return res
                 })
                 .catch((err) => {
                     return err;
@@ -130,8 +128,8 @@ export default {
                             y: 10 // vertical axis - can be a number or a string indicating unity. eg: '2em'
                         },
                     }).showToast();
-                    console.log(res);
                     commit("SET_SUCCESS")
+                    return res
                 })
                 .catch((err) => {
                     return err;

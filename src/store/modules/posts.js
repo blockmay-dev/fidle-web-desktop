@@ -79,7 +79,6 @@ export default {
             commit('SET_LOADING')
             request().get('/user/feeds')
                 .then((res) => {
-                    console.log(res);
                     commit('SET_POSTS', res.data.results);
                 })
                 .catch((err) => {
@@ -96,7 +95,6 @@ export default {
             // commit('SET_LOADING')
             request().get('/user/feeds')
                 .then((res) => {
-                    console.log(res);
                     commit('SET_POSTS', res.data.results);
                 })
                 .catch((err) => {
@@ -111,7 +109,6 @@ export default {
         searchPosts({ commit }, search_item) {
             request().get(`/user/feeds?search=${search_item}`)
                 .then((res) => {
-                    console.log(res);
                     commit('POSTS_SEARCH_RESULTS', res.data.results);
                 })
                 .catch((err) => {
@@ -126,7 +123,6 @@ export default {
             // commit('SET_LOADING')
             request().get(`/user/feeds?page=${page}`)
                 .then((res) => {
-                    console.log(res);
                     let newPosts = res.data.results;
                     for (let i = 0; i < newPosts.length; i++) {
                         // this.posts.push(newPosts[i]);
@@ -148,7 +144,6 @@ export default {
             commit('SET_LOADING')
             request().get(`posts/${id}`)
                 .then((res) => {
-                    console.log(res);
                     commit('SET_SINGLE_POST', res.data);
                 })
                 .catch((err) => {
@@ -164,7 +159,6 @@ export default {
             // commit('SET_LOADING')
             request().post(`/posts/`, payload)
                 .then((res) => {
-                    console.log(res);
                     Toastify({
                         text: `Post Created Succesfully`,
                         className: "info",
@@ -181,9 +175,10 @@ export default {
                         },
                     }).showToast();
                     dispatch("updatePosts")
+                    return res
                 })
                 .catch((err) => {
-                    console.log(err);
+                    return err;
                 })
                 .finally(() => {
                     // commit('END_LOADING')
@@ -195,7 +190,6 @@ export default {
         likePost({ dispatch }, id) {
             request().post(`posts/${id}/likes/`)
                 .then((res) => {
-                    console.log(res);
                     Toastify({
                         text: `Post Liked`,
                         className: "info",
@@ -211,9 +205,10 @@ export default {
                         },
                     }).showToast();
                     dispatch('updatePosts')
+                    return res
                 })
                 .catch((err) => {
-                    console.log(err);
+                    return err;
                 })
         },
 
@@ -222,7 +217,6 @@ export default {
             // commit('SET_LOADING')
             request().post(`posts/${post_id}/save/`)
                 .then((res) => {
-                    console.log(res);
                     Toastify({
                         text: `Post Saved`,
                         className: "info",
@@ -239,9 +233,10 @@ export default {
                         },
                     }).showToast();
                     dispatch("updatePosts")
+                    return res
                 })
                 .catch((err) => {
-                    console.log(err);
+                    return err;
                 })
                 .finally(() => {
                     // commit('END_LOADING')
@@ -254,7 +249,6 @@ export default {
             // commit('SET_LOADING')
             request().post(`posts/${post_id}/hide/`)
                 .then((res) => {
-                    console.log(res);
                     Toastify({
                         text: `Post Hidden`,
                         className: "info",
@@ -271,9 +265,10 @@ export default {
                         },
                     }).showToast();
                     dispatch("updatePosts")
+                    return res
                 })
                 .catch((err) => {
-                    console.log(err);
+                    return err
                 })
                 .finally(() => {
                     // commit('END_LOADING')
@@ -286,7 +281,6 @@ export default {
             // commit('SET_LOADING')
             request().post(`posts/${post_id}/report-abuse/`, payload)
                 .then((res) => {
-                    console.log(res);
                     Toastify({
                         text: `Post Flagged`,
                         className: "info",
@@ -303,9 +297,10 @@ export default {
                         },
                     }).showToast();
                     dispatch("updatePosts")
+                    return res
                 })
                 .catch((err) => {
-                    console.log(err);
+                    return err
                 })
                 .finally(() => {
                     // commit('END_LOADING')
@@ -318,11 +313,11 @@ export default {
             // commit('SET_LOADING')
             request().get(`/posts/${id}/comments/`)
                 .then((res) => {
-                    console.log(res);
                     commit('ALL_COMMENTS', res.data.results)
+                    return res
                 })
                 .catch((err) => {
-                    console.log(err);
+                    return err
                 })
                 .finally(() => {
                     // commit('END_LOADING')
@@ -333,7 +328,6 @@ export default {
             // commit('SET_LOADING')
             request().post(`/posts/${id}/comments/`, payload)
                 .then((res) => {
-                    console.log(res);
                     Toastify({
                         text: `Comment Posted`,
                         className: "info",
@@ -351,9 +345,10 @@ export default {
                     }).showToast();
                     dispatch('updatePosts')
                     dispatch("viewComments", id)
+                    return res
                 })
                 .catch((err) => {
-                    console.log(err);
+                    return err
                 })
                 .finally(() => {
                     // commit('END_LOADING')
@@ -364,7 +359,6 @@ export default {
             // commit('SET_LOADING')
             request().post(`posts/${post_id}/comments/${comment_id}/like/`)
                 .then((res) => {
-                    console.log(res);
                     Toastify({
                         text: `Comment Liked`,
                         className: "info",
@@ -381,9 +375,10 @@ export default {
                         },
                     }).showToast();
                     dispatch("viewComments", post_id)
+                    return res
                 })
                 .catch((err) => {
-                    console.log(err);
+                    return err
                 })
                 .finally(() => {
                     // commit('END_LOADING')
@@ -393,7 +388,6 @@ export default {
         followUser({ dispatch, commit }, id) {
             request().post(`users/${id}/follow/`)
                 .then((res) => {
-                    console.log(res);
                     Toastify({
                         text: `You are now following ${res.data.following.name}`,
                         className: "info",
@@ -409,6 +403,7 @@ export default {
                         },
                     }).showToast();
                     dispatch("updatePosts")
+                    return res
                 })
                 .catch((err) => {
                     commit('SET_ERRORS', err.response.data);

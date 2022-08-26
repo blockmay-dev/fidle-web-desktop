@@ -91,7 +91,6 @@ export default {
         searchUsers({ commit }, search_item) {
             request().get(`/users?search=${search_item}`)
                 .then((res) => {
-                    console.log(res.data);
                     commit('USER_SEARCH_RESULT', res.data)
                 })
                 .catch((err) => {
@@ -103,7 +102,6 @@ export default {
         listCountries({ commit }) {
             request().get("/locations/countries")
                 .then((res) => {
-                    console.log(res);
                     commit("SET_COUNTRIES", res.data)
                 })
                 .catch((err) => {
@@ -115,7 +113,6 @@ export default {
         listStates({ commit }, selectedCountry) {
             request().get(`locations/countries/${selectedCountry}/states/`)
                 .then((res) => {
-                    console.log(res);
                     commit("SET_STATES", res.data)
                 })
                 .catch((err) => {
@@ -127,7 +124,6 @@ export default {
         listCities({ commit }, selectedState) {
             request().get(`locations/states/${selectedState}/cities/`)
                 .then((res) => {
-                    console.log(res);
                     commit("SET_LGAS", res.data)
                 })
                 .catch((err) => {

@@ -62,7 +62,6 @@ export default {
             // commit('SET_LOADING')
             request().get('/chat')
                 .then((res) => {
-                    console.log(res);
                     commit('SET_MESSAGES', res.data.results);
                 })
                 .catch((err) => {
@@ -78,7 +77,6 @@ export default {
             commit('SET_LOADING')
             request().get(`/chat/${sender_username}/`)
                 .then((res) => {
-                    console.log(res);
                     let message = res.data.results
                     let sortedMessage = message.sort((a, b) => a.date_created - b.date_created);
                     commit('SINGLE_MESSAGE', sortedMessage);
@@ -95,7 +93,6 @@ export default {
         updateSingleMessage({ commit }, sender_username) {
             request().get(`/chat/${sender_username}/`)
                 .then((res) => {
-                    console.log(res);
                     let message = res.data.results
                     let sortedMessage = message.sort((a, b) => a.date_created - b.date_created);
                     commit('SINGLE_MESSAGE', sortedMessage);
@@ -109,13 +106,13 @@ export default {
         sendMessage({ dispatch }, payload) {
             request().post(`/chat/${payload.sender_username}/send/`, { text: payload.data })
                 .then((res) => {
-                    console.log(res);
                     dispatch("allMessages")
-                    dispatch('updateSingleMessage', payload.sender_username)
+                    dispatch('updateSingleMessage', payload.sender_username);
+                    return res
                 })
                 .catch((err) => {
-                    console.log(err);
-                    // commit('SET_ERRORS', err.response.data);
+                    return err
+                        // commit('SET_ERRORS', err.response.data);
                 })
                 .finally(() => {
                     // commit('END_LOADING')

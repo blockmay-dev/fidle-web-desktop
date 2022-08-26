@@ -150,11 +150,9 @@ export default {
                     let fiveFollowers = res.data.results
                     let slicedFollowers = fiveFollowers.slice(0, 5)
                     commit('FIVE_FOLLOWERS', slicedFollowers)
-                    console.log(res.data)
                     return res
                 })
                 .catch((err) => {
-                    console.log(err);
                     commit('SET_ERRORS', err.response.data)
                 })
         },
@@ -164,11 +162,9 @@ export default {
             request().get('/user/following')
                 .then((res) => {
                     commit('SET_FOLLOWING', res.data.results)
-                    console.log(res);
                     return res
                 })
                 .catch((err) => {
-                    console.log(err);
                     commit('SET_ERRORS', err.response.data)
                 })
         },
@@ -178,14 +174,12 @@ export default {
             request().get('/user/posts')
                 .then((res) => {
                     commit('SET_POSTS', res.data)
-                    console.log(res.data)
                     let posts = res.data.results
                     const value = posts.filter((elem) => elem.media.length !== 0);
                     commit('MEDIA_FILES', value)
                     return res
                 })
                 .catch((err) => {
-                    console.log(err);
                     commit('SET_ERRORS', err.response.data)
                 })
         },
@@ -197,7 +191,6 @@ export default {
                     return res
                 })
                 .catch((err) => {
-                    console.log(err);
                     commit('SET_ERRORS', err.response.data)
                 })
         },
@@ -209,7 +202,6 @@ export default {
             // commit('SET_LOADING')
             request().post(`/posts/`, payload)
                 .then((res) => {
-                    console.log(res);
                     Toastify({
                         text: `Post Created Succesfully`,
                         className: "info",
@@ -226,9 +218,10 @@ export default {
                         },
                     }).showToast();
                     dispatch("allPosts")
+                    return res
                 })
                 .catch((err) => {
-                    console.log(err);
+                    return err
                 })
                 .finally(() => {
                     // commit('END_LOADING')
@@ -240,7 +233,6 @@ export default {
         likePost({ dispatch }, id) {
             request().post(`posts/${id}/likes/`)
                 .then((res) => {
-                    console.log(res);
                     Toastify({
                         text: `Post Liked`,
                         className: "info",
@@ -257,9 +249,10 @@ export default {
                     }).showToast();
                     dispatch('allPosts')
                     dispatch('savedPosts')
+                    return res
                 })
                 .catch((err) => {
-                    console.log(err);
+                    return err
                 })
         },
 
@@ -268,11 +261,10 @@ export default {
             // commit('SET_LOADING')
             request().get(`/posts/${id}/comments/`)
                 .then((res) => {
-                    console.log(res);
                     commit('ALL_COMMENTS', res.data.results)
                 })
                 .catch((err) => {
-                    console.log(err);
+                    return err
                 })
                 .finally(() => {
                     // commit('END_LOADING')
@@ -283,7 +275,6 @@ export default {
             // commit('SET_LOADING')
             request().post(`/posts/${id}/comments/`, payload)
                 .then((res) => {
-                    console.log(res);
                     Toastify({
                         text: `Comment Posted`,
                         className: "info",
@@ -302,9 +293,10 @@ export default {
                     dispatch('allPosts')
                     dispatch('savedPosts')
                     dispatch("viewComments", id)
+                    return res
                 })
                 .catch((err) => {
-                    console.log(err);
+                    return err
                 })
                 .finally(() => {
                     // commit('END_LOADING')
@@ -315,7 +307,6 @@ export default {
             // commit('SET_LOADING')
             request().post(`posts/${post_id}/comments/${comment_id}/like/`)
                 .then((res) => {
-                    console.log(res);
                     Toastify({
                         text: `Comment Liked`,
                         className: "info",
@@ -332,9 +323,10 @@ export default {
                         },
                     }).showToast();
                     dispatch("viewComments", post_id)
+                    return res
                 })
                 .catch((err) => {
-                    console.log(err);
+                    return err
                 })
                 .finally(() => {
                     // commit('END_LOADING')
@@ -345,13 +337,12 @@ export default {
         walletBalance({ commit }) {
             request().get('/user/wallet-balances')
                 .then((res) => {
-                    console.log(res);
                     commit('SET_WALLET_BALANCE', res.data.balances);
                     commit('SET_WALLET_ADDRESS', res.data.wallet_address);
                 })
                 .catch((err) => {
                     // commit('SET_ERRORS', err.response.data);
-                    console.log(err);
+                    return err
                 })
         },
 
@@ -359,7 +350,6 @@ export default {
         getTransactions({ commit }, currency) {
             request().get(`user/wallet/transactions/?currency__symbol=${currency}`)
                 .then((res) => {
-                    console.log(res);
                     commit('SET_TRANSACTIONS', res.data.results);
                 })
                 .catch((err) => {
@@ -375,11 +365,10 @@ export default {
             commit("SET_LOADING")
             request().get(`/user/wallet/transactions/${id}`)
                 .then((res) => {
-                    console.log(res);
                     commit("SET_SINGLE_TRANSACTION", res.data)
                 })
                 .catch((err) => {
-                    console.log(err);
+                    return err
                 })
                 .finally(() => {
                     commit("END_LOADING")
@@ -391,7 +380,6 @@ export default {
             // commit('SET_LOADING')
             request().post(`user/wallet/swap/`, payload)
                 .then((res) => {
-                    console.log(res);
                     Toastify({
                         text: `Swap Successful`,
                         className: "info",
@@ -409,9 +397,9 @@ export default {
                     }).showToast();
                     dispatch("walletBalance")
                     dispatch("getTransactions", "")
+                    return res
                 })
                 .catch((err) => {
-                    console.log(err);
                     Toastify({
                         text: `${err.response.data.error}`,
                         className: "info",
@@ -426,6 +414,7 @@ export default {
                             y: 10 // vertical axis - can be a number or a string indicating unity. eg: '2em'
                         },
                     }).showToast();
+                    return err
                 })
                 .finally(() => {
                     // commit('END_LOADING')
@@ -437,7 +426,6 @@ export default {
             commit('SET_LOADING')
             request().post(`user/verify-pin`, pin)
                 .then((res) => {
-                    console.log(res);
                     commit("SET_VERIFICATION")
                     Toastify({
                         text: `Pin verified`,
@@ -453,9 +441,9 @@ export default {
                             y: 10 // vertical axis - can be a number or a string indicating unity. eg: '2em'
                         },
                     }).showToast();
+                    return res
                 })
                 .catch((err) => {
-                    console.log(err.response.data.error);
                     Toastify({
                         text: `${err.response.data.error}`,
                         className: "info",
@@ -483,12 +471,10 @@ export default {
         getReferrals({ commit }) {
             request().get('/user/referrals')
                 .then((res) => {
-                    console.log(res.data);
                     commit('SET_REFERRALS', res.data)
                     return res
                 })
                 .catch((err) => {
-                    console.log(err);
                     commit('SET_ERRORS', err.response.data)
                 })
         },
@@ -497,12 +483,10 @@ export default {
         getReferralStatistics({ commit }) {
             request().get('/user/referrals-statistics')
                 .then((res) => {
-                    console.log(res.data);
                     commit('SET_REFERRALS_STATISTICS', res.data)
                     return res
                 })
                 .catch((err) => {
-                    console.log(err);
                     commit('SET_ERRORS', err.response.data)
                 })
         },
@@ -512,7 +496,6 @@ export default {
             commit('SET_LOADING')
             request().post(`/user/referrals/${id}/claim-reward/`)
                 .then((res) => {
-                    console.log(res);
                     Toastify({
                         text: `Reward Claimed`,
                         className: "info",
@@ -529,9 +512,9 @@ export default {
                     }).showToast();
                     dispatch("getReferralStatistics");
                     dispatch("getReferrals")
+                    return res
                 })
                 .catch((err) => {
-                    console.log(err.response.data.error);
                     Toastify({
                         text: `${err.response.data.error}`,
                         className: "info",

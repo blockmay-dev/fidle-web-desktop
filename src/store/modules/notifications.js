@@ -61,7 +61,6 @@ export default {
             commit('SET_LOADING')
             request().get('/user/notifications')
                 .then((res) => {
-                    console.log(res);
                     commit('SET_NOTIFICATIONS', res.data.results);
                 })
                 .catch((err) => {

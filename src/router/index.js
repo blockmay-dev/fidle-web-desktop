@@ -9,17 +9,17 @@ Vue.use(VueRouter)
 const routes = [{
         path: '/',
         name: 'sign-in',
-        // beforeEnter(to, from, next) {
-        //     var loggedIn;
-        //     loggedIn = store.getters.isLoggedIn
-        //     if (loggedIn) {
-        //         next({
-        //             name: "feeds",
-        //         });
-        //     } else {
-        //         next();
-        //     }
-        // },
+        async beforeEnter(to, from, next) {
+            var loggedIn
+            loggedIn = localStorage.getItem("loggedIn")
+            if (loggedIn) {
+                next({
+                    path: "/feeds",
+                });
+            } else {
+                next();
+            }
+        },
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.

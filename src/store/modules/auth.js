@@ -110,7 +110,6 @@ export default {
             commit('SET_LOADING')
             request().post('/auth/token/login', payload)
                 .then((res) => {
-                    console.log(res);
                     commit('SET_TOKEN', res.data.auth_token);
                     commit('SET_USER', res.data.user);
                     let token = res.data.auth_token;
@@ -118,7 +117,6 @@ export default {
                     localStorage.setItem('loggedIn', true)
                     let loggedIn = true
                     commit('SET_LOGGED_IN', loggedIn)
-                    console.log(res);
                     Toastify({
                         text: `Welcome back, ${res.data.user.username}`,
                         className: "info",
@@ -157,7 +155,6 @@ export default {
         userRegistrationLogin({ commit, dispatch }, payload) {
             request().post('/auth/token/login', payload)
                 .then((res) => {
-                    console.log(res);
                     commit('SET_TOKEN', res.data.auth_token);
                     commit('SET_USER', res.data.user);
                     let token = res.data.auth_token;
@@ -165,7 +162,6 @@ export default {
                     localStorage.setItem('loggedIn', true)
                     let loggedIn = true
                     commit('SET_LOGGED_IN', loggedIn)
-                    console.log(res);
                     Toastify({
                         text: `Hello, ${res.data.user.username}`,
                         className: "info",
@@ -206,7 +202,6 @@ export default {
                     return res
                 })
                 .catch((err) => {
-                    console.log(err);
                     commit('SET_ERRORS', err.response.data)
                     Toastify({
                         text: `Error!`,
@@ -239,12 +234,9 @@ export default {
                     if (window.location.pathname == '/sign-up/complete-profile') {
                         window.location.href = "/follow-to-continue"
                     }
-                    console.log(res);
-                    console.log(window.location)
                     return res
                 })
                 .catch((err) => {
-                    console.log(err);
                     commit('SET_ERRORS', err.response.data)
                     Toastify({
                         text: `Error!`,
@@ -267,11 +259,9 @@ export default {
             request().get('/auth/users/me')
                 .then((res) => {
                     commit('SET_USER', res.data)
-                    console.log(res.data)
                     return res
                 })
                 .catch((err) => {
-                    console.log(err);
                     commit('SET_ERRORS', err.response.data)
                 })
         },

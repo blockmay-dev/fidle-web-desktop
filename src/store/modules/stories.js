@@ -47,7 +47,6 @@ export default {
             commit('SET_DONE')
             request().post(`/user/stories/`, payload)
                 .then((res) => {
-                    console.log(res);
                     Toastify({
                         text: `Story Created Succesfully`,
                         className: "info",
@@ -64,9 +63,10 @@ export default {
                         },
                     }).showToast();
                     dispatch("getStories")
+                    return res
                 })
                 .catch((err) => {
-                    console.log(err);
+                    return err;
                 })
                 .finally(() => {
                     commit('REMOVE_DONE')

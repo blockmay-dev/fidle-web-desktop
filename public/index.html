@@ -14,27 +14,13 @@
     <!-- <title><%= htmlWebpackPlugin.options.title %></title> -->
     <title>Fidle | The world's first decentralized social network for creators </title>
     <script type="text/javascript">
-        // if (window.location.search !== "") {
         if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|OperaMini/i.test(navigator.userAgent)) {
-            //         if (window.location.search.includes("referral_code")) {
-            //             document.location.href = "https://m.fidle.io/r" + window.location.search
-            //         } else {
-            //             document.location.href = "https://m.fidle.io"
-            //         }
-            //     }
-
-            // } else {
-            document.location = "https://m.fidle.io"
+            if (window.location.search !== "") {
+                document.location.href = "https://m.fidle.io/r" + window.location.search
+            } else {
+                document.location.href = "https://m.fidle.io"
+            }
         }
-        // if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|OperaMini/i.test(navigator.userAgent)) {
-        //     alert("phone")
-        // } else {
-        //     console.log(window.location.search);
-        //     if (condition) {
-
-        //     }
-        //     document.location = "https://m.fidle.io"+window.location.search;
-        // }
     </script>
 </head>
 
