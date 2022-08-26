@@ -2,13 +2,21 @@
         height: 85vh;
     }
     
-    .nav--item.active {
+    .settings--page .router-link-exact-active {
         border-right: 3px solid var(--blue-200);
     }
     
-    .nav--item.active h5,
-    .nav--item.active small,
-    .nav--item.active span {
+    .settings--page a {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 0.3rem 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .settings--page .router-link-exact-active h5,
+    .settings--page .router-link-exact-active small,
+    .settings--page .router-link-exact-active span {
         color: var(--blue-200) !important;
     }
     

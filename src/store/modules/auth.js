@@ -101,7 +101,7 @@ export default {
                     return err
                 })
                 .finally(() => {
-                    window.location.href = '/'
+                    window.location = '/'
                 })
 
         },
@@ -133,7 +133,7 @@ export default {
                             y: 10 // vertical axis - can be a number or a string indicating unity. eg: '2em'
                         },
                     }).showToast();
-                    router.replace('/feeds')
+                    router.push('/feeds')
                 })
                 .catch((err) => {
                     commit('SET_ERRORS', err.response.data);
@@ -236,10 +236,11 @@ export default {
                             borderRadius: "5px",
                         }
                     }).showToast();
-                    if (router.path === 'complete-profile') {
-                        router.push("/follow-to-continue")
+                    if (window.location.pathname == '/sign-up/complete-profile') {
+                        window.location.href = "/follow-to-continue"
                     }
                     console.log(res);
+                    console.log(window.location)
                     return res
                 })
                 .catch((err) => {

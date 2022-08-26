@@ -11,7 +11,7 @@
           />
         </div>
         <el-alert v-show="err" :title="err" type="error" show-icon> </el-alert>
-        <small v-show="err"> Go to <router-link to="/settings">settings</router-link> to set or change Pin</small>
+        <small v-show="err"> Go to <router-link to="/settings/security">settings</router-link> to set or change Pin</small>
         <div class="text-center mt-3" v-if="!verified">
           <div class="text-center">
             <h4 class="m-0">Enter Your Pin</h4>

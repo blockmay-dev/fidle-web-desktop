@@ -43,8 +43,8 @@ export default {
         },
 
         // Add Story
-        createStory({ dispatch }, payload) {
-            // commit('SET_LOADING')
+        createStory({ commit, dispatch }, payload) {
+            commit('SET_DONE')
             request().post(`/user/stories/`, payload)
                 .then((res) => {
                     console.log(res);
@@ -69,7 +69,7 @@ export default {
                     console.log(err);
                 })
                 .finally(() => {
-                    // commit('END_LOADING')
+                    commit('REMOVE_DONE')
                 })
         },
 

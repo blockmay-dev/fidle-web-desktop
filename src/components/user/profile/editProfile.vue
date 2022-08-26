@@ -28,19 +28,18 @@
           </div>
         </div>
         <div
-          v-if="user.current_profile_image.media"
+          v-if="user.current_profile_image"
           :style="{
             backgroundImage: `url(${user.current_profile_image.media.file})`,
           }"
           class="user--image p-3"
         >
           <img
-            v-if="user.current_profile_image"
-            :src="user.current_profile_image.media.file"
+            :src="user.current_profile_image ? user.current_profile_image.media.file : '@/assets/img/no_user.png' "
             class=""
             alt=""
           />
-          <img v-else src="@/assets/img/no_user.png" class="" alt="" />
+          <!-- <img v-else src="@/assets/img/no_user.png" class="" alt="" /> -->
           <div class="update--profile" role="button">
             <input
               @change="onFileChange2"
@@ -251,9 +250,11 @@ export default {
     // }
   },
   beforeMount() {
+    this.$store.dispatch('extras/listCountries')
     this.$store.dispatch("auth/setUser");
+    
   },
-  mounted() {
+  async created() {
     this.userData = this.$store.getters["auth/getUser"];
   },
   computed: {

@@ -26,7 +26,7 @@
             v-for="err in errMessages.country_id"
             :key="err"
           >
-            *{{ err }}
+            *this field cannot be empty
           </small>
         </div>
         <div class="mb-4">
@@ -54,7 +54,7 @@
                 v-for="err in errMessages.state_id"
                 :key="err"
               >
-                *{{ err }}
+                *this field cannot be empty
               </small>
             </div>
             <div class="w-100">
@@ -72,7 +72,7 @@
                 v-for="err in errMessages.city_id"
                 :key="err"
               >
-                *{{ err }}
+                *this field cannot be empty
               </small>
             </div>
           </div>
@@ -92,7 +92,7 @@
             v-for="err in errMessages.gender"
             :key="err"
           >
-            *{{ err }}
+            *this field cannot be empty
           </small>
         </div>
         <div class="mb-3 mt-4">

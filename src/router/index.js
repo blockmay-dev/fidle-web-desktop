@@ -354,7 +354,56 @@ const routes = [{
                 // this generates a separate chunk (about.[hash].js) for this route
                 // which is lazy-loaded when the route is visited.
                 component: () =>
-                    import ( /* webpackChunkName: "about" */ '../pages/settings/indexPage.vue')
+                    import ( /* webpackChunkName: "about" */ '../pages/settings/indexPage.vue'),
+                children: [{
+                        path: '/settings',
+                        // route level code-splitting
+                        // this generates a separate chunk (about.[hash].js) for this route
+                        // which is lazy-loaded when the route is visited.
+                        component: () =>
+                            import ( /* webpackChunkName: "about" */ '@/components/settings/accountSettings.vue'),
+                    },
+                    {
+                        path: '/settings',
+                        // route level code-splitting
+                        // this generates a separate chunk (about.[hash].js) for this route
+                        // which is lazy-loaded when the route is visited.
+                        component: () =>
+                            import ( /* webpackChunkName: "about" */ '@/components/settings/accountSettings.vue'),
+                    },
+                    {
+                        path: '/settings/security-settings',
+                        // route level code-splitting
+                        // this generates a separate chunk (about.[hash].js) for this route
+                        // which is lazy-loaded when the route is visited.
+                        component: () =>
+                            import ( /* webpackChunkName: "about" */ '@/components/settings/securitySettings.vue'),
+                    },
+                    {
+                        path: '/settings/support',
+                        // route level code-splitting
+                        // this generates a separate chunk (about.[hash].js) for this route
+                        // which is lazy-loaded when the route is visited.
+                        component: () =>
+                            import ( /* webpackChunkName: "about" */ '@/components/settings/supportSettings.vue'),
+                    },
+                    {
+                        path: '/settings/about-fidle',
+                        // route level code-splitting
+                        // this generates a separate chunk (about.[hash].js) for this route
+                        // which is lazy-loaded when the route is visited.
+                        component: () =>
+                            import ( /* webpackChunkName: "about" */ '@/components/settings/aboutFidle.vue'),
+                    },
+                    {
+                        path: '/settings/blocking',
+                        // route level code-splitting
+                        // this generates a separate chunk (about.[hash].js) for this route
+                        // which is lazy-loaded when the route is visited.
+                        component: () =>
+                            import ( /* webpackChunkName: "about" */ '@/components/settings/blockedUsers.vue'),
+                    }
+                ]
             },
             {
                 path: '/fidle/external-post-source',

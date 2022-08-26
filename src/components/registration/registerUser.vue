@@ -93,6 +93,7 @@
 
 
 <script>
+import request from '@/config/axios'
 export default {
   data() {
       return{
@@ -123,8 +124,10 @@ export default {
     },
     goToNext() {
       this.signupLoader = true
-      this.$http.post('/auth/users/', this.payload)
+      request().post('/auth/users/', this.payload)
       .then((res)=>{
+        this.backgroundLogin();
+        this.$router.push('/sign-up/complete-profile')
         return res
       })
       .catch((err)=>{
@@ -133,8 +136,6 @@ export default {
       })
       .finally(()=>{
         this.signupLoader = false
-        this.backgroundLogin();
-        this.$router.push('/sign-up/complete-profile')
       })
     },
     backgroundLogin(){

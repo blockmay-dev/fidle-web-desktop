@@ -2,7 +2,7 @@
 import request from '@/config/axios'
 import createPersistedState from 'vuex-persistedstate';
 
-// import router from '@/router'
+import router from '@/router'
 
 import "toastify-js/src/toastify.css"
 import Toastify from 'toastify-js'
@@ -21,7 +21,8 @@ const getDefaultState = () => {
         following: [],
         posts: [],
         comments: [],
-        media_files: []
+        media_files: [],
+        blocked_users: []
     };
 };
 
@@ -64,6 +65,9 @@ export default {
         allMediaFiles: state => {
             return state.media_files
         },
+        getBlockedUsers: state => {
+            return state.blocked_users
+        }
     },
     mutations: {
         SET_FOLLOWERS: (state, followers) => {
@@ -105,6 +109,9 @@ export default {
         MEDIA_FILES: (state, media_files) => {
             state.media_files = media_files
         },
+        SET_BLOCKED_USERS: (state, data) => {
+            state.blocked_users = data
+        }
 
     },
     actions: {
@@ -200,7 +207,110 @@ export default {
                     dispatch("getFidler", id)
                 })
                 .catch((err) => {
-                    commit('SET_ERRORS', err.response.data);
+                    commit('SET_ERRORS', err.response);
+                })
+                .finally(() => {
+                    commit('END_LOADING')
+                    dispatch("getFidler", id)
+                })
+        },
+
+        // Block User
+        blockUser({ commit }, id) {
+            request().post(`users/${id}/toggle-block/`)
+                .then((res) => {
+                    console.log(res);
+                    Toastify({
+                        text: `User blocked Succsssfully`,
+                        className: "info",
+                        style: {
+                            background: "#333",
+                            fontSize: "13px",
+                            borderRadius: "5px",
+                        },
+                        gravity: "bottom",
+                        offset: {
+                            x: 50, // horizontal axis - can be a number or a string indicating unity. eg: '2em'
+                            y: 10 // vertical axis - can be a number or a string indicating unity. eg: '2em'
+                        },
+                    }).showToast();
+                    router.push('/feeds')
+                })
+                .catch((err) => {
+                    commit('SET_ERRORS', err.response);
+                })
+                .finally(() => {
+                    commit('END_LOADING')
+                })
+        },
+
+        // Block User
+        unblockUser({ dispatch, commit }, id) {
+            request().post(`users/${id}/toggle-block/`)
+                .then((res) => {
+                    console.log(res);
+                    Toastify({
+                        text: `User Unblocked Succsssfully`,
+                        className: "info",
+                        style: {
+                            background: "#333",
+                            fontSize: "13px",
+                            borderRadius: "5px",
+                        },
+                        gravity: "bottom",
+                        offset: {
+                            x: 50, // horizontal axis - can be a number or a string indicating unity. eg: '2em'
+                            y: 10 // vertical axis - can be a number or a string indicating unity. eg: '2em'
+                        },
+                    }).showToast();
+
+                })
+                .catch((err) => {
+                    commit('SET_ERRORS', err.response);
+                })
+                .finally(() => {
+                    commit('END_LOADING')
+                    dispatch("getBlockedUsers")
+                })
+        },
+
+        // List Blocked Users
+        getBlockedUsers({ commit }) {
+            request().get(`user/blocked-users`)
+                .then((res) => {
+                    commit('SET_BLOCKED_USERS', res.data.results)
+                    console.log(res.data)
+                    return res
+                })
+                .catch((err) => {
+                    console.log(err);
+                    commit('SET_ERRORS', err.response.data)
+                })
+        },
+
+        // Follow User
+        unFollowUser({ dispatch, commit }, id) {
+            request().post(`users/${id}/follow/`)
+                .then((res) => {
+                    console.log(res);
+                    Toastify({
+                        text: `You have unfollowed ${res.data.following.name}`,
+                        className: "info",
+                        style: {
+                            background: "#333",
+                            fontSize: "13px",
+                            borderRadius: "5px",
+                        },
+                        gravity: "bottom",
+                        offset: {
+                            x: 50, // horizontal axis - can be a number or a string indicating unity. eg: '2em'
+                            y: 10 // vertical axis - can be a number or a string indicating unity. eg: '2em'
+                        },
+                    }).showToast();
+                    dispatch("getFidler", id)
+                })
+                .catch((err) => {
+                    commit('SET_ERRORS', err);
                 })
                 .finally(() => {
                     commit('END_LOADING')

@@ -7,12 +7,12 @@
             <img src="@/assets/img/logo.svg" width="50" alt="" />
           </div>
           <div>
-            <h4 class="font-weight-bold text-center">Log out Of Fidle?</h4>
-            <p class="text-center small text-secondary">Are you sure you want to log out of Fidle? 
-              you will be able to login again if you do.</p>
+            <h4 class="font-weight-bold text-center">Block User?</h4>
+            <p class="text-center small text-secondary">Are you sure you want to block this user? 
+              you will be able to unblock then in your settings.</p>
             <div class="mt-4">
-              <button class="logout w-100" @click="logout">
-                Logout
+              <button class="logout w-100" @click="blockUser">
+                Block
               </button>
             </div>
             <div class="mt-2">
@@ -39,8 +39,9 @@ export default {
     };
   },
   methods: {
-    async logout() {
-        this.$store.dispatch("auth/logout");
+    async blockUser(){
+      var query = this.$route.query.fidler_id;
+      this.$store.dispatch("fidler/blockUser", query);
     },
     close() {
       this.$emit("close");

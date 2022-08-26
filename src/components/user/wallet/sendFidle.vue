@@ -292,7 +292,7 @@
         </div>
         <el-alert v-show="err" :title="err" type="error" show-icon> </el-alert>
         <small v-show="err">
-          Go to <router-link to="/settings">settings</router-link> to set or
+          Go to <router-link to="/settings/security">settings</router-link> to set or
           change Pin</small
         >
         <div class="text-center mt-3">
