@@ -203,7 +203,7 @@
                             class="dropdown-item d-flex"
                             style="gap: 12px"
                             role="button"
-                            @click="block_user = !block_user"
+                            @click.once="block_user = !block_user"
                           >
                             <span>
                               <IconComponent

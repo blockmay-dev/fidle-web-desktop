@@ -163,7 +163,6 @@ export default {
       request()
         .post("user/upgrade-level/", payload)
         .then((res) => {
-           console.log(res);
           this.$toastify({
             text: `${res.data.message}`,
             className: "info",
@@ -173,6 +172,7 @@ export default {
               borderRadius: "5px",
             },
           }).showToast();
+          return res
         })
         .catch((err) => {
           
@@ -185,7 +185,7 @@ export default {
               borderRadius: "5px",
             },
           }).showToast();
-          console.log(err.response.data.error)
+          return err
         })
         .finally(() => {
           this.loading = false;
@@ -202,10 +202,9 @@ export default {
           let levelsList = res.data;
           let editedList = levelsList.slice(Number(this.currentLevel), 5);
           this.levels = editedList;
-          console.log(this.levels);
         })
         .catch((err) => {
-          console.log(err)
+          return err
         });
     },
     close() {
