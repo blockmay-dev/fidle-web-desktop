@@ -7,7 +7,7 @@
             <img src="@/assets/img/logo.svg" width="50" alt="" />
           </div>
           <div>
-            <h4 class="font-weight-bold text-center">Log out Of Fidle?</h4>
+            <h4 class="font-weight-bold text-center">Log out f Fidle?</h4>
             <p class="text-center small text-secondary">Are you sure you want to log out of Fidle? 
               you will be able to login again if you do.</p>
             <div class="mt-4">
